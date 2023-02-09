@@ -1,0 +1,13 @@
+import type { ComponentStory, ComponentMeta } from "@storybook/react";
+import { {{pascalCase name}} } from ".";
+
+const Story: ComponentMeta<typeof {{pascalCase name}}> = {
+  component: {{pascalCase name}},
+  title: "{{pascalCase name}}",
+};
+export default Story;
+
+const Template: ComponentStory<typeof {{pascalCase name}}> = (args) => <{{pascalCase name}} {...args} />;
+
+export const Primary = Template.bind({});
+Primary.args = {};
