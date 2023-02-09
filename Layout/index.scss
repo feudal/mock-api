@@ -1,0 +1,36 @@
+.layout {
+  $line-color: grey;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__header {
+    border-bottom: 1px solid $line-color;
+
+    flex: 0 0 auto;
+    padding: 20px;
+  }
+
+  &__main {
+    flex: 1 0 auto;
+    height: 1px;
+  }
+
+  &__aside {
+    border-right: 1px solid $line-color;
+    padding: 20px;
+  }
+
+  &__section {
+    padding: 20px;
+  }
+
+  &__footer {
+    border-top: 1px solid $line-color;
+
+    padding: 20px;
+    flex: 0 0 auto;
+    text-align: center;
+  }
+}
