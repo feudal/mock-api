@@ -8,24 +8,24 @@ type Data = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  if (req.method === "GET") {
+  if (req.method === "DELETE") {
+    if (!req.query.id) {
+      res.status(400).json({ message: "Missing id" });
+      return;
+    }
+
     await db.connect();
 
-    const mockApis = await MockApi.find({});
+    const id = req.query.id;
+    const mockApi = await MockApi.findByIdAndDelete(id);
 
     await db.disconnect();
-    res.status(200).json({ data: mockApis });
-  }
 
-  if (req.method === "POST") {
-    await db.connect();
-
-    const mockApi = await MockApi.create({
-      name: req.body.name,
-    });
-
-    await db.disconnect();
-    res.status(200).json({ name: mockApi.name });
+    if (mockApi) {
+      res.status(200).json({ name: mockApi.name });
+    } else {
+      res.status(404).json({ error: "Not found" });
+    }
   }
 
   res.status(400).json({ error: "Bad request" });
