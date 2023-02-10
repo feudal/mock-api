@@ -1,5 +1,6 @@
 .layout {
   $line-color: grey;
+  $padding: 20px 0;
 
   display: flex;
   flex-direction: column;
@@ -9,7 +10,7 @@
     border-bottom: 1px solid $line-color;
 
     flex: 0 0 auto;
-    padding: 20px;
+    padding: $padding;
   }
 
   &__main {
@@ -19,17 +20,18 @@
 
   &__aside {
     border-right: 1px solid $line-color;
-    padding: 20px;
+    padding: $padding;
   }
 
   &__section {
     padding: 20px;
+    overflow-y: scroll;
   }
 
   &__footer {
     border-top: 1px solid $line-color;
 
-    padding: 20px;
+    padding: $padding;
     flex: 0 0 auto;
     text-align: center;
   }
