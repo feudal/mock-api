@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { MockApi } from "types";
-import { makeBEM } from "utils";
+import { getError, makeBEM } from "utils";
 import { DeleteIcon } from "svg";
 import { MockApiContext } from "context";
 
@@ -22,11 +22,14 @@ export const MockApiList = (props: MockApiListProps) => {
     setIsLoading(true);
 
     fetch("/api/mock-api")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(res.statusText);
+        return res.json();
+      })
       .then((data) => setApis(data))
       .catch((err) => {
         setIsError(true);
-        toast.error("Something went wrong");
+        toast.error(getError(err));
       });
 
     setIsLoading(false);
@@ -35,12 +38,15 @@ export const MockApiList = (props: MockApiListProps) => {
 
   const deleteApi = (id: string) =>
     fetch(`/api/mock-api/${id}`, { method: "DELETE" })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(res.statusText);
+        return res.json();
+      })
       .then((data) => {
         setApis(data);
         setNeedToUpdate(true);
       })
-      .catch((err) => toast.error("Something went wrong"));
+      .catch((err) => toast.error(getError(err)));
 
   return (
     <div className={bem()}>

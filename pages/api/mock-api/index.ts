@@ -12,10 +12,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     res.status(200).json({ data: mockApis });
   } else if (req.method === "POST") {
     await db.connect();
-    const mockApi = await MockApi.create({ name: req.body.name });
-    await db.disconnect();
+    const mockApiExists = await MockApi.exists({ name: req.body.name });
 
-    res.status(200).json({ name: mockApi.name });
+    if (mockApiExists) {
+      res.status(400).json({ error: "Api with this name already exists" });
+      db.disconnect();
+      return;
+    } else {
+      const mockApi = await MockApi.create({ name: req.body.name });
+      await db.disconnect();
+
+      res.status(200).json({ name: mockApi.name });
+    }
   } else {
     res.status(400).json({ error: "Bad request" });
   }

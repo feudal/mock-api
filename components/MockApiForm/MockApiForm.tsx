@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { MockApi } from "types";
 
 import { MockApiContext } from "context";
-import { makeBEM } from "utils";
+import { getError, makeBEM } from "utils";
 
 /* eslint-disable-next-line */
 export interface MockApiFormProps {}
@@ -21,9 +21,11 @@ export const MockApiForm = (props: MockApiFormProps) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(api),
     })
-      .then((res) => res.json())
-      .then((data) => setNeedToUpdate(true))
-      .catch((err) => toast.error("Something went wrong"));
+      .then((res) => {
+        if (!res.ok) throw new Error(res.statusText);
+      })
+      .then(() => setNeedToUpdate(true))
+      .catch((err) => toast.error(getError(err)));
 
   return (
     <div className={bem()}>
