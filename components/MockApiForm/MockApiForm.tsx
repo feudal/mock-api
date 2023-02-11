@@ -5,7 +5,7 @@ import { MockApi } from "types";
 
 import { MockApiContext } from "context";
 import { getError, makeBEM } from "utils";
-import { Button, Input, InterfaceInput as InterfaceInput } from "components";
+import { Button, Input, InterfaceInput } from "components";
 
 /* eslint-disable-next-line */
 export interface MockApiFormProps {}
@@ -13,7 +13,7 @@ export interface MockApiFormProps {}
 const bem = makeBEM("mock-api-form");
 
 export const MockApiForm = (props: MockApiFormProps) => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, unregister, setValue } = useForm();
   const { setNeedToUpdate } = useContext(MockApiContext);
 
   const createApi = (api: Partial<MockApi>) =>
@@ -36,14 +36,19 @@ export const MockApiForm = (props: MockApiFormProps) => {
         className={bem("form")}
         onSubmit={handleSubmit((data) => createApi(data))}
       >
-        <Input label="API name" name="name" register={register} required />
+        <Input label="API name" name="api-name" register={register} required />
 
-        <InterfaceInput register={register} />
+        <InterfaceInput
+          register={register}
+          unregister={unregister}
+          setValue={setValue}
+        />
 
         <Input
           label="How many objects to generate (max 100)"
           name="count"
           register={register}
+          required
           type="number"
           min={1}
           max={100}

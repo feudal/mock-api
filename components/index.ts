@@ -5,4 +5,5 @@ export * from "./CustomHead";
 export * from "./InterfaceInput";
 export * from "./Input";
 export * from "./Button";
+export * from './Selector';
 /* INJECT_EXPORT */

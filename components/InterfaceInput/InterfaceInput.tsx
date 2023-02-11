@@ -1,28 +1,43 @@
-import { Input } from "components";
+import { Input, Selector } from "components";
 import { Button } from "components/Button";
 import React, { useState } from "react";
-import { FieldValues, UseFormRegister } from "react-hook-form";
+import {
+  FieldValues,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormUnregister,
+} from "react-hook-form";
 import { DeleteIcon } from "svg";
 
 import { makeBEM } from "utils";
 
 export interface InterfaceInputProps {
   register: UseFormRegister<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  unregister: UseFormUnregister<FieldValues>;
 }
 
 const bem = makeBEM("interface-form");
 
-export const InterfaceInput = ({ register }: InterfaceInputProps) => {
+export const InterfaceInput = ({
+  register,
+  setValue,
+  unregister,
+}: InterfaceInputProps) => {
   const [fieldCount, setFieldCount] = useState(1);
   const [fields, setFields] = useState([{ id: 1 }]);
+  register(`fieldType1`);
 
   const addField = () => {
     setFieldCount(fieldCount + 1);
     setFields([...fields, { id: fieldCount + 1 }]);
+    register(`fieldName${fieldCount + 1}`);
   };
 
   const deleteField = (id: number) => {
     setFields(fields.filter((field) => field.id !== id));
+    unregister(`fieldName${id}`);
+    unregister(`fieldType${id}`);
   };
 
   return (
@@ -32,7 +47,7 @@ export const InterfaceInput = ({ register }: InterfaceInputProps) => {
       <Input
         register={register}
         name="interfaceName"
-        label="Interface Name"
+        label="Interface name"
         required
       />
 
@@ -41,15 +56,18 @@ export const InterfaceInput = ({ register }: InterfaceInputProps) => {
           <Input
             register={register}
             name={`fieldName${field.id}`}
-            label={`Field ${field.id} Name`}
+            label={`Field name - ${field.id}`}
             required
           />
-          <Input
-            register={register}
+
+          {/* this is hidden input to register field type */}
+          <input {...register(`fieldType${field.id}`)} hidden />
+          <Selector
             name={`fieldType${field.id}`}
-            label="Field Type"
+            setValue={setValue}
             required
           />
+
           <DeleteIcon onClick={() => deleteField(field.id)} />
         </div>
       ))}
