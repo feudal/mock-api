@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { MockApiForm } from "components";
 
 export default function Home() {
   return (
@@ -10,7 +11,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div>some content</div>
+      <div>
+        <MockApiForm />
+      </div>
     </>
   );
 }

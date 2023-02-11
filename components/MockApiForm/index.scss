@@ -1,0 +1,51 @@
+.mock-api-form {
+  @mixin grey-border {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+    margin-top: 20px;
+    padding: 20px;
+
+    @include grey-border;
+
+    label {
+      margin-bottom: 10px;
+
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    input {
+      margin-bottom: 20px;
+      padding: 10px;
+      font-size: 16px;
+
+      @include grey-border;
+    }
+
+    button {
+      width: 50%;
+      min-width: 200px;
+      padding: 10px;
+      font-size: 16px;
+
+      transition: 0.3s;
+
+      background-color: #7570d4;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #5e59c2;
+      }
+    }
+  }
+}
