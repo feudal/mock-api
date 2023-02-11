@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { MockApi } from "types";
 
+import { MockApiContext } from "context";
 import { makeBEM } from "utils";
 
 /* eslint-disable-next-line */
@@ -12,6 +13,7 @@ const bem = makeBEM("mock-api-form");
 
 export const MockApiForm = (props: MockApiFormProps) => {
   const { register, handleSubmit } = useForm();
+  const { setNeedToUpdate } = useContext(MockApiContext);
 
   const createApi = (api: Partial<MockApi>) =>
     fetch(`/api/mock-api`, {
@@ -20,9 +22,7 @@ export const MockApiForm = (props: MockApiFormProps) => {
       body: JSON.stringify(api),
     })
       .then((res) => res.json())
-      .then((data) => {
-        toast.success("API created");
-      })
+      .then((data) => setNeedToUpdate(true))
       .catch((err) => toast.error("Something went wrong"));
 
   return (

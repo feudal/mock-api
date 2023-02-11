@@ -57,7 +57,7 @@ export const Layout = ({
         </footer>
       </div>
 
-      <ToastContainer position="top-left" limit={1} />
+      <ToastContainer position="top-right" limit={1} />
     </>
   );
 };

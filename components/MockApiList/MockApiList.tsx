@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { MockApi } from "types";
 import { makeBEM } from "utils";
 import { DeleteIcon } from "svg";
+import { MockApiContext } from "context";
 
 /* eslint-disable-next-line */
 export interface MockApiListProps {}
@@ -14,10 +15,10 @@ export const MockApiList = (props: MockApiListProps) => {
   const [apis, setApis] = useState<{ data: MockApi[] } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isUpdated, setIsUpdated] = useState<boolean | null>();
+  const { needToUpdate, setNeedToUpdate } = useContext(MockApiContext);
 
   useEffect(() => {
-    if (isUpdated === false) return;
+    if (needToUpdate === false) return;
     setIsLoading(true);
 
     fetch("/api/mock-api")
@@ -29,15 +30,15 @@ export const MockApiList = (props: MockApiListProps) => {
       });
 
     setIsLoading(false);
-    setIsUpdated(false);
-  }, [isUpdated]);
+    setNeedToUpdate(false);
+  }, [needToUpdate, setNeedToUpdate]);
 
   const deleteApi = (id: string) =>
     fetch(`/api/mock-api/${id}`, { method: "DELETE" })
       .then((res) => res.json())
       .then((data) => {
         setApis(data);
-        setIsUpdated(true);
+        setNeedToUpdate(true);
       })
       .catch((err) => toast.error("Something went wrong"));
 
