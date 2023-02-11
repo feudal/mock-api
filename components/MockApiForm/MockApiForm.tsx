@@ -5,6 +5,7 @@ import { MockApi } from "types";
 
 import { MockApiContext } from "context";
 import { getError, makeBEM } from "utils";
+import { Button, Input, InterfaceInput as InterfaceInput } from "components";
 
 /* eslint-disable-next-line */
 export interface MockApiFormProps {}
@@ -35,14 +36,20 @@ export const MockApiForm = (props: MockApiFormProps) => {
         className={bem("form")}
         onSubmit={handleSubmit((data) => createApi(data))}
       >
-        <label htmlFor="name">API name</label>
-        <input
-          {...register("name", { required: true })}
-          type="text"
-          name="name"
+        <Input label="API name" name="name" register={register} required />
+
+        <InterfaceInput register={register} />
+
+        <Input
+          label="How many objects to generate"
+          name="count"
+          register={register}
+          type="number"
+          min={1}
+          max={100}
         />
 
-        <button type="submit">Create</button>
+        <Button type="submit">Create</Button>
       </form>
     </div>
   );
