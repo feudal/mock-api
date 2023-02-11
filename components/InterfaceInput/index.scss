@@ -1,9 +1,30 @@
 .interface-form {
+  position: relative;
   border: 1px solid #4e4e4e;
   border-radius: 5px;
 
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
-  padding: 20px;
+  margin: 20px 0;
+  padding: 15px;
+
+  &__title {
+    position: absolute;
+    background-color: #fff;
+    padding: 0 5px;
+    top: -15px;
+    left: 10px;
+  }
+
+  &__group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 28px;
+    grid-gap: 10px;
+    align-items: end;
+  }
+
+  svg {
+    color: red;
+    margin-bottom: 10px;
+  }
 }

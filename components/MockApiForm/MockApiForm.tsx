@@ -41,7 +41,7 @@ export const MockApiForm = (props: MockApiFormProps) => {
         <InterfaceInput register={register} />
 
         <Input
-          label="How many objects to generate"
+          label="How many objects to generate (max 100)"
           name="count"
           register={register}
           type="number"

@@ -12,6 +12,10 @@
   border-radius: 5px;
   cursor: pointer;
 
+  &--block {
+    width: 100%;
+  }
+
   &:hover {
     background-color: #5e59c2;
   }
