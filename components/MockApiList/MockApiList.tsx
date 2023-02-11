@@ -43,7 +43,7 @@ export const MockApiList = (props: MockApiListProps) => {
 
   return (
     <div className={bem()}>
-      <h2 className={bem("title")}>Api list</h2>
+      <h2 className={bem("title")}>API list</h2>
 
       {isLoading && <p>Loading...</p>}
       {isError && <p>Error</p>}

@@ -3,10 +3,6 @@ import { MockApi } from "models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "utils";
 
-type Data = {
-  name: string;
-};
-
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method === "DELETE") {
     if (!req.query.id) {
@@ -15,10 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
 
     await db.connect();
-
-    const id = req.query.id;
-    const mockApi = await MockApi.findByIdAndDelete(id);
-
+    const mockApi = await MockApi.findByIdAndDelete(req.query.id);
     await db.disconnect();
 
     if (mockApi) {
@@ -26,9 +19,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     } else {
       res.status(404).json({ error: "Not found" });
     }
+  } else {
+    res.status(400).json({ error: "Bad request" });
   }
-
-  res.status(400).json({ error: "Bad request" });
 };
 
 export default handler;

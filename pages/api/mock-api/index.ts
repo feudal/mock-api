@@ -6,23 +6,19 @@ import { db } from "utils";
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method === "GET") {
     await db.connect();
-
     const mockApis = await MockApi.find({});
-
     await db.disconnect();
+
     res.status(200).json({ data: mockApis });
-  }
-
-  if (req.method === "POST") {
+  } else if (req.method === "POST") {
     await db.connect();
-
     const mockApi = await MockApi.create({ name: req.body.name });
-
     await db.disconnect();
-    res.status(200).json({ name: mockApi.name });
-  }
 
-  res.status(400).json({ error: "Bad request" });
+    res.status(200).json({ name: mockApi.name });
+  } else {
+    res.status(400).json({ error: "Bad request" });
+  }
 };
 
 export default handler;
