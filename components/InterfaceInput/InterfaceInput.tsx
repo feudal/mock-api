@@ -1,4 +1,4 @@
-import { Input, Selector } from "components";
+import { Input, FieldsTypSelector } from "components";
 import { Button } from "components/Button";
 import React, { useEffect, useState } from "react";
 import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
@@ -56,7 +56,7 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
               }
             />
 
-            <Selector
+            <FieldsTypSelector
               index={idx}
               required
               name="fields"

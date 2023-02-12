@@ -3,22 +3,23 @@ import { Field } from "types";
 
 import { fakerOptions, fakerOptionsKeys, makeBEM } from "utils";
 
-export interface SelectorProps extends React.HTMLAttributes<HTMLSelectElement> {
+export interface FieldsTypSelectorProps
+  extends React.HTMLAttributes<HTMLSelectElement> {
   name: string;
   index: number;
   required?: boolean;
   setFields: React.Dispatch<React.SetStateAction<(Field | undefined)[]>>;
 }
 
-const bem = makeBEM("selector");
+const bem = makeBEM("fields-type-selector");
 
-export const Selector = ({
+export const FieldsTypSelector = ({
   name,
   index,
   setFields,
   required,
   ...props
-}: SelectorProps) => {
+}: FieldsTypSelectorProps) => {
   const [fakerOption, setFakerOption] = useState<string>(fakerOptionsKeys[0]);
   const [subOption, setSubOption] = useState<string>(
     fakerOptions[fakerOption][0]
