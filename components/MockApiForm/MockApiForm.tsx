@@ -36,13 +36,9 @@ export const MockApiForm = (props: MockApiFormProps) => {
         className={bem("form")}
         onSubmit={handleSubmit((data) => createApi(data))}
       >
-        <Input label="API name" name="api-name" register={register} required />
+        <Input label="API name" name="name" register={register} required />
 
-        <InterfaceInput
-          register={register}
-          unregister={unregister}
-          setValue={setValue}
-        />
+        <InterfaceInput register={register} setValue={setValue} />
 
         <Input
           label="How many objects to generate (max 100)"

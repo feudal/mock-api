@@ -4,8 +4,8 @@ import { FieldValues, UseFormRegister } from "react-hook-form";
 import { makeBEM } from "utils";
 
 export interface InputProps extends React.HTMLAttributes<HTMLInputElement> {
-  register: UseFormRegister<FieldValues>;
   name: string;
+  register?: UseFormRegister<FieldValues>;
   label?: string;
   required?: boolean;
   type?: string;
@@ -23,7 +23,7 @@ export const Input = ({ register, name, label, ...props }: InputProps) => {
       </label>
       <input
         className={bem("input")}
-        {...register(name, { required: props.required })}
+        {...(register && register(name, { required: props.required }))}
         {...props}
       />
     </div>

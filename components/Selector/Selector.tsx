@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { FieldValues, UseFormSetValue } from "react-hook-form";
+import { Field } from "types";
 
 import { fakerOptions, fakerOptionsKeys, makeBEM } from "utils";
 
 export interface SelectorProps extends React.HTMLAttributes<HTMLSelectElement> {
   name: string;
-  setValue: UseFormSetValue<FieldValues>;
+  index: number;
   required?: boolean;
+  setFields: React.Dispatch<React.SetStateAction<(Field | undefined)[]>>;
 }
 
 const bem = makeBEM("selector");
 
 export const Selector = ({
   name,
-  setValue,
+  index,
+  setFields,
   required,
   ...props
 }: SelectorProps) => {
@@ -22,10 +24,13 @@ export const Selector = ({
     fakerOptions[fakerOption][0]
   );
 
-  useEffect(
-    () => setValue(name, [fakerOption, subOption]),
-    [fakerOption, name, setValue, subOption]
-  );
+  useEffect(() => {
+    setFields((prev) => {
+      const newFields = [...prev];
+      newFields[index]!.type = [fakerOption, subOption];
+      return newFields;
+    });
+  }, [fakerOption, name, index, setFields, subOption]);
 
   return (
     <div className={bem()}>

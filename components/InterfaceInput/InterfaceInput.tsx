@@ -1,43 +1,29 @@
 import { Input, Selector } from "components";
 import { Button } from "components/Button";
-import React, { useState } from "react";
-import {
-  FieldValues,
-  UseFormRegister,
-  UseFormSetValue,
-  UseFormUnregister,
-} from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { DeleteIcon } from "svg";
+import { Field } from "types";
 
 import { makeBEM } from "utils";
 
 export interface InterfaceInputProps {
   register: UseFormRegister<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
-  unregister: UseFormUnregister<FieldValues>;
 }
 
 const bem = makeBEM("interface-form");
 
-export const InterfaceInput = ({
-  register,
-  setValue,
-  unregister,
-}: InterfaceInputProps) => {
-  const [fieldCount, setFieldCount] = useState(1);
-  const [fields, setFields] = useState([{ id: 1 }]);
-  register(`fieldType1`);
-
-  const addField = () => {
-    setFieldCount(fieldCount + 1);
-    setFields([...fields, { id: fieldCount + 1 }]);
-    register(`fieldName${fieldCount + 1}`);
-  };
+export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
+  const [fields, setFields] = useState<(Field | undefined)[]>([]);
+  register("fields", { required: true });
+  useEffect(() => setValue("fields", fields), [fields, setValue]);
+  const addField = () => setFields([...fields, { name: "", type: [] }]);
 
   const deleteField = (id: number) => {
-    setFields(fields.filter((field) => field.id !== id));
-    unregister(`fieldName${id}`);
-    unregister(`fieldType${id}`);
+    const newFields = [...fields];
+    newFields[id] = undefined;
+    setFields(newFields);
   };
 
   return (
@@ -51,26 +37,36 @@ export const InterfaceInput = ({
         required
       />
 
-      {fields.map((field) => (
-        <div className={bem("group")} key={field.id}>
-          <Input
-            register={register}
-            name={`fieldName${field.id}`}
-            label={`Field name - ${field.id}`}
-            required
-          />
+      {fields.map((field, idx) => {
+        if (field === undefined) return null;
 
-          {/* this is hidden input to register field type */}
-          <input {...register(`fieldType${field.id}`)} hidden />
-          <Selector
-            name={`fieldType${field.id}`}
-            setValue={setValue}
-            required
-          />
+        return (
+          <div className={bem("group")} key={idx}>
+            <Input
+              name="is-not-registered"
+              required
+              label={`Field name - ${idx + 1}`}
+              defaultValue={field?.name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFields((prev) => {
+                  const newFields = [...prev];
+                  newFields[idx]!.name = e.target.value;
+                  return newFields;
+                })
+              }
+            />
 
-          <DeleteIcon onClick={() => deleteField(field.id)} />
-        </div>
-      ))}
+            <Selector
+              index={idx}
+              required
+              name="fields"
+              setFields={setFields}
+            />
+
+            <DeleteIcon onClick={() => deleteField(idx)} />
+          </div>
+        );
+      })}
 
       <Button block onClick={addField}>
         Add new field
