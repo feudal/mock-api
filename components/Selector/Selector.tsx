@@ -22,7 +22,10 @@ export const Selector = ({
     fakerOptions[fakerOption][0]
   );
 
-  useEffect(() => setValue(name, [fakerOption, subOption]), []);
+  useEffect(
+    () => setValue(name, [fakerOption, subOption]),
+    [fakerOption, name, setValue, subOption]
+  );
 
   return (
     <div className={bem()}>
@@ -33,10 +36,7 @@ export const Selector = ({
           {...props}
           required={required}
           defaultValue={fakerOption}
-          onChange={(v) => {
-            setFakerOption(v.target.value);
-            setValue(name, [v.target.value, subOption]);
-          }}
+          onChange={(v) => setFakerOption(v.target.value)}
         >
           {fakerOptionsKeys.map((fakerOption) => (
             <option key={fakerOption} value={fakerOption}>
@@ -49,10 +49,7 @@ export const Selector = ({
           {...props}
           required={required}
           defaultValue={subOption}
-          onChange={(v) => {
-            setSubOption(v.target.value);
-            setValue(name, [fakerOption, v.target.value]);
-          }}
+          onChange={(v) => setSubOption(v.target.value)}
         >
           {fakerOptions[fakerOption].map((subOption) => (
             <option key={subOption} value={subOption}>
