@@ -15,7 +15,9 @@ export interface InterfaceInputProps {
 const bem = makeBEM("interface-form");
 
 export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
-  const [fields, setFields] = useState<(Field | undefined)[]>([]);
+  const [fields, setFields] = useState<(Field | undefined)[]>([
+    { name: "", type: [] },
+  ]);
   register("fields", { required: true });
   useEffect(() => setValue("fields", fields), [fields, setValue]);
   const addField = () => setFields([...fields, { name: "", type: [] }]);
@@ -29,13 +31,6 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
   return (
     <div className={bem()}>
       <h3 className={bem("title")}>Interface</h3>
-
-      <Input
-        register={register}
-        name="interfaceName"
-        label="Interface name"
-        required
-      />
 
       {fields.map((field, idx) => {
         if (field === undefined) return null;
