@@ -28,7 +28,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
       const mockApi = await MockApi.create({
         name: req.body.name,
-        count: req.body.count,
         fields: fields,
       });
 

@@ -42,16 +42,6 @@ export const MockApiForm = () => {
 
         <InterfaceInput register={register} setValue={setValue} />
 
-        <Input
-          label="How many objects to generate (max 100)"
-          name="count"
-          register={register}
-          required
-          type="number"
-          min={1}
-          max={100}
-        />
-
         <Button type="submit">Create</Button>
       </form>
     </div>
