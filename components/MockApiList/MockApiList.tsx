@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -5,6 +6,7 @@ import { MockApi } from "types";
 import { getError, makeBEM } from "utils";
 import { DeleteIcon } from "svg";
 import { MockApiContext } from "context";
+import Link from "next/link";
 
 const bem = makeBEM("mock-api-list");
 
@@ -13,6 +15,7 @@ export const MockApiList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { needToUpdate, setNeedToUpdate } = useContext(MockApiContext);
+  const router = useRouter();
 
   useEffect(() => {
     if (needToUpdate === false) return;
@@ -23,13 +26,16 @@ export const MockApiList = () => {
         if (!res.ok) throw new Error(res.statusText);
         return res.json();
       })
-      .then((data) => setApis(data))
+      .then((data) => {
+        setApis(data);
+        setIsLoading(false);
+      })
       .catch((err) => {
         setIsError(true);
+        setIsLoading(false);
         toast.error(getError(err));
       });
 
-    setIsLoading(false);
     setNeedToUpdate(false);
   }, [needToUpdate, setNeedToUpdate]);
 
@@ -55,7 +61,13 @@ export const MockApiList = () => {
       <ul className={bem("list")}>
         {apis?.data?.map((api) => (
           <li key={api._id} className={bem("item")}>
-            /{api.name}
+            <Link
+              href={`/${api._id}`}
+              className={bem("link", { active: router.query.id === api._id })}
+            >
+              /{api.name}
+            </Link>
+
             <DeleteIcon onClick={() => deleteApi(api._id)} />
           </li>
         ))}
