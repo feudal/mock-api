@@ -4,8 +4,23 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 
 import { MockApi } from "types";
-import { Button, Input } from "components";
+import { Button, Input, Loader } from "components";
 import { getError, pascalCase, makeBEM } from "utils";
+
+const generateMockApi = (name: string, count: number) => {
+  if (!name) return;
+
+  fetch(`/api/mock-api/generate/${name}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ count }),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      toast.success("Data for API generated");
+    })
+    .catch((err) => toast.error(getError(err)));
+};
 
 const bem = makeBEM("mock-api-item");
 
@@ -37,7 +52,7 @@ export const MockApiItem = () => {
   }, [id]);
 
   let dataState = null;
-  if (isLoading) dataState = <p>Loading...</p>;
+  if (isLoading) dataState = <Loader />;
   if (isError) dataState = <p>Error</p>;
 
   return (
@@ -70,7 +85,7 @@ export const MockApiItem = () => {
 
           <Button
             onClick={handleSubmit((data) => {
-              console.log(data);
+              api?.name && generateMockApi(api.name, data.count);
             })}
           >
             Generate objects for api
