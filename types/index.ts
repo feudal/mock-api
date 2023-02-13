@@ -3,6 +3,7 @@ export interface MockApi {
   name: string;
   interfaceName: string;
   fields: Field[];
+  data: Object[];
 
   createdAt: string;
   updatedAt: string;

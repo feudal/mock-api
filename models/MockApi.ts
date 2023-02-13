@@ -8,6 +8,7 @@ const mockApiSchema = new mongoose.Schema({
       ref: "Field",
     },
   ],
+  data: [{ type: Object }],
 });
 
 export const MockApi =

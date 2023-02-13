@@ -9,4 +9,5 @@ export * from "./FieldsTypSelector";
 export * from "./MockApiItem";
 export * from "./Loader";
 export * from "./MockApiInterface";
+export * from "./MockApiData";
 /* INJECT_EXPORT */

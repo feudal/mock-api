@@ -25,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const fields = mockApi.fields;
 
     // Generate fake data
-    let data = [];
+    let data: string[] = [];
     for (let i = 0; i < req.body.count; i++) {
       data.push(
         Object.assign(
@@ -39,11 +39,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       );
     }
 
-    const apiData = await ApiData.create({ api: mockApi._id, data });
+    mockApi.data = data;
+    await mockApi.save();
     await db.disconnect();
 
-    if (apiData) {
-      res.status(200).json(apiData);
+    if (mockApi) {
+      res.status(200).json(mockApi);
     } else {
       res.status(404).json({ error: "Not found" });
     }

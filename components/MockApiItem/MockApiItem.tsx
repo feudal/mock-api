@@ -4,7 +4,13 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 
 import { MockApi } from "types";
-import { Button, Input, Loader, MockApiInterface } from "components";
+import {
+  Button,
+  Input,
+  Loader,
+  MockApiData,
+  MockApiInterface,
+} from "components";
 import { getError, pascalCase, makeBEM } from "utils";
 
 const generateMockApi = (name: string, count: number) => {
@@ -30,6 +36,7 @@ export const MockApiItem = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { register, handleSubmit } = useForm();
+  const router = useRouter();
 
   useEffect(() => {
     if (!id) return;
@@ -63,23 +70,32 @@ export const MockApiItem = () => {
         <>
           <MockApiInterface name={api?.name} fields={api?.fields} />
 
-          <Input
-            label="How many objects to generate (max 100)"
-            name="count"
-            register={register}
-            required
-            type="number"
-            min={1}
-            max={100}
-          />
+          {api?.data.length !== 0 ? (
+            <MockApiData data={api?.data} />
+          ) : (
+            <>
+              <Input
+                label="How many objects to generate (max 100)"
+                name="count"
+                register={register}
+                required
+                type="number"
+                min={1}
+                max={100}
+              />
 
-          <Button
-            onClick={handleSubmit((data) => {
-              api?.name && generateMockApi(api.name, data.count);
-            })}
-          >
-            Generate objects for api
-          </Button>
+              <Button
+                onClick={handleSubmit((data) => {
+                  if (api?.name) {
+                    generateMockApi(api.name, data.count);
+                    router.reload();
+                  }
+                })}
+              >
+                Generate objects for api
+              </Button>
+            </>
+          )}
         </>
       )}
     </div>

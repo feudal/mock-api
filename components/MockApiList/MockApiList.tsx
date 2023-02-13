@@ -58,6 +58,7 @@ export const MockApiList = () => {
 
       {isLoading && <Loader />}
       {isError && <p>Error</p>}
+      {apis?.data?.length === 0 && <p>No APIs</p>}
 
       <ul className={bem("list")}>
         {apis?.data?.map((api) => (
