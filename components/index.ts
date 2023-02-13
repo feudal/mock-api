@@ -6,5 +6,6 @@ export * from "./InterfaceInput";
 export * from "./Input";
 export * from "./Button";
 export * from "./FieldsTypSelector";
-export * from './MockApiItem';
+export * from "./MockApiItem";
+export * from "./Loader";
 /* INJECT_EXPORT */

@@ -28,13 +28,13 @@ export default function config(plop) {
         type: "modify",
         path: "components/index.ts",
         pattern: "/* INJECT_EXPORT */",
-        template: "export * from './{{pascalCase name}}';\n/* INJECT_EXPORT */",
+        template: 'export * from "./{{pascalCase name}}";\n/* INJECT_EXPORT */',
       },
       {
         type: "modify",
         path: "components/index.scss",
         pattern: "/* INJECT_IMPORT */",
-        template: "@forward './{{pascalCase name}}';\n/* INJECT_IMPORT */",
+        template: '@forward "./{{pascalCase name}}";\n/* INJECT_IMPORT */',
       },
     ],
   });

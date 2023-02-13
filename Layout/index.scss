@@ -19,11 +19,13 @@
   }
 
   &__aside {
+    position: relative;
     border-right: 1px solid $line-color;
     padding: $padding;
   }
 
   &__section {
+    position: relative;
     padding: 20px;
     overflow-y: scroll;
   }

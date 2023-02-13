@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { Button } from "components";
+import { Button, Loader } from "components";
 import { MockApiContext } from "context";
 import { MockApi } from "types";
 import { getError, makeBEM } from "utils";
@@ -56,7 +56,7 @@ export const MockApiList = () => {
     <div className={bem()}>
       <h2 className={bem("title")}>API list</h2>
 
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <Loader />}
       {isError && <p>Error</p>}
 
       <ul className={bem("list")}>
