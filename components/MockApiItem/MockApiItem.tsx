@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 
 import { MockApi } from "types";
-import { Button, Input, Loader } from "components";
+import { Button, Input, Loader, MockApiInterface } from "components";
 import { getError, pascalCase, makeBEM } from "utils";
 
 const generateMockApi = (name: string, count: number) => {
@@ -61,17 +61,7 @@ export const MockApiItem = () => {
 
       {dataState || (
         <>
-          <pre className={bem("code")}>
-            <h3>interface {pascalCase(api?.name)} &#123;</h3>
-            <ul style={{ marginLeft: 20 }}>
-              {api?.fields.map((field) => (
-                <li key={field.name}>
-                  {field.name}: {field.type.join("-")};
-                </li>
-              ))}
-            </ul>
-            <h3>&#125;</h3>
-          </pre>
+          <MockApiInterface name={api?.name} fields={api?.fields} />
 
           <Input
             label="How many objects to generate (max 100)"

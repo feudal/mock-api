@@ -8,4 +8,5 @@ export * from "./Button";
 export * from "./FieldsTypSelector";
 export * from "./MockApiItem";
 export * from "./Loader";
+export * from "./MockApiInterface";
 /* INJECT_EXPORT */
