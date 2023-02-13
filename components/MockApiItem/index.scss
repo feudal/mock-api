@@ -1,0 +1,14 @@
+.mock-api-item {
+  &__title {
+    margin-bottom: 20px;
+  }
+
+  &__code {
+    margin-bottom: 20px;
+
+    background-color: #fbfbfe;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+  }
+}

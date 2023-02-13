@@ -1,7 +1,6 @@
 export interface MockApi {
   _id: string;
   name: string;
-  count: string;
   interfaceName: string;
   fields: Field[];
 
