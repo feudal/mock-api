@@ -6,12 +6,9 @@ import { getError, makeBEM } from "utils";
 import { DeleteIcon } from "svg";
 import { MockApiContext } from "context";
 
-/* eslint-disable-next-line */
-export interface MockApiListProps {}
-
 const bem = makeBEM("mock-api-list");
 
-export const MockApiList = (props: MockApiListProps) => {
+export const MockApiList = () => {
   const [apis, setApis] = useState<{ data: MockApi[] } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);

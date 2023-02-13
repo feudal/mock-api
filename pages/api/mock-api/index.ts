@@ -1,7 +1,7 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { MockApi } from "models";
 import type { NextApiRequest, NextApiResponse } from "next";
+
 import { db } from "utils";
+import { MockApi, Field } from "models";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method === "GET") {
@@ -19,10 +19,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       db.disconnect();
       return;
     } else {
-      const mockApi = await MockApi.create({ name: req.body.name });
+      const fields = await Promise.all(
+        req.body.fields.map(async (field: any) => {
+          const createdField = await Field.create(field);
+          return createdField._id;
+        })
+      );
+
+      const mockApi = await MockApi.create({
+        name: req.body.name,
+        count: req.body.count,
+        fields: fields,
+      });
+
       await db.disconnect();
 
-      res.status(200).json({ name: mockApi.name });
+      res.status(200).json({ data: mockApi });
     }
   } else {
     res.status(400).json({ error: "Bad request" });

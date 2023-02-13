@@ -1,20 +1,19 @@
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { MockApi } from "types";
+import { useRouter } from "next/router";
 
+import { MockApi } from "types";
 import { MockApiContext } from "context";
 import { getError, makeBEM } from "utils";
 import { Button, Input, InterfaceInput } from "components";
 
-/* eslint-disable-next-line */
-export interface MockApiFormProps {}
-
 const bem = makeBEM("mock-api-form");
 
-export const MockApiForm = (props: MockApiFormProps) => {
-  const { register, handleSubmit, unregister, setValue } = useForm();
+export const MockApiForm = () => {
+  const { register, handleSubmit, setValue } = useForm();
   const { setNeedToUpdate } = useContext(MockApiContext);
+  const router = useRouter();
 
   const createApi = (api: Partial<MockApi>) =>
     fetch(`/api/mock-api`, {
@@ -25,7 +24,10 @@ export const MockApiForm = (props: MockApiFormProps) => {
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText);
       })
-      .then(() => setNeedToUpdate(true))
+      .then(() => {
+        setNeedToUpdate(true);
+        router.reload();
+      })
       .catch((err) => toast.error(getError(err)));
 
   return (

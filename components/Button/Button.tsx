@@ -3,7 +3,6 @@ import React from "react";
 
 import { makeBEM } from "utils";
 
-/* eslint-disable-next-line */
 export interface ButtonProps extends HTMLButtonElement {
   children: HTMLCollection;
   block?: boolean;

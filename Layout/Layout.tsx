@@ -7,7 +7,6 @@ import { makeBEM } from "utils";
 
 import "react-toastify/dist/ReactToastify.min.css";
 
-/* eslint-disable-next-line */
 export interface LayoutProps {
   fontClass: string;
 }

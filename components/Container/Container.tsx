@@ -2,7 +2,6 @@ import React from "react";
 
 import { makeBEM } from "utils";
 
-/* eslint-disable-next-line */
 export interface ContainerProps extends HTMLDivElement {
   children: HTMLCollection;
 }
