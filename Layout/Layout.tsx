@@ -6,6 +6,7 @@ import { Container, MockApiList } from "components";
 import { makeBEM } from "utils";
 
 import "react-toastify/dist/ReactToastify.min.css";
+import Link from "next/link";
 
 export interface LayoutProps {
   fontClass: string;
@@ -23,7 +24,9 @@ export const Layout = ({
       <div className={classNames(fontClass, bem())} {...props}>
         <header className={bem("header")}>
           <Container>
-            <h2>Mock-api</h2>
+            <Link href="/">
+              <h2>Mock-api</h2>
+            </Link>
           </Container>
         </header>
 
