@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
+import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import { Button } from "components";
+import { MockApiContext } from "context";
 import { MockApi } from "types";
 import { getError, makeBEM } from "utils";
 import { DeleteIcon } from "svg";
-import { MockApiContext } from "context";
-import Link from "next/link";
 
 const bem = makeBEM("mock-api-list");
 
@@ -72,6 +73,12 @@ export const MockApiList = () => {
           </li>
         ))}
       </ul>
+
+      {router.asPath === "/" || (
+        <Button block>
+          <Link href="/">Create new API</Link>
+        </Button>
+      )}
     </div>
   );
 };
