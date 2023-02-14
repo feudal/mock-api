@@ -71,7 +71,7 @@ export const MockApiItem = () => {
           <MockApiInterface name={api?.name} fields={api?.fields} />
 
           {api?.data.length !== 0 ? (
-            <MockApiData data={api?.data} />
+            <MockApiData apiName={api?.name} data={api?.data} />
           ) : (
             <>
               <Input
