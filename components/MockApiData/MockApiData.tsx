@@ -49,7 +49,9 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
         {locationOrigin}/api/data/{apiName}
       </Link>
 
-      <Button onClick={() => deleteData(apiName)}>Delete all data</Button>
+      <Button color="danger" onClick={() => deleteData(apiName)}>
+        Delete all data
+      </Button>
 
       <ul className={bem("list")}>
         {data?.map((item, idx) => (

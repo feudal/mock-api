@@ -6,17 +6,26 @@
 
   transition: 0.3s;
 
-  background-color: #7570d4;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
-  &--block {
-    width: 100%;
+  &--primary {
+    background-color: #7570d4;
+    &:hover {
+      background-color: #5e59c2;
+    }
   }
 
-  &:hover {
-    background-color: #5e59c2;
+  &--danger {
+    background-color: #d12b2b;
+    &:hover {
+      background-color: #b71c1c;
+    }
+  }
+
+  &--block {
+    width: 100%;
   }
 }

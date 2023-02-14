@@ -6,16 +6,22 @@ import { makeBEM } from "utils";
 export interface ButtonProps extends HTMLButtonElement {
   children: HTMLCollection;
   block?: boolean;
+  color?: string;
 }
 
 const bem = makeBEM("button");
 
-export const Button = ({ children, block, ...props }: any) => {
+export const Button = ({
+  children,
+  color = "primary",
+  block,
+  ...props
+}: any) => {
   return (
     <button
       {...props}
       type={props.type || "button"}
-      className={classNames(bem(null, { block }), props.className)}
+      className={classNames(bem(null, [color], { block }), props.className)}
     >
       {children}
     </button>
