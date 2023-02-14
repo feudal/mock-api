@@ -41,8 +41,14 @@ export const MockApiList = () => {
         if (!res.ok) throw new Error(res.statusText);
         return res.json();
       })
-      .then((data) => {
-        setApis(data);
+      .then(() => {
+        setApis((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            data: prev?.data?.filter((api) => api._id !== id),
+          };
+        });
         router.push("/");
       })
       .catch((err) => toast.error(getError(err)));
