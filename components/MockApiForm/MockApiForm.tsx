@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 import { MockApi } from "types";
 import { MockApiContext } from "context";
-import { getError, makeBEM } from "utils";
+import { getError, kebabCase, makeBEM } from "utils";
 import { Button, Input, InterfaceInput } from "components";
 
 const bem = makeBEM("mock-api-form");
@@ -36,7 +36,10 @@ export const MockApiForm = () => {
 
       <form
         className={bem("form")}
-        onSubmit={handleSubmit((data) => createApi(data))}
+        onSubmit={handleSubmit((data) => {
+          data.name = kebabCase(data.name);
+          createApi(data);
+        })}
       >
         <Input label="API name" name="name" register={register} required />
 
