@@ -36,7 +36,10 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
 
   return (
     <div className={bem()}>
-      <h2 className={bem("title")}>Data is available at </h2>
+      <h2 className={bem("title")}>
+        You can &quot;POST&quot;, &quot;GET&quot;, &quot;PUT&quot;,
+        &quot;DELETE&quot;, &quot;PATCH&quot; on this endpoint
+      </h2>
 
       <Link
         className={bem("link")}
