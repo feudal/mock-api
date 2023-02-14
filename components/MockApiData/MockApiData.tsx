@@ -1,10 +1,10 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 
 import { Button } from "components";
 import { getError, makeBEM } from "utils";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export interface MockApiDataProps {
   data?: Object[];
@@ -20,7 +20,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
   const deleteData = (name?: string) => {
     if (!name) return;
 
-    fetch(`/api/data/${name}`, { method: "DELETE" })
+    fetch(`/api/data/delete/${name}`, { method: "DELETE" })
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText);
         return res.json();
@@ -41,6 +41,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
       <Link
         className={bem("link")}
         href={`${locationOrigin}/api/data/${apiName}`}
+        target="_blank"
       >
         {locationOrigin}/api/data/{apiName}
       </Link>
