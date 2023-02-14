@@ -33,6 +33,7 @@ export const MockApiForm = () => {
         className={bem("form")}
         onSubmit={handleSubmit((data) => {
           data.name = kebabCase(data.name);
+          data.fields = data.fields.filter((field: any) => field !== undefined);
           createApi(data);
         })}
       >
