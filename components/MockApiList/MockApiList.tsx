@@ -70,7 +70,7 @@ export const MockApiList = () => {
         ))}
       </ul>
 
-      {router.asPath === "/" || (
+      {router.asPath !== "/" && !isLoading && (
         <Button block>
           <Link href="/">Create new API</Link>
         </Button>
