@@ -20,7 +20,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
   const deleteData = (name?: string) => {
     if (!name) return;
 
-    fetch(`/api/data/delete/${name}`, { method: "DELETE" })
+    fetch(`/api/data/${name}`, { method: "DELETE" })
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText);
         return res.json();
