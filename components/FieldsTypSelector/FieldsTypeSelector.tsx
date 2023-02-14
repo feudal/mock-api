@@ -13,7 +13,7 @@ export interface FieldsTypSelectorProps
 
 const bem = makeBEM("fields-type-selector");
 
-export const FieldsTypSelector = ({
+export const FieldsTypeSelector = ({
   name,
   index,
   setFields,
@@ -42,7 +42,10 @@ export const FieldsTypSelector = ({
           {...props}
           required={required}
           defaultValue={fakerOption}
-          onChange={(v) => setFakerOption(v.target.value)}
+          onChange={(v) => {
+            setFakerOption(v.target.value);
+            setSubOption(fakerOptions[v.target.value][0]);
+          }}
         >
           {fakerOptionsKeys.map((fakerOption) => (
             <option key={fakerOption} value={fakerOption}>
