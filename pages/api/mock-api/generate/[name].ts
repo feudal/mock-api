@@ -1,4 +1,4 @@
-import { ApiData, MockApi } from "models";
+import { MockApi } from "models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { faker } from "@faker-js/faker";
 
@@ -32,6 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
           {},
           ...fields.map((field: Field) => {
             return {
+              // @ts-ignore
               [field.name]: faker?.[field.type[0]]?.[field.type[1]]?.(),
             };
           })
