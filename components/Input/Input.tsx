@@ -11,6 +11,7 @@ export interface InputProps extends React.HTMLAttributes<HTMLInputElement> {
   type?: string;
   min?: number;
   max?: number;
+  pattern?: string;
 }
 
 const bem = makeBEM("input");

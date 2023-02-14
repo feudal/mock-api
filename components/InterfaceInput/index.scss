@@ -16,6 +16,12 @@
     left: 10px;
   }
 
+  &__info {
+    font-style: italic;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
   &__group {
     display: grid;
     grid-template-columns: 1fr 2fr 28px;

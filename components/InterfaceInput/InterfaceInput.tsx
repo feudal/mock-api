@@ -32,6 +32,10 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
     <div className={bem()}>
       <h3 className={bem("title")}>Interface</h3>
 
+      <p className={bem("info")}>
+        Field name must contain only letters and underscores, and be unique
+      </p>
+
       {fields.map((field, idx) => {
         if (field === undefined) return null;
 
@@ -41,6 +45,7 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
               name="is-not-registered"
               required
               label={`Field name - ${idx + 1}`}
+              pattern="[a-zA-Z_]+"
               defaultValue={field?.name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFields((prev) => {
