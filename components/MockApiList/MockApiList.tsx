@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { Button, Loader } from "components";
-import { MockApiContext } from "context";
 import { MockApi } from "types";
 import { getError, makeBEM } from "utils";
 import { DeleteIcon } from "svg";
@@ -15,11 +14,9 @@ export const MockApiList = () => {
   const [apis, setApis] = useState<{ data: MockApi[] } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const { needToUpdate, setNeedToUpdate } = useContext(MockApiContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (needToUpdate === false) return;
     setIsLoading(true);
 
     fetch("/api/mock-api")
@@ -36,9 +33,7 @@ export const MockApiList = () => {
         setIsLoading(false);
         toast.error(getError(err));
       });
-
-    setNeedToUpdate(false);
-  }, [needToUpdate, setNeedToUpdate]);
+  }, []);
 
   const deleteApi = (id: string) =>
     fetch(`/api/mock-api/${id}`, { method: "DELETE" })
@@ -48,7 +43,7 @@ export const MockApiList = () => {
       })
       .then((data) => {
         setApis(data);
-        setNeedToUpdate(true);
+        router.push("/");
       })
       .catch((err) => toast.error(getError(err)));
 

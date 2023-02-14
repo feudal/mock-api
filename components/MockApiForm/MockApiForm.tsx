@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
 import { MockApi } from "types";
-import { MockApiContext } from "context";
 import { getError, kebabCase, makeBEM } from "utils";
 import { Button, Input, InterfaceInput } from "components";
 
@@ -12,7 +11,6 @@ const bem = makeBEM("mock-api-form");
 
 export const MockApiForm = () => {
   const { register, handleSubmit, setValue } = useForm();
-  const { setNeedToUpdate } = useContext(MockApiContext);
   const router = useRouter();
 
   const createApi = (api: Partial<MockApi>) =>
@@ -24,10 +22,7 @@ export const MockApiForm = () => {
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText);
       })
-      .then(() => {
-        setNeedToUpdate(true);
-        router.reload();
-      })
+      .then(() => router.reload())
       .catch((err) => toast.error(getError(err)));
 
   return (
