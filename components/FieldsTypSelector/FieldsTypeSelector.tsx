@@ -47,8 +47,8 @@ export const FieldsTypeSelector = ({
             setSubOption(fakerOptions[v.target.value][0]);
           }}
         >
-          {fakerOptionsKeys.map((fakerOption) => (
-            <option key={fakerOption} value={fakerOption}>
+          {fakerOptionsKeys.map((fakerOption, idx) => (
+            <option key={idx} value={fakerOption}>
               {fakerOption}
             </option>
           ))}
@@ -60,8 +60,8 @@ export const FieldsTypeSelector = ({
           defaultValue={subOption}
           onChange={(v) => setSubOption(v.target.value)}
         >
-          {fakerOptions[fakerOption].map((subOption) => (
-            <option key={subOption} value={subOption}>
+          {fakerOptions[fakerOption].map((subOption, idx) => (
+            <option key={idx} value={subOption}>
               {subOption}
             </option>
           ))}
