@@ -1,14 +1,29 @@
 .mock-api-data {
-  &__title {
-    margin-bottom: 10px;
-  }
-
-  &__list {
-    margin: 20px 0;
+  @mixin code-block {
     background-color: #fbfbfe;
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 20px;
+  }
+
+  &__title {
+    margin-bottom: 10px;
+  }
+
+  &__link {
+    display: block;
+    margin-bottom: 10px;
+
+    @include code-block;
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  &__list {
+    margin: 20px 0;
+
+    @include code-block;
   }
 
   &__item {

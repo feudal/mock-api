@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 
 import { Button } from "components";
 import { getError, makeBEM } from "utils";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export interface MockApiDataProps {
   data?: Object[];
@@ -12,7 +14,9 @@ export interface MockApiDataProps {
 const bem = makeBEM("mock-api-data");
 
 export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
+  const [locationOrigin, setLocationOrigin] = useState<string>("");
   const router = useRouter();
+
   const deleteData = (name?: string) => {
     if (!name) return;
 
@@ -25,9 +29,21 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
       .catch((err) => toast.error(getError(err)));
   };
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setLocationOrigin(window.location.origin);
+  }, []);
+
   return (
     <div className={bem()}>
-      <h2 className={bem("title")}>Data</h2>
+      <h2 className={bem("title")}>Data is available at </h2>
+
+      <Link
+        className={bem("link")}
+        href={`${locationOrigin}/api/data/${apiName}`}
+      >
+        {locationOrigin}/api/data/{apiName}
+      </Link>
 
       <Button onClick={() => deleteData(apiName)}>Delete all data</Button>
 
