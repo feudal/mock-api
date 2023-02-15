@@ -1,13 +1,12 @@
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
   Grid,
-  Stack,
   Typography,
 } from "@mui/material";
-import Button from "@mui/material/Button";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function Login() {
   const { data: session, status } = useSession();

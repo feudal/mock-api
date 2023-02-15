@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -5,7 +6,7 @@ import { useRouter } from "next/router";
 
 import { MockApi } from "types";
 import { getError, kebabCase, makeBEM } from "utils";
-import { Button, Input, InterfaceInput } from "components";
+import { Input, InterfaceInput } from "components";
 
 const bem = makeBEM("mock-api-form");
 
@@ -41,7 +42,9 @@ export const MockApiForm = () => {
 
         <InterfaceInput register={register} setValue={setValue} />
 
-        <Button type="submit">Create</Button>
+        <Button type="submit" variant="contained">
+          Create
+        </Button>
       </form>
     </div>
   );

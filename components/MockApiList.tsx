@@ -3,11 +3,10 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { Button } from "components";
 import { MockApi } from "types";
 import { getError, makeBEM } from "utils";
 import { DeleteIcon } from "svg";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 
 const bem = makeBEM("mock-api-list");
 
@@ -78,7 +77,7 @@ export const MockApiList = () => {
       </ul>
 
       {router.asPath !== "/" && !isLoading && (
-        <Button block>
+        <Button variant="contained">
           <Link href="/">Create new API</Link>
         </Button>
       )}

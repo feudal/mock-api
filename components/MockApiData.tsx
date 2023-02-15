@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 
-import { Button } from "components";
 import { getError, makeBEM } from "utils";
+import { Button } from "@mui/material";
 
 export interface MockApiDataProps {
   data?: Object[];
@@ -49,7 +49,11 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
         {locationOrigin}/api/data/{apiName}
       </Link>
 
-      <Button color="danger" onClick={() => deleteData(apiName)}>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => deleteData(apiName)}
+      >
         Delete all data
       </Button>
 

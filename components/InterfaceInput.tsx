@@ -1,5 +1,5 @@
+import { Button } from "@mui/material";
 import { Input, FieldsTypeSelector } from "components";
-import { Button } from "components/Button";
 import React, { useEffect, useState } from "react";
 import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { DeleteIcon } from "svg";
@@ -68,7 +68,7 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
         );
       })}
 
-      <Button block onClick={addField}>
+      <Button variant="contained" onClick={addField}>
         Add new field
       </Button>
     </div>
