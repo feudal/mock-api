@@ -3,10 +3,11 @@ import { ToastContainer } from "react-toastify";
 import React, { PropsWithChildren } from "react";
 import Link from "next/link";
 import { Stack } from "@mui/system";
+import { Container } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import { Container, UserCard } from "components";
+import { UserCard } from "components";
 import { makeBEM } from "utils";
 
 import "react-toastify/dist/ReactToastify.min.css";

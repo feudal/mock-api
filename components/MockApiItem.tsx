@@ -4,14 +4,9 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 
 import { MockApi } from "types";
-import {
-  Button,
-  Input,
-  Loader,
-  MockApiData,
-  MockApiInterface,
-} from "components";
+import { Button, Input, MockApiData, MockApiInterface } from "components";
 import { getError, pascalCase, makeBEM } from "utils";
+import { CircularProgress } from "@mui/material";
 
 const generateMockApi = (name: string, count: number) => {
   if (!name) return;
@@ -59,7 +54,7 @@ export const MockApiItem = () => {
   }, [id]);
 
   let dataState = null;
-  if (isLoading) dataState = <Loader />;
+  if (isLoading) dataState = <CircularProgress />;
   if (isError) dataState = <p>Error</p>;
 
   return (

@@ -3,10 +3,11 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { Button, Loader } from "components";
+import { Button } from "components";
 import { MockApi } from "types";
 import { getError, makeBEM } from "utils";
 import { DeleteIcon } from "svg";
+import { CircularProgress } from "@mui/material";
 
 const bem = makeBEM("mock-api-list");
 
@@ -57,7 +58,7 @@ export const MockApiList = () => {
     <div className={bem()}>
       <h2 className={bem("title")}>API list</h2>
 
-      {isLoading && <Loader />}
+      {isLoading && <CircularProgress />}
       {isError && <p>Error</p>}
       {apis?.data?.length === 0 && <p>No APIs</p>}
 
