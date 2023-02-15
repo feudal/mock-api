@@ -1,12 +1,15 @@
 import classNames from "classnames";
 import { ToastContainer } from "react-toastify";
 import React, { PropsWithChildren } from "react";
+import Link from "next/link";
+import { Stack } from "@mui/system";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
-import { Container, MockApiList } from "components";
+import { Container, UserCard } from "components";
 import { makeBEM } from "utils";
 
 import "react-toastify/dist/ReactToastify.min.css";
-import Link from "next/link";
 
 export interface LayoutProps {
   fontClass: string;
@@ -19,31 +22,33 @@ export const Layout = ({
   children,
   ...props
 }: PropsWithChildren<LayoutProps>) => {
+  const { status } = useSession();
+  const router = useRouter();
+
+  if (status === "unauthenticated" && router.pathname !== "/login")
+    router.push("/login");
+
   return (
     <>
       <div className={classNames(fontClass, bem())} {...props}>
         <header className={bem("header")}>
           <Container>
-            <Link href="/">
-              <h2>Mock-api</h2>
-            </Link>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Link href="/">
+                <h2>Mock-api</h2>
+              </Link>
+
+              <UserCard />
+            </Stack>
           </Container>
         </header>
 
         <main className={bem("main")}>
-          <Container
-            style={{
-              display: "grid",
-              gridTemplateColumns: "300px 1fr",
-              height: "100%",
-            }}
-          >
-            <aside className={bem("aside")}>
-              <MockApiList />
-            </aside>
-
-            <section className={bem("section")}>{children}</section>
-          </Container>
+          <Container style={{ height: "100%" }}>{children}</Container>
         </main>
 
         <footer className={bem("footer")}>

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { CustomHead, MockApiItem } from "components";
+import { CustomHead, MockApiItem, MockApiList } from "components";
 
 export default function Home() {
   const { id } = useRouter().query;
@@ -8,6 +8,9 @@ export default function Home() {
     <>
       <CustomHead title={`Mock API - ${id}`} />
 
+      <aside>
+        <MockApiList />
+      </aside>
       <MockApiItem />
     </>
   );

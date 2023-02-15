@@ -10,4 +10,5 @@ export * from "./MockApiItem";
 export * from "./Loader";
 export * from "./MockApiInterface";
 export * from "./MockApiData";
+export * from "./UserCard";
 /* INJECT_EXPORT */
