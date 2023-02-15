@@ -1,12 +1,12 @@
+import { Button, CircularProgress, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 
 import { MockApi } from "types";
-import { Button, Input, MockApiData, MockApiInterface } from "components";
-import { getError, pascalCase, makeBEM } from "utils";
-import { CircularProgress } from "@mui/material";
+import { MockApiData, MockApiInterface } from "components";
+import { getError, makeBEM } from "utils";
 
 const generateMockApi = (name: string, count: number) => {
   if (!name) return;
@@ -69,14 +69,13 @@ export const MockApiItem = () => {
             <MockApiData apiName={api?.name} data={api?.data} />
           ) : (
             <>
-              <Input
+              <TextField
+                // min={1}
+                // max={100}
+                {...register("count", { required: true })}
                 label="How many objects to generate (max 100)"
                 name="count"
-                register={register}
-                required
                 type="number"
-                min={1}
-                max={100}
               />
 
               <Button

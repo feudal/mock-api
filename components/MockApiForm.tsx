@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 import { MockApi } from "types";
 import { getError, kebabCase, makeBEM } from "utils";
-import { Input, InterfaceInput } from "components";
+import { InterfaceInput } from "components";
 
 const bem = makeBEM("mock-api-form");
 
@@ -38,7 +38,7 @@ export const MockApiForm = () => {
           createApi(data);
         })}
       >
-        <Input label="API name" name="name" register={register} required />
+        <TextField label="API name" {...register("name", { required: true })} />
 
         <InterfaceInput register={register} setValue={setValue} />
 

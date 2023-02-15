@@ -1,3 +1,5 @@
+import { Button, CircularProgress, IconButton } from "@mui/material";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -5,8 +7,6 @@ import { toast } from "react-toastify";
 
 import { MockApi } from "types";
 import { getError, makeBEM } from "utils";
-import { DeleteIcon } from "svg";
-import { Button, CircularProgress } from "@mui/material";
 
 const bem = makeBEM("mock-api-list");
 
@@ -71,7 +71,9 @@ export const MockApiList = () => {
               /{api.name}
             </Link>
 
-            <DeleteIcon onClick={() => deleteApi(api._id)} />
+            <IconButton onClick={() => deleteApi(api._id)}>
+              <HighlightOffIcon />
+            </IconButton>
           </li>
         ))}
       </ul>

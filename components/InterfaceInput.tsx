@@ -1,10 +1,10 @@
-import { Button } from "@mui/material";
-import { Input, FieldsTypeSelector } from "components";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { Button, IconButton, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { DeleteIcon } from "svg";
-import { Field } from "types";
 
+import { Field } from "types";
+import { FieldsTypeSelector } from "components";
 import { makeBEM } from "utils";
 
 export interface InterfaceInputProps {
@@ -41,11 +41,9 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
 
         return (
           <div className={bem("group")} key={idx}>
-            <Input
-              name="is-not-registered"
-              required
+            <TextField
               label={`Field name - ${idx + 1}`}
-              pattern="[a-zA-Z_]+"
+              // pattern="[a-zA-Z_]+"
               defaultValue={field?.name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFields((prev) => {
@@ -63,7 +61,9 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
               setFields={setFields}
             />
 
-            <DeleteIcon onClick={() => deleteField(idx)} />
+            <IconButton onClick={() => deleteField(idx)}>
+              <HighlightOffIcon />
+            </IconButton>
           </div>
         );
       })}
