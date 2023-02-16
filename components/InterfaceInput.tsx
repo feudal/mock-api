@@ -1,18 +1,23 @@
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { Button, IconButton, TextField } from "@mui/material";
+import {
+  Button,
+  Grid,
+  IconButton,
+  Paper,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 import { Field } from "types";
 import { FieldsTypeSelector } from "components";
-import { makeBEM } from "utils";
 
 export interface InterfaceInputProps {
   register: UseFormRegister<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
 }
-
-const bem = makeBEM("interface-form");
 
 export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
   const [fields, setFields] = useState<(Field | undefined)[]>([
@@ -29,48 +34,67 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
   };
 
   return (
-    <div className={bem()}>
-      <h3 className={bem("title")}>Interface</h3>
+    <Paper
+      elevation={0}
+      sx={{
+        mt: 2,
+        padding: 2,
+        border: (theme) => `1px solid ${theme.palette.grey[400]}`,
+      }}
+    >
+      <Typography variant="h6">Interface</Typography>
 
-      <p className={bem("info")}>
+      <Typography variant="caption" mb={1}>
         Field name must contain only letters and underscores, and be unique
-      </p>
+      </Typography>
 
       {fields.map((field, idx) => {
         if (field === undefined) return null;
 
         return (
-          <div className={bem("group")} key={idx}>
-            <TextField
-              label={`Field name - ${idx + 1}`}
-              // pattern="[a-zA-Z_]+"
-              defaultValue={field?.name}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFields((prev) => {
-                  const newFields = [...prev];
-                  newFields[idx]!.name = e.target.value;
-                  return newFields;
-                })
-              }
-            />
+          <Grid key={idx} container spacing={1} alignItems="flex-end">
+            <Grid item xs={5}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                size="small"
+                required
+                label={`Field name - ${idx + 1}`}
+                inputProps={{ pattern: "[a-zA-Z_]+" }}
+                defaultValue={field?.name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFields((prev) => {
+                    const newFields = [...prev];
+                    newFields[idx]!.name = e.target.value;
+                    return newFields;
+                  })
+                }
+              />
+            </Grid>
 
-            <FieldsTypeSelector
-              index={idx}
-              required
-              name="fields"
-              setFields={setFields}
-            />
+            <Grid container xs={6} item spacing={1} mt={0}>
+              <FieldsTypeSelector
+                index={idx}
+                required
+                name="fields"
+                setFields={setFields}
+              />
+            </Grid>
 
-            <IconButton onClick={() => deleteField(idx)}>
-              <HighlightOffIcon />
-            </IconButton>
-          </div>
+            <Grid container item xs={1} alignContent="flex-end">
+              <IconButton sx={{ ml: "auto" }} onClick={() => deleteField(idx)}>
+                <Tooltip title="Delete field" placement="top">
+                  <HighlightOffIcon color="error" />
+                </Tooltip>
+              </IconButton>
+            </Grid>
+          </Grid>
         );
       })}
 
-      <Button variant="contained" onClick={addField}>
+      <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={addField}>
         Add new field
       </Button>
-    </div>
+    </Paper>
   );
 };

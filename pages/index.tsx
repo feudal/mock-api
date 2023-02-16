@@ -1,3 +1,4 @@
+import { Grid } from "@mui/material";
 import { CustomHead, MockApiForm, MockApiList } from "components";
 
 export default function Home() {
@@ -5,8 +6,14 @@ export default function Home() {
     <>
       <CustomHead title="Mocks API" />
 
-      <MockApiList />
-      <MockApiForm />
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <MockApiList />
+        </Grid>
+        <Grid item xs={9}>
+          <MockApiForm />
+        </Grid>
+      </Grid>
     </>
   );
 }

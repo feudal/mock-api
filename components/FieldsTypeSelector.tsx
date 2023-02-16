@@ -1,7 +1,8 @@
+import { Grid, MenuItem, Select } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Field } from "types";
 
-import { fakerOptions, fakerOptionsKeys, makeBEM } from "utils";
+import { fakerOptions, fakerOptionsKeys } from "utils";
 
 export interface FieldsTypSelectorProps
   extends React.HTMLAttributes<HTMLSelectElement> {
@@ -10,8 +11,6 @@ export interface FieldsTypSelectorProps
   required?: boolean;
   setFields: React.Dispatch<React.SetStateAction<(Field | undefined)[]>>;
 }
-
-const bem = makeBEM("fields-type-selector");
 
 export const FieldsTypeSelector = ({
   name,
@@ -34,12 +33,13 @@ export const FieldsTypeSelector = ({
   }, [fakerOption, name, index, setFields, subOption]);
 
   return (
-    <div className={bem()}>
-      <h3 className={bem("title")}>Field type</h3>
-
-      <div className={bem("wrapper")}>
-        <select
-          {...props}
+    <>
+      <Grid item xs={6}>
+        <Select
+          // {...props}
+          fullWidth
+          variant="outlined"
+          size="small"
           required={required}
           defaultValue={fakerOption}
           onChange={(v) => {
@@ -48,25 +48,30 @@ export const FieldsTypeSelector = ({
           }}
         >
           {fakerOptionsKeys.map((fakerOption, idx) => (
-            <option key={idx} value={fakerOption}>
+            <MenuItem key={idx} value={fakerOption}>
               {fakerOption}
-            </option>
+            </MenuItem>
           ))}
-        </select>
+        </Select>
+      </Grid>
 
-        <select
-          {...props}
+      <Grid item xs={6}>
+        <Select
+          // {...props}
+          fullWidth
+          variant="outlined"
+          size="small"
           required={required}
-          defaultValue={subOption}
+          value={subOption}
           onChange={(v) => setSubOption(v.target.value)}
         >
           {fakerOptions[fakerOption].map((subOption, idx) => (
-            <option key={idx} value={subOption}>
+            <MenuItem key={idx} value={subOption}>
               {subOption}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-      </div>
-    </div>
+        </Select>
+      </Grid>
+    </>
   );
 };

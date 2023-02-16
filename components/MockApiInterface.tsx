@@ -1,27 +1,33 @@
+import { Typography } from "@mui/material";
 import React from "react";
 
 import { Field } from "types";
-import { makeBEM, pascalCase } from "utils";
+import { pascalCase } from "utils";
 
 export interface MockApiInterfaceProps {
   name?: string;
   fields?: Field[];
 }
 
-const bem = makeBEM("mock-api-interface");
-
 export const MockApiInterface = ({ name, fields }: MockApiInterfaceProps) => {
   return (
-    <pre className={bem()}>
-      <h3>interface {pascalCase(name)} &#123;</h3>
-      <ul style={{ marginLeft: 20 }}>
-        {fields?.map((field) => (
-          <li key={field.name}>
-            {field.name}: {field.type.join("-")};
-          </li>
+    <pre>
+      <Typography variant="h6" fontFamily="monospace">
+        interface {pascalCase(name)} &#123;
+        <br />
+        {fields?.map((field, idx) => (
+          <Typography
+            key={idx}
+            sx={{
+              margin: "-0.5rem 0 -0.5rem 1rem",
+              fontFamily: "monospace",
+            }}
+          >
+            {field.name}: {field.type.join("-")}; <br />
+          </Typography>
         ))}
-      </ul>
-      <h3>&#125;</h3>
+        &#125;
+      </Typography>
     </pre>
   );
 };

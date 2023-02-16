@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@mui/material/styles";
+import { Inter } from "@next/font/google";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
-import { Inter } from "@next/font/google";
 
 import { Layout } from "components";
 import { theme } from "theme";

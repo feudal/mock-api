@@ -7,9 +7,13 @@ import {
   Typography,
 } from "@mui/material";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function Login() {
   const { data: session, status } = useSession();
+  const router = useRouter();
+
+  if (status === "authenticated") router.push("/");
 
   return (
     <Grid
@@ -24,37 +28,19 @@ export default function Login() {
             Welcome to Mock Api
           </Typography>
           <Typography variant="h5" align="center" gutterBottom>
-            {status === "unauthenticated" ? (
-              <>
-                Sign in your google account <br />
-                to get started
-              </>
-            ) : (
-              `You are signed in as ${
-                session?.user?.name || session?.user?.email
-              }`
-            )}
+            Sign in your google account <br />
+            to get started
           </Typography>
         </CardContent>
 
         <CardActions>
-          {status === "unauthenticated" ? (
-            <Button
-              variant="contained"
-              style={{ paddingInline: 50, marginInline: "auto" }}
-              onClick={() => signIn()}
-            >
-              Sign in
-            </Button>
-          ) : (
-            <Button
-              href="/"
-              variant="contained"
-              style={{ paddingInline: 50, marginInline: "auto" }}
-            >
-              Go to home page
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            style={{ paddingInline: 50, marginInline: "auto" }}
+            onClick={() => signIn()}
+          >
+            Sign in
+          </Button>
         </CardActions>
       </Card>
     </Grid>

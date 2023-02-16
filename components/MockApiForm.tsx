@@ -1,14 +1,20 @@
-import { Button, TextField } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
 import { MockApi } from "types";
-import { getError, kebabCase, makeBEM } from "utils";
+import { getError, kebabCase } from "utils";
 import { InterfaceInput } from "components";
-
-const bem = makeBEM("mock-api-form");
 
 export const MockApiForm = () => {
   const { register, handleSubmit, setValue } = useForm();
@@ -27,25 +33,43 @@ export const MockApiForm = () => {
       .catch((err) => toast.error(getError(err)));
 
   return (
-    <div className={bem()}>
-      <h2>Create new API</h2>
+    <Card>
+      <CardContent>
+        <Typography component="h5" variant="h5">
+          Create new API
+        </Typography>
+      </CardContent>
+
+      <Divider />
 
       <form
-        className={bem("form")}
         onSubmit={handleSubmit((data) => {
           data.name = kebabCase(data.name);
           data.fields = data.fields.filter((field: any) => field !== undefined);
           createApi(data);
         })}
       >
-        <TextField label="API name" {...register("name", { required: true })} />
+        <CardContent>
+          <TextField
+            fullWidth
+            variant="outlined"
+            size="small"
+            label="API name"
+            required
+            {...register("name", { required: true })}
+          />
 
-        <InterfaceInput register={register} setValue={setValue} />
+          <InterfaceInput register={register} setValue={setValue} />
+        </CardContent>
 
-        <Button type="submit" variant="contained">
-          Create
-        </Button>
+        <Divider />
+
+        <CardActions>
+          <Button type="submit" variant="contained" sx={{ paddingInline: 10 }}>
+            Create
+          </Button>
+        </CardActions>
       </form>
-    </div>
+    </Card>
   );
 };

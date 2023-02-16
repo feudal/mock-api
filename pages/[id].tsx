@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import { CustomHead, MockApiItem, MockApiList } from "components";
+import { CustomHead, MockApi, MockApiList } from "components";
+import { Grid } from "@mui/material";
 
 export default function Home() {
   const { id } = useRouter().query;
@@ -8,10 +9,14 @@ export default function Home() {
     <>
       <CustomHead title={`Mock API - ${id}`} />
 
-      <aside>
-        <MockApiList />
-      </aside>
-      <MockApiItem />
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <MockApiList />
+        </Grid>
+        <Grid item xs={9}>
+          <MockApi />
+        </Grid>
+      </Grid>
     </>
   );
 }

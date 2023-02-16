@@ -37,8 +37,8 @@ export const TopBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "flex" } }}>
             {pages.map((page) => (
               <Button
-                href={`/${page.toLowerCase()}`}
                 key={page}
+                href={`/${page.toLowerCase()}`}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}

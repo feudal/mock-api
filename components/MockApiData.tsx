@@ -1,20 +1,19 @@
-import Link from "next/link";
+import { Button, Paper, Tooltip, Typography } from "@mui/material";
+import CopyAllIcon from "@mui/icons-material/CopyAll";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 
-import { getError, makeBEM } from "utils";
-import { Button } from "@mui/material";
+import { getError } from "utils";
 
 export interface MockApiDataProps {
   data?: Object[];
   apiName?: string;
 }
 
-const bem = makeBEM("mock-api-data");
-
 export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
   const [locationOrigin, setLocationOrigin] = useState<string>("");
+  const [linkCopied, setLinkCopied] = useState(false);
   const router = useRouter();
 
   const deleteData = (name?: string) => {
@@ -35,19 +34,43 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
   }, []);
 
   return (
-    <div className={bem()}>
-      <h2 className={bem("title")}>
+    <div>
+      <Typography variant="h5">
         You can &quot;POST&quot;, &quot;GET&quot;, &quot;PUT&quot;,
         &quot;DELETE&quot;, &quot;PATCH&quot; on this endpoint
-      </h2>
+      </Typography>
 
-      <Link
-        className={bem("link")}
+      <Button
+        fullWidth
+        variant="outlined"
+        sx={{
+          textTransform: "none",
+          marginY: 2,
+          padding: 2,
+          display: "flex",
+          justifyContent: "space-between",
+        }}
         href={`${locationOrigin}/api/data/${apiName}`}
         target="_blank"
+        endIcon={
+          <Tooltip
+            title={linkCopied ? "Copied!" : "Copy to clipboard"}
+            placement="top"
+          >
+            <CopyAllIcon
+              onClick={(e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(
+                  `${locationOrigin}/api/data/${apiName}`
+                );
+                setLinkCopied(true);
+              }}
+            />
+          </Tooltip>
+        }
       >
         {locationOrigin}/api/data/{apiName}
-      </Link>
+      </Button>
 
       <Button
         variant="contained"
@@ -57,20 +80,19 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
         Delete all data
       </Button>
 
-      <ul className={bem("list")}>
-        {data?.map((item, idx) => (
-          <li key={idx}>
-            {idx === 0 && <span>data = </span>}
-            <span>&#123;</span>
-            {Object.entries(item).map(([key, value]) => (
-              <p key={key} className={bem("item")}>
-                {key}: {value}
-              </p>
-            ))}
-            <span>&#125;,</span>
-          </li>
-        ))}
-      </ul>
+      <Paper
+        elevation={0}
+        sx={{
+          marginY: 2,
+          padding: 2,
+          overflowX: "scroll",
+          boxShadow: (theme) => `inset 0 0 10px 10px ${theme.palette.divider}`,
+        }}
+      >
+        <pre>
+          <code>data = {JSON.stringify(data, null, 2)}</code>
+        </pre>
+      </Paper>
     </div>
   );
 };
