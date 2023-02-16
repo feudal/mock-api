@@ -88,6 +88,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
           overflowX: "scroll",
           boxShadow: (theme) => `inset 0 0 10px 10px ${theme.palette.divider}`,
         }}
+        className="no-scrollbar"
       >
         <pre>
           <code>data = {JSON.stringify(data, null, 2)}</code>

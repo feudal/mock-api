@@ -13,7 +13,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
-      <SessionProvider>
+      <SessionProvider session={pageProps.session}>
         <Layout fontClass={inter.className}>
           <Component {...pageProps} />
         </Layout>
