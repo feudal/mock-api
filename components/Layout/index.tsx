@@ -1,6 +1,6 @@
 import { ToastContainer } from "react-toastify";
 import React, { PropsWithChildren } from "react";
-import { Container, Grid } from "@mui/material";
+import { CircularProgress, Container, Grid } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -49,7 +49,19 @@ export const Layout = ({
             py: 3,
           }}
         >
-          {children}
+          {status === "loading" ? (
+            <Grid
+              alignContent="center"
+              justifyContent="center"
+              container
+              height="75vh"
+              minHeight={200}
+            >
+              <CircularProgress size={100} />
+            </Grid>
+          ) : (
+            <>{children}</>
+          )}
         </Container>
 
         <Footer />

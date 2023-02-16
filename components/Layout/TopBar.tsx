@@ -10,7 +10,7 @@ import Link from "next/link";
 import React from "react";
 import { UserCard } from "./UserCard";
 
-const pages = ["Projects", "APIs"];
+const pages: string[] = []; // ["Projects", "APIs"];
 
 export const TopBar = () => {
   return (
@@ -22,7 +22,6 @@ export const TopBar = () => {
             noWrap
             sx={{
               mr: 2,
-              display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
