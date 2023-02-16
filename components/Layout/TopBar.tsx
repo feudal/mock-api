@@ -6,6 +6,7 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import Link from "next/link";
 import React from "react";
 import { UserCard } from "./UserCard";
 
@@ -19,8 +20,6 @@ export const TopBar = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -31,18 +30,19 @@ export const TopBar = () => {
               textDecoration: "none",
             }}
           >
-            Mock API
+            <Link href="/">Mock API</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                href={`/${page.toLowerCase()}`}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
+            {pages.map((page, idx) => (
+              <Link href={`/${page.toLowerCase()}`} key={idx} passHref>
+                <Button
+                  key={page}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              </Link>
             ))}
           </Box>
 

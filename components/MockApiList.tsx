@@ -111,8 +111,8 @@ export const MockApiList = () => {
           {state}
 
           {apis?.data?.map((api) => (
-            <>
-              <ListItemButton key={api._id} href={`/${api._id}`}>
+            <Link href={`/${api._id}`} key={api._id} passHref>
+              <ListItemButton>
                 <ListItemText
                   sx={{ fontStyle: "italic" }}
                   primary={`/${api.name}`}
@@ -126,15 +126,17 @@ export const MockApiList = () => {
               </ListItemButton>
 
               <Divider />
-            </>
+            </Link>
           ))}
         </List>
 
         <CardActions>
           {router.asPath !== "/" && !isLoading && (
-            <Button variant="contained" sx={{ width: "100%" }}>
-              <Link href="/">Create new API</Link>
-            </Button>
+            <Link href="/" passHref>
+              <Button variant="contained" sx={{ width: "100%" }}>
+                Create new API
+              </Button>
+            </Link>
           )}
         </CardActions>
       </Card>
