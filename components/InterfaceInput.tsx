@@ -81,13 +81,18 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
               />
             </Grid>
 
-            <Grid container item xs={1} alignContent="flex-end">
-              <IconButton sx={{ ml: "auto" }} onClick={() => deleteField(idx)}>
-                <Tooltip title="Delete field" placement="top">
-                  <HighlightOffIcon color="error" />
-                </Tooltip>
-              </IconButton>
-            </Grid>
+            {idx !== 0 && (
+              <Grid container item xs={1} alignContent="flex-end">
+                <IconButton
+                  sx={{ ml: "auto" }}
+                  onClick={() => deleteField(idx)}
+                >
+                  <Tooltip title="Delete field" placement="top">
+                    <HighlightOffIcon color="error" />
+                  </Tooltip>
+                </IconButton>
+              </Grid>
+            )}
           </Grid>
         );
       })}
