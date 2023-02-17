@@ -8,4 +8,4 @@ export * from "./MockApiInterface";
 export * from "./MockApiData";
 export * from "./Layout/TopBar";
 export * from "./Layout";
-/* INJECT_EXPORT */
+export * from "./AutoCompleteMultiSelector";
