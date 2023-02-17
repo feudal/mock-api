@@ -10,7 +10,7 @@ import Link from "next/link";
 import React from "react";
 import { UserCard } from "./UserCard";
 
-const pages: string[] = []; // ["Projects", "APIs"];
+const pages: string[] = ["APIs"];
 
 export const TopBar = () => {
   return (

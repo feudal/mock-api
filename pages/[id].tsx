@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { CustomHead, MockApi, MockApiList } from "components";
 import { Grid } from "@mui/material";
 
-export default function Home() {
+export default function MockApiPage() {
   const { id } = useRouter().query;
 
   return (

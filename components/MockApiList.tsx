@@ -68,7 +68,8 @@ export const MockApiList = () => {
       })
       .catch((err) => toast.error(getError(err)));
 
-  const state = (isLoading || isError) && (
+  // TODO: move this to a separate component
+  const state = (isLoading || isError || apis?.data?.length === 0) && (
     <Grid
       alignContent="center"
       justifyContent="center"
