@@ -13,3 +13,19 @@ export interface Field {
   name: string;
   type: string[];
 }
+
+export interface Project {
+  _id: string;
+  name: string;
+  owner: string;
+  users: string[];
+  mockApis: string[];
+}
+
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  image: string;
+  projects: string[];
+}

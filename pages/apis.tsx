@@ -1,17 +1,17 @@
 import { Grid } from "@mui/material";
-import { CustomHead, ProjectForm, ProjectList } from "components";
+import { CustomHead, MockApiForm, MockApiList } from "components";
 
-export default function ProjectsPage() {
+export default function MockApisPage() {
   return (
     <>
-      <CustomHead title="Projects" />
+      <CustomHead title="Mocks APIs" />
 
       <Grid container spacing={2}>
         <Grid item xs={3}>
-          <ProjectList />
+          <MockApiList />
         </Grid>
         <Grid item xs={9}>
-          <ProjectForm />
+          <MockApiForm />
         </Grid>
       </Grid>
     </>
