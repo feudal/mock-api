@@ -8,58 +8,34 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import useSWR from "swr";
 
-import { MockApi as MockApiType } from "types";
 import { MockApiData, MockApiInterface } from "components";
-import { getError } from "utils";
 
 const generateMockApi = async (name: string, count: number) => {
-  if (!name) return;
-
-  fetch(`/api/mock-api/generate/${name}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ count }),
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error(res.statusText);
-      toast.success("Data for API generated");
-    })
-    .catch((err) => toast.error(getError(err)));
+  await axios
+    .post(`/api/mock-api/generate/${name}`, { count })
+    .catch((err) => toast.error(err.response.data.error));
 };
 
 export const MockApi = () => {
-  const { id } = useRouter().query;
-  const [api, setApi] = useState<MockApiType | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const { register, handleSubmit, getFieldState } = useForm();
-  const router = useRouter();
+  const { query } = useRouter();
+  const { register, handleSubmit } = useForm();
 
-  useEffect(() => {
-    if (!id) return;
-    setIsLoading(true);
+  const fetcher = async (url: string) =>
+    await axios.get(url).then((res) => res.data);
+  const {
+    data: api,
+    error: isError,
+    isLoading,
+    mutate,
+  } = useSWR(`/api/mock-api/${query.id}`, fetcher);
 
-    fetch(`/api/mock-api/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
-      .then((data: MockApiType) => {
-        setApi(data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsError(true);
-        setIsLoading(false);
-        toast.error(getError(err));
-      });
-  }, [id]);
-
+  // TODO: Move this to a separate component
   const dataState = (isLoading || isError) && (
     <Grid
       alignContent="center"
@@ -94,7 +70,7 @@ export const MockApi = () => {
           <Divider />
 
           <CardContent>
-            {api?.data.length !== 0 ? (
+            {api?.data?.length !== 0 ? (
               <MockApiData apiName={api?.name} data={api?.data} />
             ) : (
               <form>
@@ -106,7 +82,6 @@ export const MockApi = () => {
                   defaultValue={10}
                   inputProps={{ min: 1, max: 100 }}
                   required
-                  error={!!getFieldState("count").invalid}
                   {...register("count", {
                     required: true,
                     validate: (v) => v > 0 && v <= 100,
@@ -117,10 +92,8 @@ export const MockApi = () => {
                   variant="contained"
                   sx={{ mt: 2 }}
                   onClick={handleSubmit(async (data) => {
-                    if (api?.name) {
-                      await generateMockApi(api.name, data.count);
-                      router.reload();
-                    }
+                    await generateMockApi(api.name, data.count);
+                    mutate(`/api/mock-api/${query.id}`);
                   })}
                 >
                   Generate objects for api

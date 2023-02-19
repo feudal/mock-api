@@ -14,59 +14,35 @@ import {
   Typography,
 } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
+import useSWR from "swr";
 
 import { Project } from "types";
-import { getError } from "utils";
+
+const deleteProject = async (id: string) => {
+  await axios
+    .delete(`/api/project/${id}`)
+    .catch((err) => toast.error(err.response.data.error));
+};
 
 export const ProjectList = () => {
-  const [projects, setProjects] = useState<{ data: Project[] } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
   const [open, setOpen] = useState(true);
   const router = useRouter();
 
   const handleClick = () => setOpen(!open);
 
-  useEffect(() => {
-    setIsLoading(true);
+  const fetcher = async (url: string) =>
+    await axios.get(url).then((res) => res.data);
 
-    fetch("/api/project")
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
-      .then((data) => {
-        setProjects(data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsError(true);
-        setIsLoading(false);
-        toast.error(getError(err));
-      });
-  }, []);
-
-  const deleteProject = (id: string) =>
-    fetch(`/api/project/${id}`, { method: "DELETE" })
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
-      .then(() => {
-        setProjects((prev) => {
-          if (!prev) return null;
-          return {
-            ...prev,
-            data: prev?.data?.filter((project) => project._id !== id),
-          };
-        });
-        router.push("/");
-      })
-      .catch((err) => toast.error(getError(err)));
+  const {
+    data: projects,
+    error: isError,
+    isLoading,
+  } = useSWR("/api/project", fetcher);
 
   // TODO: move this to a separate component
   const state = (isLoading || isError || projects?.data?.length === 0) && (
@@ -111,7 +87,7 @@ export const ProjectList = () => {
 
           {state}
 
-          {projects?.data?.map((project) => (
+          {projects?.data?.map((project: Project) => (
             <Link href={`/${project._id}`} key={project._id} passHref>
               <ListItemButton>
                 <ListItemText

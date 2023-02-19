@@ -1,56 +1,38 @@
 import {
-  Autocomplete,
   Box,
   Button,
   Card,
   CardActions,
   CardContent,
   Divider,
-  InputLabel,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import useSWR from "swr";
 
 import { Project, User } from "types";
-import { getError } from "utils";
 import { AutoCompleteMultiSelector } from "components";
 
 export const ProjectForm = () => {
   const { register, handleSubmit } = useForm();
-  const [users, setUser] = useState<{ data: User[] } | null>(null);
   const router = useRouter();
 
-  const fetchUsers = async () => {
-    fetch("/api/user")
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
-      .then((data) => {
-        setUser(data);
-      })
-      .catch((err) => toast.error(getError(err)));
-  };
+  const fetcher = async (url: string) =>
+    await axios.get(url).then((res) => res.data);
+
+  const { data: users } = useSWR("/api/user", fetcher, {
+    onError: (err: AxiosError) => toast.error(err.message),
+  });
 
   const createProject = (project: Partial<Project>) =>
-    fetch(`/api/project`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(project),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-      })
+    axios
+      .post("/api/project", project)
       .then(() => router.reload())
-      .catch((err) => toast.error(getError(err)));
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+      .catch((err) => toast.error(err.response.data.error));
 
   return (
     <Card>
@@ -79,7 +61,7 @@ export const ProjectForm = () => {
               label="Emails"
               placeholder="Enter email"
               helperText="Enter email of users that will have access to this project"
-              options={users?.data.map((user) => user.email)}
+              options={users?.data.map((user: User) => user.email)}
             />
           </Box>
         </CardContent>

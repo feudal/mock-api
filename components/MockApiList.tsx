@@ -14,59 +14,43 @@ import {
   Typography,
 } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { useRouter } from "next/router";
+import axios from "axios";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
+import useSWR from "swr";
 
 import { MockApi } from "types";
-import { getError } from "utils";
+
+const LIST_STYLE = {
+  width: "100%",
+  bgcolor: "background.paper",
+  borderRadius: 1,
+  overflow: "hidden",
+};
+
+const deleteApi = async (id: string) => {
+  await axios
+    .delete(`/api/mock-api/${id}`)
+    .catch((err) => toast.error(err.response.data.error));
+};
 
 export const MockApiList = () => {
-  const [apis, setApis] = useState<{ data: MockApi[] } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
   const [open, setOpen] = useState(true);
   const router = useRouter();
 
   const handleClick = () => setOpen(!open);
 
-  useEffect(() => {
-    setIsLoading(true);
+  const fetcher = async (url: string) =>
+    await axios.get(url).then((res) => res.data);
 
-    fetch("/api/mock-api")
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
-      .then((data) => {
-        setApis(data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsError(true);
-        setIsLoading(false);
-        toast.error(getError(err));
-      });
-  }, []);
-
-  const deleteApi = (id: string) =>
-    fetch(`/api/mock-api/${id}`, { method: "DELETE" })
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
-      .then(() => {
-        setApis((prev) => {
-          if (!prev) return null;
-          return {
-            ...prev,
-            data: prev?.data?.filter((api) => api._id !== id),
-          };
-        });
-        router.push("/");
-      })
-      .catch((err) => toast.error(getError(err)));
+  const {
+    data: apis,
+    error: isError,
+    isLoading,
+    mutate,
+  } = useSWR("/api/mock-api", fetcher);
 
   // TODO: move this to a separate component
   const state = (isLoading || isError || apis?.data?.length === 0) && (
@@ -93,12 +77,7 @@ export const MockApiList = () => {
     <>
       <Card>
         <List
-          sx={{
-            width: "100%",
-            bgcolor: "background.paper",
-            borderRadius: 1,
-            overflow: "hidden",
-          }}
+          sx={LIST_STYLE}
           component="nav"
           aria-labelledby="nested-list-subheader"
           subheader={
@@ -111,7 +90,7 @@ export const MockApiList = () => {
 
           {state}
 
-          {apis?.data?.map((api) => (
+          {apis?.data?.map((api: MockApi) => (
             <Link href={`/${api._id}`} key={api._id} passHref>
               <ListItemButton>
                 <ListItemText
@@ -119,7 +98,14 @@ export const MockApiList = () => {
                   primary={`/${api.name}`}
                 />
 
-                <IconButton onClick={() => deleteApi(api._id)}>
+                <IconButton
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await deleteApi(api._id);
+                    await mutate("/api/mock-api");
+                    if (router.asPath === `/${api._id}`) router.push("/apis");
+                  }}
+                >
                   <Tooltip title="Delete api" placement="top">
                     <HighlightOffIcon color="error" />
                   </Tooltip>
@@ -132,12 +118,10 @@ export const MockApiList = () => {
         </List>
 
         <CardActions>
-          {router.asPath !== "/" && !isLoading && (
-            <Link href="/" passHref>
-              <Button variant="contained" sx={{ width: "100%" }}>
-                Create new API
-              </Button>
-            </Link>
+          {router.asPath !== "/apis" && !isLoading && (
+            <Button fullWidth variant="contained">
+              <Link href="/apis">Create new API</Link>
+            </Button>
           )}
         </CardActions>
       </Card>

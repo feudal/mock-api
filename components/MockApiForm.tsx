@@ -7,30 +7,27 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
+import { useSWRConfig } from "swr";
 
-import { MockApi } from "types";
-import { getError, kebabCase } from "utils";
+import { Field, MockApi } from "types";
+import { kebabCase } from "utils";
 import { InterfaceInput } from "components";
 
 export const MockApiForm = () => {
-  const { register, handleSubmit, setValue } = useForm();
-  const router = useRouter();
+  const { register, handleSubmit, setValue, reset } = useForm();
+  const { mutate } = useSWRConfig();
 
-  const createApi = (api: Partial<MockApi>) =>
-    fetch(`/api/mock-api`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(api),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-      })
-      .then(() => router.reload())
-      .catch((err) => toast.error(getError(err)));
+  const createApi = async (api: Partial<MockApi>) => {
+    let error = false;
+    await axios.post("/api/mock-api", api).catch((err) => {
+      toast.error(err.response.data.error);
+      error = true;
+    });
+    return error;
+  };
 
   return (
     <Card>
@@ -43,10 +40,14 @@ export const MockApiForm = () => {
       <Divider />
 
       <form
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit(async (data) => {
           data.name = kebabCase(data.name);
-          data.fields = data.fields.filter((field: any) => field !== undefined);
-          createApi(data);
+          data.fields = data.fields.filter(
+            (field: Field) => field !== undefined
+          );
+          const error = await createApi(data);
+          mutate("/api/mock-api");
+          if (!error) reset();
         })}
       >
         <CardContent>
