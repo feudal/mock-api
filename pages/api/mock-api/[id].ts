@@ -1,14 +1,15 @@
-import { MockApi } from "models";
 import type { NextApiRequest, NextApiResponse } from "next";
+
+import { MockApi } from "models";
 import { db } from "utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  if (req.method === "GET") {
-    if (!req.query.id) {
-      res.status(400).json({ message: "Missing id" });
-      return;
-    }
+  if (!req.query.id) {
+    res.status(400).json({ message: "Missing id" });
+    return;
+  }
 
+  if (req.method === "GET") {
     await db.connect();
     const mockApi = await MockApi.findById(req.query.id);
     await mockApi?.populate("fields");
@@ -20,11 +21,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(404).json({ error: "Not found" });
     }
   } else if (req.method === "DELETE") {
-    if (!req.query.id) {
-      res.status(400).json({ message: "Missing id" });
-      return;
-    }
-
     await db.connect();
     const mockApi = await MockApi.findByIdAndDelete(req.query.id);
     await db.disconnect();

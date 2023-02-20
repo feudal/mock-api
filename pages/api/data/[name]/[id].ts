@@ -4,6 +4,11 @@ import { db } from "utils";
 import { MockApi } from "models";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
+  if (!req.query.name) {
+    res.status(400).json({ message: "Missing name" });
+    return;
+  }
+
   if (req.method === "GET") {
     await db.connect();
     const mockApis = await MockApi.findOne({ name: req.query.name });
