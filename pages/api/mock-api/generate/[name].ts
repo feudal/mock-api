@@ -6,6 +6,9 @@ import { Field } from "types";
 import { db } from "utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
+  /*
+   * ================================= POST =================================
+   */
   if (req.method === "POST") {
     if (!req.query.name) {
       res.status(400).json({ message: "Missing name" });
@@ -50,6 +53,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(404).json({ error: "Not found" });
     }
   } else {
+    /*
+     * ================================= OTHER =================================
+     */
     res.status(400).json({ error: "Bad request" });
   }
 };

@@ -10,6 +10,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   }
 
   if (req.method === "GET") {
+    /*
+     * ================================= GET =================================
+     */
     await db.connect();
     const projects = await Project.findOne({ _id: req.query.id })
       .populate("owner")
@@ -23,6 +26,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(404).json({ error: "Not found" });
     }
   } else if (req.method === "DELETE") {
+    /*
+     * ================================= DELETE =================================
+     */
     // TODO: Need to check if user is owner of project
     await db.connect();
     const project = await Project.findOneAndDelete({ _id: req.query.id });
@@ -35,6 +41,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
   }
   if (req.method === "PATCH") {
+    /*
+     * ================================= PATCH =================================
+     */
     await db.connect();
     const project = await Project.findOne({ _id: req.query.id });
     if (!project) {
@@ -53,6 +62,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
         const mockApi = await MockApi.create({
           name: req.body.name,
+          project: req.query.id,
           fields: fields,
         });
 
@@ -64,6 +74,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     await db.disconnect();
     return;
   } else {
+    /*
+     * ================================= OTHER =================================
+     */
     res.status(400).json({ error: "Bad request" });
   }
 };

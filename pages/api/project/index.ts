@@ -9,12 +9,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   const userEmail = session?.user?.email;
 
   if (req.method === "GET") {
+    /*
+     * ================================= GET =================================
+     */
     await db.connect();
     const projects = await Project.find({});
     await db.disconnect();
 
     res.status(200).json({ data: projects });
   } else if (req.method === "POST") {
+    /*
+     * ================================= POST =================================
+     */
     await db.connect();
     const projectExists = await Project.exists({ name: req.body.name });
 
@@ -43,6 +49,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(200).json({ data: project });
     }
   } else {
+    /*
+     * ================================= OTHER =================================
+     */
     res.status(400).json({ error: "Bad request" });
   }
 };

@@ -10,6 +10,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   }
 
   if (req.method === "GET") {
+    /*
+     * ================================= GET =================================
+     */
+
     await db.connect();
     const mockApis = await MockApi.findOne({ name: req.query.name });
     const data = mockApis.data.find((item: any) => item.id === req.query.id);
@@ -36,6 +40,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
     await db.disconnect();
   } else if (req.method === "PUT") {
+    /*
+     * ================================= PUT =================================
+     */
     await db.connect();
     const mockApi = await MockApi.findOne(
       { name: req.query.name, data: { $elemMatch: { id: req.query.id } } },
@@ -55,6 +62,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
     await db.disconnect();
   } else if (req.method === "DELETE") {
+    /*
+     * ================================= DELETE =================================
+     */
+
     await db.connect();
     const mockApi = await MockApi.findOne({ name: req.query.name });
     const itemExists = mockApi.data.find(
@@ -68,6 +79,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
     res.status(200).json({ message: "Deleted" });
   } else {
+    /*
+     * ================================= OTHER =================================
+     */
     res.status(400).json({ error: "Bad request" });
   }
 };

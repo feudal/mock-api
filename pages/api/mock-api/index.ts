@@ -5,12 +5,18 @@ import { MockApi, Field } from "models";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method === "GET") {
+    /*
+     * ================================= GET =================================
+     */
     await db.connect();
     const mockApis = await MockApi.find({});
     await db.disconnect();
 
     res.status(200).json({ data: mockApis });
   } else if (req.method === "POST") {
+    /*
+     * ================================= POST =================================
+     */
     await db.connect();
     const mockApiExists = await MockApi.exists({ name: req.body.name });
 
@@ -36,6 +42,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(200).json({ data: mockApi });
     }
   } else {
+    /*
+     * ================================= OTHER =================================
+     */
     res.status(400).json({ error: "Bad request" });
   }
 };

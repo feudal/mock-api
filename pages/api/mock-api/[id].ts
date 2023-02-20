@@ -10,6 +10,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   }
 
   if (req.method === "GET") {
+    /*
+     * ================================= GET =================================
+     */
     await db.connect();
     const mockApi = await MockApi.findById(req.query.id);
     await mockApi?.populate("fields");
@@ -31,6 +34,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(404).json({ error: "Not found" });
     }
   } else {
+    /*
+     * ================================= OTHER =================================
+     */
     res.status(400).json({ error: "Bad request" });
   }
 };
