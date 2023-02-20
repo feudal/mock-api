@@ -1,7 +1,5 @@
 import {
-  Button,
   Card,
-  CardActions,
   CircularProgress,
   Divider,
   Grid,
@@ -69,99 +67,51 @@ export const ProjectList = () => {
   );
 
   return (
-    <>
-      <Card>
-        <List
-          sx={{
-            width: "100%",
-            bgcolor: "background.paper",
-            borderRadius: 1,
-            overflow: "hidden",
-          }}
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          subheader={
-            <ListSubheader component="div" id="nested-list-subheader">
-              Project list
-            </ListSubheader>
-          }
-        >
-          <Divider />
+    <Card>
+      <List
+        sx={{
+          width: "100%",
+          bgcolor: "background.paper",
+          borderRadius: 1,
+          overflow: "hidden",
+        }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            Project list
+          </ListSubheader>
+        }
+      >
+        <Divider />
 
-          {state}
+        {state}
 
-          {projects?.data?.map((project: Project) => (
-            <Link href={`/${project._id}`} key={project._id} passHref>
-              <ListItemButton>
-                <ListItemText
-                  sx={{ fontStyle: "italic" }}
-                  primary={`/${project.name}`}
-                />
+        {projects?.data?.map((project: Project) => (
+          <Link href={`/project/${project._id}`} key={project._id} passHref>
+            <ListItemButton>
+              <ListItemText
+                sx={{ fontStyle: "italic" }}
+                primary={`/${project.name}`}
+              />
 
-                <IconButton
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await deleteProject(project._id);
-                    mutate("/api/project");
-                  }}
-                >
-                  <Tooltip title="Delete project" placement="top">
-                    <HighlightOffIcon color="error" />
-                  </Tooltip>
-                </IconButton>
-              </ListItemButton>
+              <IconButton
+                onClick={async (e) => {
+                  e.preventDefault();
+                  await deleteProject(project._id);
+                  mutate("/api/project");
+                }}
+              >
+                <Tooltip title="Delete project" placement="top">
+                  <HighlightOffIcon color="error" />
+                </Tooltip>
+              </IconButton>
+            </ListItemButton>
 
-              <Divider />
-            </Link>
-          ))}
-        </List>
-
-        <CardActions>
-          {router.asPath !== "/" && !isLoading && (
-            <Link href="/" passHref>
-              <Button variant="contained" sx={{ width: "100%" }}>
-                Create new project
-              </Button>
-            </Link>
-          )}
-        </CardActions>
-      </Card>
-
-      {/* <Card>
-        <List
-          sx={{
-            width: "100%",
-            bgcolor: "background.paper",
-            borderRadius: 1,
-            overflow: "hidden",
-          }}
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          subheader={
-            <ListSubheader component="div" id="nested-list-subheader">
-              Projects
-            </ListSubheader>
-          }
-        >
-          <ListItemButton>
-            <ListItemText primary="Sent mail" />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemText primary="Drafts" />
-          </ListItemButton>
-          <ListItemButton onClick={handleClick}>
-            <ListItemText primary="Your APIs" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
-        </List>
-      </Card> */}
-    </>
+            <Divider />
+          </Link>
+        ))}
+      </List>
+    </Card>
   );
 };

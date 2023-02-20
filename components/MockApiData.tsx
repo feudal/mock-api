@@ -1,4 +1,13 @@
-import { Button, Paper, Theme, Tooltip, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Paper,
+  Theme,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -8,7 +17,7 @@ import { useRouter } from "next/router";
 
 const BUTTON_STYLE = {
   textTransform: "none",
-  marginY: 2,
+  mb: 2,
   padding: 2,
   display: "flex",
   justifyContent: "space-between",
@@ -46,54 +55,60 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
   }, []);
 
   return (
-    <div>
-      <Typography variant="h5">
-        You can &quot;POST&quot;, &quot;GET&quot;, &quot;PUT&quot;,
-        &quot;DELETE&quot;, &quot;PATCH&quot; on this endpoint
-      </Typography>
+    <Card>
+      <CardContent>
+        <Typography variant="h5">
+          You can &quot;POST&quot;, &quot;GET&quot;, &quot;PUT&quot;,
+          &quot;DELETE&quot;, &quot;PATCH&quot; on this endpoint
+        </Typography>
+      </CardContent>
 
-      <Button
-        fullWidth
-        variant="outlined"
-        sx={BUTTON_STYLE}
-        href={`${locationOrigin}/api/data/${apiName}`}
-        target="_blank"
-        endIcon={
-          <Tooltip
-            title={linkCopied ? "Copied!" : "Copy to clipboard"}
-            placement="top"
-          >
-            <CopyAllIcon
-              onClick={(e) => {
-                e.preventDefault();
-                navigator.clipboard.writeText(
-                  `${locationOrigin}/api/data/${apiName}`
-                );
-                setLinkCopied(true);
-              }}
-            />
-          </Tooltip>
-        }
-      >
-        {locationOrigin}/api/data/{apiName}
-      </Button>
+      <Divider />
 
-      <Button
-        variant="contained"
-        color="error"
-        onClick={async () => {
-          await deleteData(apiName);
-          mutate(`/api/mock-api/${query.id}`);
-        }}
-      >
-        Delete all data
-      </Button>
+      <CardContent>
+        <Button
+          fullWidth
+          variant="outlined"
+          sx={BUTTON_STYLE}
+          href={`${locationOrigin}/api/data/${apiName}`}
+          target="_blank"
+          endIcon={
+            <Tooltip
+              title={linkCopied ? "Copied!" : "Copy to clipboard"}
+              placement="top"
+            >
+              <CopyAllIcon
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigator.clipboard.writeText(
+                    `${locationOrigin}/api/data/${apiName}`
+                  );
+                  setLinkCopied(true);
+                }}
+              />
+            </Tooltip>
+          }
+        >
+          {locationOrigin}/api/data/{apiName}
+        </Button>
 
-      <Paper elevation={0} sx={PAPER_STYLE} className="no-scrollbar">
-        <pre>
-          <code>data = {JSON.stringify(data, null, 2)}</code>
-        </pre>
-      </Paper>
-    </div>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={async () => {
+            await deleteData(apiName);
+            mutate(`/api/mock-api/${query.id}`);
+          }}
+        >
+          Delete all data
+        </Button>
+
+        <Paper elevation={0} sx={PAPER_STYLE} className="no-scrollbar">
+          <pre>
+            <code>data = {JSON.stringify(data, null, 2)}</code>
+          </pre>
+        </Paper>
+      </CardContent>
+    </Card>
   );
 };

@@ -1,19 +1,48 @@
-import { Grid } from "@mui/material";
-import { CustomHead, ProjectForm, ProjectList } from "components";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  Typography,
+} from "@mui/material";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
-export default function ProjectsPage() {
+export default function Login() {
+  const { status } = useSession();
+  const router = useRouter();
+
+  if (status === "authenticated") router.push("/project");
+
   return (
-    <>
-      <CustomHead title="Projects" />
+    <Grid
+      container
+      alignContent="center"
+      justifyContent="center"
+      style={{ height: "100%" }}
+    >
+      <Card elevation={5} sx={{ borderRadius: 3, padding: 3 }}>
+        <CardContent>
+          <Typography variant="h3" gutterBottom>
+            Welcome to Mock Api
+          </Typography>
+          <Typography variant="h5" align="center" gutterBottom>
+            Sign in your google account <br />
+            to get started
+          </Typography>
+        </CardContent>
 
-      <Grid container spacing={2}>
-        <Grid item xs={3}>
-          <ProjectList />
-        </Grid>
-        <Grid item xs={9}>
-          <ProjectForm />
-        </Grid>
-      </Grid>
-    </>
+        <CardActions>
+          <Button
+            variant="contained"
+            style={{ paddingInline: 50, marginInline: "auto" }}
+            onClick={() => signIn()}
+          >
+            Sign in
+          </Button>
+        </CardActions>
+      </Card>
+    </Grid>
   );
 }

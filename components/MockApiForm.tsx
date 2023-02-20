@@ -11,6 +11,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
+import { useRouter } from "next/router";
 
 import { Field, MockApi } from "types";
 import { kebabCase } from "utils";
@@ -19,10 +20,11 @@ import { InterfaceInput } from "components";
 export const MockApiForm = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
   const { mutate } = useSWRConfig();
+  const { query } = useRouter();
 
   const createApi = async (api: Partial<MockApi>) => {
     let error = false;
-    await axios.post("/api/mock-api", api).catch((err) => {
+    await axios.patch(`/api/project/${query.projectId}`, api).catch((err) => {
       toast.error(err.response.data.error);
       error = true;
     });
@@ -45,8 +47,11 @@ export const MockApiForm = () => {
           data.fields = data.fields.filter(
             (field: Field) => field !== undefined
           );
-          const error = await createApi(data);
-          mutate("/api/mock-api");
+          const error = await createApi({
+            ...data,
+            projectId: query.id as string,
+          });
+          mutate(`/api/project/${query.projectId}`);
           if (!error) reset();
         })}
       >

@@ -17,9 +17,8 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
 import { toast } from "react-toastify";
-import useSWR from "swr";
+import { useSWRConfig } from "swr";
 
 import { MockApi } from "types";
 
@@ -36,44 +35,13 @@ const deleteApi = async (id: string) => {
     .catch((err) => toast.error(err.response.data.error));
 };
 
-export const MockApiList = () => {
-  const [open, setOpen] = useState(true);
+interface MockApiListProps {
+  mockApis: MockApi[];
+}
+
+export const MockApiList = ({ mockApis }: MockApiListProps) => {
   const router = useRouter();
-
-  const handleClick = () => setOpen(!open);
-
-  const fetcher = async (url: string) =>
-    await axios.get(url).then((res) => res.data);
-
-  const {
-    data: apis,
-    error: isError,
-    isLoading,
-    mutate,
-  } = useSWR("/api/mock-api", fetcher);
-
-  // TODO: move this to a separate component
-  const state = (isLoading || isError || apis?.data?.length === 0) && (
-    <Grid
-      alignContent="center"
-      justifyContent="center"
-      container
-      height="50vh"
-      minHeight={200}
-    >
-      {isLoading && <CircularProgress size={100} />}
-      {isError && (
-        <Typography align="center" variant="h4" color="error">
-          Error
-        </Typography>
-      )}
-      {apis?.data?.length === 0 && (
-        <Typography variant="h4" align="center">
-          No APIs found
-        </Typography>
-      )}
-    </Grid>
-  );
+  const { mutate } = useSWRConfig();
 
   return (
     <>
@@ -90,10 +58,12 @@ export const MockApiList = () => {
         >
           <Divider />
 
-          {state}
-
-          {apis?.data?.map((api: MockApi) => (
-            <Link href={`/${api._id}`} key={api._id} passHref>
+          {mockApis?.map((api: MockApi) => (
+            <Link
+              href={`/project/${router.query.projectId}/mock-api/${api._id}`}
+              key={api._id}
+              passHref
+            >
               <ListItemButton>
                 <ListItemText
                   sx={{ fontStyle: "italic" }}
@@ -104,8 +74,7 @@ export const MockApiList = () => {
                   onClick={async (e) => {
                     e.preventDefault();
                     await deleteApi(api._id);
-                    await mutate("/api/mock-api");
-                    if (router.asPath === `/${api._id}`) router.push("/apis");
+                    await mutate(`/api/project/${router.query.projectId}`);
                   }}
                 >
                   <Tooltip title="Delete api" placement="top">
@@ -120,49 +89,11 @@ export const MockApiList = () => {
         </List>
 
         <CardActions>
-          {router.asPath !== "/apis" && !isLoading && (
-            <Button fullWidth variant="contained">
-              <Link href="/apis">Create new API</Link>
-            </Button>
-          )}
+          <Button fullWidth variant="contained">
+            Create new API
+          </Button>
         </CardActions>
       </Card>
-
-      {/* <Card>
-        <List
-          sx={{
-            width: "100%",
-            bgcolor: "background.paper",
-            borderRadius: 1,
-            overflow: "hidden",
-          }}
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          subheader={
-            <ListSubheader component="div" id="nested-list-subheader">
-              Projects
-            </ListSubheader>
-          }
-        >
-          <ListItemButton>
-            <ListItemText primary="Sent mail" />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemText primary="Drafts" />
-          </ListItemButton>
-          <ListItemButton onClick={handleClick}>
-            <ListItemText primary="Your APIs" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
-        </List>
-      </Card> */}
     </>
   );
 };

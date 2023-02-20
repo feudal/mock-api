@@ -10,7 +10,7 @@ import Link from "next/link";
 import React from "react";
 import { UserCard } from "./UserCard";
 
-const pages: string[] = ["APIs"];
+const pages: string[] = []; // ["APIs"];
 
 export const TopBar = () => {
   return (
@@ -29,7 +29,7 @@ export const TopBar = () => {
               textDecoration: "none",
             }}
           >
-            <Link href="/">Mock API</Link>
+            <Link href="/project">Mock API</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex" } }}>

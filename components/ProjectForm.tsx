@@ -11,7 +11,8 @@ import {
 import axios, { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
+import { useRouter } from "next/router";
 
 import { Project, User } from "types";
 import { AutoCompleteMultiSelector } from "components";
@@ -27,13 +28,16 @@ const createProject = async (project: Partial<Project>) => {
 
 export const ProjectForm = () => {
   const { register, handleSubmit, reset } = useForm();
+  const { query } = useRouter();
 
   const fetcher = async (url: string) =>
     await axios.get(url).then((res) => res.data);
 
-  const { data: users, mutate } = useSWR("/api/user", fetcher, {
+  const { data: users } = useSWR("/api/user", fetcher, {
     onError: (err: AxiosError) => toast.error(err.message),
   });
+
+  const { mutate } = useSWRConfig();
 
   return (
     <Card>
@@ -48,7 +52,7 @@ export const ProjectForm = () => {
       <form
         onSubmit={handleSubmit(async (data) => {
           const error = await createProject(data);
-          mutate("/api/project");
+          mutate(`/api/project/${query.projectId}`);
           if (!error) reset();
         })}
       >

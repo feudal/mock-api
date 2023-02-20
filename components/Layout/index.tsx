@@ -21,8 +21,7 @@ export const Layout = ({
   const { status } = useSession();
   const router = useRouter();
 
-  if (status === "unauthenticated" && router.pathname !== "/login")
-    router.push("/login");
+  if (status === "unauthenticated" && router.pathname !== "/") router.push("/");
 
   return (
     <>

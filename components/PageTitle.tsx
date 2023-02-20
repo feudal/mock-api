@@ -13,25 +13,34 @@ import { useRouter } from "next/router";
 
 interface PageTitleProps {
   entity: string;
+  name?: string;
 }
 
-export const PageTitle = ({ entity }: PageTitleProps) => {
-  const { id } = useRouter().query;
+export const PageTitle = ({ entity, name }: PageTitleProps) => {
+  const router = useRouter();
 
   return (
     <Card>
       <CardActions>
         <Stack direction="row" alignItems="center" spacing={2}>
           <Tooltip title={`Back to ${entity.toLowerCase()}s`} placement="top">
-            <Link href="/" passHref>
-              <Button variant="contained" color="primary">
-                <ArrowBackIcon />
-              </Button>
-            </Link>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                if (router.pathname.includes("mock-api")) {
+                  router.push(`/project/${router.query.projectId}`);
+                } else {
+                  router.push(`/project`);
+                }
+              }}
+            >
+              <ArrowBackIcon />
+            </Button>
           </Tooltip>
 
           <Typography variant="h5" component="h2">
-            {entity} - {id}
+            {entity} name - {name}
           </Typography>
         </Stack>
       </CardActions>
