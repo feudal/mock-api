@@ -13,3 +13,4 @@ export * from "./ProjectList";
 export * from "./ProjectForm";
 export * from "./PageTitle";
 export * from "./Loader";
+export * from "./Modals";

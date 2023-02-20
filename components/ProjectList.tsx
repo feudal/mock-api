@@ -13,13 +13,13 @@ import {
 } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "axios";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
 import { Project } from "types";
+import { DeleteProjectModal } from "components";
 
 const deleteProject = async (id: string) => {
   await axios
@@ -28,11 +28,7 @@ const deleteProject = async (id: string) => {
 };
 
 export const ProjectList = () => {
-  const [open, setOpen] = useState(true);
-  const router = useRouter();
-
-  const handleClick = () => setOpen(!open);
-
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const fetcher = async (url: string) =>
     await axios.get(url).then((res) => res.data);
 
@@ -88,28 +84,40 @@ export const ProjectList = () => {
         {state}
 
         {projects?.data?.map((project: Project) => (
-          <Link href={`/project/${project._id}`} key={project._id} passHref>
-            <ListItemButton>
-              <ListItemText
-                sx={{ fontStyle: "italic" }}
-                primary={`/${project.name}`}
-              />
+          <React.Fragment key={project._id}>
+            <Link href={`/project/${project._id}`} key={project._id} passHref>
+              <ListItemButton>
+                <ListItemText
+                  sx={{ fontStyle: "italic" }}
+                  primary={`/${project.name}`}
+                />
 
-              <IconButton
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await deleteProject(project._id);
-                  mutate("/api/project");
-                }}
-              >
-                <Tooltip title="Delete project" placement="top">
-                  <HighlightOffIcon color="error" />
-                </Tooltip>
-              </IconButton>
-            </ListItemButton>
+                <IconButton
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedProject(project);
+                  }}
+                >
+                  <Tooltip title="Delete project" placement="top">
+                    <HighlightOffIcon color="error" />
+                  </Tooltip>
+                </IconButton>
+              </ListItemButton>
 
-            <Divider />
-          </Link>
+              <Divider />
+            </Link>
+
+            <DeleteProjectModal
+              projectName={project.name}
+              open={selectedProject?._id === project._id}
+              handleClose={() => setSelectedProject(null)}
+              action={async () => {
+                await deleteProject(project._id);
+                mutate("/api/project");
+                setSelectedProject(null);
+              }}
+            />
+          </React.Fragment>
         ))}
       </List>
     </Card>

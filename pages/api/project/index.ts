@@ -33,8 +33,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         email: { $in: req.body.emails },
       }).exec();
 
-      console.log({ owner, usersIds });
-
       const project = await Project.create({
         name: req.body.name,
         owner: owner._id,

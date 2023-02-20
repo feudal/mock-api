@@ -21,6 +21,9 @@ import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 
 import { MockApi } from "types";
+import { DeleteMockApiModal } from "components";
+import { useState } from "react";
+import React from "react";
 
 const LIST_STYLE = {
   width: "100%",
@@ -40,25 +43,26 @@ interface MockApiListProps {
 }
 
 export const MockApiList = ({ mockApis }: MockApiListProps) => {
+  const [selectedApi, setSelectedApi] = useState<MockApi | null>(null);
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
   return (
-    <>
-      <Card>
-        <List
-          sx={LIST_STYLE}
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          subheader={
-            <ListSubheader component="div" id="nested-list-subheader">
-              API list
-            </ListSubheader>
-          }
-        >
-          <Divider />
+    <Card>
+      <List
+        sx={LIST_STYLE}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            API list
+          </ListSubheader>
+        }
+      >
+        <Divider />
 
-          {mockApis?.map((api: MockApi) => (
+        {mockApis?.map((api: MockApi) => (
+          <React.Fragment key={api._id}>
             <Link
               href={`/project/${router.query.projectId}/mock-api/${api._id}`}
               key={api._id}
@@ -73,8 +77,7 @@ export const MockApiList = ({ mockApis }: MockApiListProps) => {
                 <IconButton
                   onClick={async (e) => {
                     e.preventDefault();
-                    await deleteApi(api._id);
-                    await mutate(`/api/project/${router.query.projectId}`);
+                    setSelectedApi(api);
                   }}
                 >
                   <Tooltip title="Delete api" placement="top">
@@ -85,15 +88,20 @@ export const MockApiList = ({ mockApis }: MockApiListProps) => {
 
               <Divider />
             </Link>
-          ))}
-        </List>
 
-        <CardActions>
-          <Button fullWidth variant="contained">
-            Create new API
-          </Button>
-        </CardActions>
-      </Card>
-    </>
+            <DeleteMockApiModal
+              apiName={api.name}
+              open={selectedApi?._id === api._id}
+              handleClose={() => setSelectedApi(null)}
+              action={async () => {
+                await deleteApi(api._id);
+                await mutate(`/api/project/${router.query.projectId}`);
+                setSelectedApi(null);
+              }}
+            />
+          </React.Fragment>
+        ))}
+      </List>
+    </Card>
   );
 };

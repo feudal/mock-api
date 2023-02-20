@@ -28,7 +28,6 @@ const createProject = async (project: Partial<Project>) => {
 
 export const ProjectForm = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { query } = useRouter();
 
   const fetcher = async (url: string) =>
     await axios.get(url).then((res) => res.data);
@@ -52,7 +51,7 @@ export const ProjectForm = () => {
       <form
         onSubmit={handleSubmit(async (data) => {
           const error = await createProject(data);
-          mutate(`/api/project/${query.projectId}`);
+          mutate("/api/project");
           if (!error) reset();
         })}
       >
