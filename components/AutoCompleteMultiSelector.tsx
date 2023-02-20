@@ -38,7 +38,6 @@ export const AutoCompleteMultiSelector = forwardRef<Ref, Props>(
           name={name}
           ref={ref}
           onBlur={onBlur}
-          onChange={(v) => console.log({ v })}
           helperText={helperText}
           {...params}
           label={label}

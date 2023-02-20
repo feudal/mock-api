@@ -1,9 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
 
 import { db } from "utils";
 import { Project, User } from "models";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
+  const session = await getSession({ req });
+  const userEmail = session?.user?.email;
+
   if (req.method === "GET") {
     await db.connect();
     const projects = await Project.find({});
@@ -12,26 +16,34 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     res.status(200).json({ data: projects });
   } else if (req.method === "POST") {
     await db.connect();
-    const projectExists = await User.exists({ name: req.body.name });
+    const projectExists = await Project.exists({ name: req.body.name });
 
-    // if (projectExists) {
-    //   res.status(400).json({ error: "Project with this name already exists" });
-    //   db.disconnect();
-    //   return;
-    // } else {
-    //   const fields = await Promise.all(
-    //     req.body.fields.map(async (field: any) => {
-    //       const createdField = await Field.create(field);
-    //       return createdField._id;
-    //     })
-    //   );
-    //   const Project = await Project.create({
-    //     name: req.body.name,
-    //     fields: fields,
-    //   });
-    //   await db.disconnect();
-    //   res.status(200).json({ data: mockApi });
-    // }
+    if (projectExists) {
+      res.status(400).json({ error: "Project with this name already exists" });
+      db.disconnect();
+      return;
+    } else {
+      const owner = await User.findOne({ email: userEmail }).exec();
+      if (!owner) {
+        res.status(400).json({ error: "Owner not found" });
+        db.disconnect();
+        return;
+      }
+      const usersIds = await User.find({
+        email: { $in: req.body.emails },
+      }).exec();
+
+      console.log({ owner, usersIds });
+
+      const project = await Project.create({
+        name: req.body.name,
+        owner: owner._id,
+        users: usersIds.map((user) => user._id),
+      });
+      await db.disconnect();
+
+      res.status(200).json({ data: project });
+    }
   } else {
     res.status(400).json({ error: "Bad request" });
   }

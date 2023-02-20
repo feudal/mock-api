@@ -68,7 +68,9 @@ export const MockApiList = () => {
         </Typography>
       )}
       {apis?.data?.length === 0 && (
-        <Typography variant="h4">No APIs</Typography>
+        <Typography variant="h4" align="center">
+          No APIs found
+        </Typography>
       )}
     </Grid>
   );

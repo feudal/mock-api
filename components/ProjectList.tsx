@@ -42,6 +42,7 @@ export const ProjectList = () => {
     data: projects,
     error: isError,
     isLoading,
+    mutate,
   } = useSWR("/api/project", fetcher);
 
   // TODO: move this to a separate component
@@ -60,7 +61,9 @@ export const ProjectList = () => {
         </Typography>
       )}
       {projects?.data?.length === 0 && (
-        <Typography variant="h4">No Project</Typography>
+        <Typography variant="h4" align="center">
+          No projects <br /> found
+        </Typography>
       )}
     </Grid>
   );
@@ -95,7 +98,13 @@ export const ProjectList = () => {
                   primary={`/${project.name}`}
                 />
 
-                <IconButton onClick={() => deleteProject(project._id)}>
+                <IconButton
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await deleteProject(project._id);
+                    mutate("/api/project");
+                  }}
+                >
                   <Tooltip title="Delete project" placement="top">
                     <HighlightOffIcon color="error" />
                   </Tooltip>
