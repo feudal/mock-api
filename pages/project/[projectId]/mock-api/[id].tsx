@@ -19,7 +19,7 @@ export default function MockApiPage() {
 
   return (
     <>
-      <CustomHead title={`Project - ${query.id}`} />
+      <CustomHead title={`Project - ${data?.name}`} />
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
