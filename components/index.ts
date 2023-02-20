@@ -11,3 +11,4 @@ export * from "./Layout";
 export * from "./AutoCompleteMultiSelector";
 export * from "./ProjectList";
 export * from "./ProjectForm";
+export * from "./PageTitle";
