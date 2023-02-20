@@ -1,10 +1,9 @@
-import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
+import { useRouter } from "next/router";
 import useSWR from "swr";
 import { toast } from "react-toastify";
 
-import { CustomHead, Loader, MockApiData, PageTitle } from "components";
-import { MockApi } from "types";
+import { CustomHead, Loader, MockApi, PageTitle } from "components";
 
 export default function MockApiPage() {
   const { query } = useRouter();
@@ -13,10 +12,6 @@ export default function MockApiPage() {
   const { data, error, isLoading } = useSWR(
     `/api/project/${query.projectId}`,
     fetcher
-  );
-
-  const mockApi = data?.mockApis.find(
-    (mockApi: MockApi) => mockApi._id === query.id
   );
 
   if (error) toast.error(error.response.data.error);
@@ -28,11 +23,11 @@ export default function MockApiPage() {
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <PageTitle entity="Api" name={mockApi?.name} />
+          <PageTitle entity="Api" name={data?.name} />
         </Grid>
 
         <Grid item xs={12}>
-          <MockApiData data={mockApi._id} />
+          <MockApi />
         </Grid>
       </Grid>
     </>

@@ -8,9 +8,6 @@ export default function ProjectsPage() {
 
       <Grid container spacing={2}>
         <Grid item xs={3}>
-          {/*  
-            TODO: FIX THIS
-          */}
           <ProjectList />
         </Grid>
         <Grid item xs={9}>
