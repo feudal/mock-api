@@ -11,6 +11,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { Stack } from "@mui/system";
+import FolderIcon from "@mui/icons-material/Folder";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "axios";
 import Link from "next/link";
@@ -89,7 +91,12 @@ export const ProjectList = () => {
               <ListItemButton>
                 <ListItemText
                   sx={{ fontStyle: "italic" }}
-                  primary={`/${project.name}`}
+                  primary={
+                    <Stack direction="row" spacing={1}>
+                      <FolderIcon />
+                      <span>{project.name}</span>
+                    </Stack>
+                  }
                 />
 
                 <IconButton
