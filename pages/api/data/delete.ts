@@ -5,6 +5,9 @@ import { MockApi } from "models";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method === "DELETE") {
+    /*
+     * ================================= DELETE =================================
+     */
     await db.connect();
     const mockApi = await MockApi.findOneAndUpdate(
       { name: req.query.name },
@@ -15,6 +18,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
     res.status(200).json({ data: mockApi });
   } else {
+    /*
+     * ================================= OTHER =================================
+     */
     res.status(400).json({ error: "Bad request" });
   }
 };
