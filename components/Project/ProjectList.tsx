@@ -93,7 +93,7 @@ export const ProjectList = () => {
                   sx={{ fontStyle: "italic" }}
                   primary={
                     <Stack direction="row" spacing={1}>
-                      <FolderIcon />
+                      <FolderIcon color="secondary" />
                       <span>{project.name}</span>
                     </Stack>
                   }
