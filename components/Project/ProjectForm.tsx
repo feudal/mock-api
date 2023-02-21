@@ -8,14 +8,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios, { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
-import { useRouter } from "next/router";
 
 import { Project, User } from "types";
 import { AutoCompleteMultiSelector } from "components";
+import axios from "axios";
 
 const createProject = async (project: Partial<Project>) => {
   let error = false;
@@ -29,11 +28,9 @@ const createProject = async (project: Partial<Project>) => {
 export const ProjectForm = () => {
   const { register, handleSubmit, reset } = useForm();
 
-  const fetcher = async (url: string) =>
-    await axios.get(url).then((res) => res.data);
-
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
   const { data: users } = useSWR("/api/user", fetcher, {
-    onError: (err: AxiosError) => toast.error(err.message),
+    onError: (err) => toast.error(err.message),
   });
 
   const { mutate } = useSWRConfig();

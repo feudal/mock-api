@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Grid } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import useSWR from "swr";
 import { toast } from "react-toastify";
 
@@ -9,18 +9,19 @@ import {
   MockApiForm,
   MockApiList,
   PageTitle,
+  UserList,
 } from "components";
 
 export default function MockApiPage() {
   const { query } = useRouter();
 
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading } = useSWR(
+  const { data, isLoading } = useSWR(
     `/api/project/${query.projectId}`,
-    fetcher
+    fetcher,
+    { onError: (err) => toast.error(err.message) }
   );
 
-  if (error) toast.error(error.response.data.error);
   if (isLoading) return <Loader />;
 
   return (
@@ -33,7 +34,11 @@ export default function MockApiPage() {
         </Grid>
 
         <Grid item xs={3}>
-          <MockApiList mockApis={data?.mockApis} />
+          <Stack direction="column" spacing={2}>
+            <MockApiList mockApis={data?.mockApis} />
+
+            <UserList users={data?.users} />
+          </Stack>
         </Grid>
 
         <Grid item xs={9}>

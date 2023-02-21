@@ -8,6 +8,8 @@ import {
   Button,
   CardActions,
   Divider,
+  SxProps,
+  Theme,
 } from "@mui/material";
 
 const modal_style = {
@@ -30,6 +32,7 @@ interface ModalProps {
   actionLabel?: string;
   action: () => void;
   actionButtonProps?: any;
+  modalStyles?: any;
   children: React.ReactNode;
 }
 
@@ -39,6 +42,7 @@ export const Modal = ({
   title,
   actionLabel = "Create",
   action,
+  modalStyles,
   actionButtonProps,
   children,
 }: ModalProps) => {
@@ -49,7 +53,7 @@ export const Modal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Card sx={modal_style}>
+      <Card sx={{ ...modal_style, ...modalStyles }}>
         <CardHeader title={title} />
 
         <Divider />
