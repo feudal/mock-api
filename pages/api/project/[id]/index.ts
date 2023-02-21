@@ -1,13 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
 
 import { Field, MockApi, Project } from "models";
 import { db } from "utils";
+import { User } from "types";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (!req.query.id) {
     res.status(400).json({ message: "Missing id" });
     return;
   }
+
+  const session = await getSession({ req });
+  const userEmail = session?.user?.email;
 
   if (req.method === "GET") {
     /*
@@ -20,33 +25,60 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       .populate("users");
     await db.disconnect();
 
-    if (projects) {
-      res.status(200).json(projects);
-    } else {
+    if (!projects) {
       res.status(404).json({ error: "Not found" });
+    } else if (
+      projects.users.map((user: User) => user.email).includes(userEmail)
+    ) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    } else {
+      res.status(200).json(projects);
     }
   } else if (req.method === "DELETE") {
     /*
      * ================================= DELETE =================================
      */
-    // TODO: Need to check if user is owner of project
     await db.connect();
-    const project = await Project.findOneAndDelete({ _id: req.query.id });
+    const project = await Project.findOne({ _id: req.query.id }).populate(
+      "owner"
+    );
+    if (!project) {
+      res.status(404).json({ error: "Not found" });
+    } else if (project.owner.email !== userEmail) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const allMockApis = project.mockApis;
+    const allFields = await Promise.all(
+      allMockApis.map(async (mockApi: any) => {
+        const mockApiFields = await MockApi.findOne({ _id: mockApi }).populate(
+          "fields"
+        );
+        return mockApiFields?.fields;
+      })
+    );
+    const allFieldsIds = allFields.flat().map((field) => field._id);
+    await Field.deleteMany({ _id: { $in: allFieldsIds } });
+    await MockApi.deleteMany({ _id: { $in: allMockApis } });
+    await project.remove();
     await db.disconnect();
 
-    if (project) {
-      res.status(200).json({ name: project.name });
-    } else {
-      res.status(404).json({ error: "Not found" });
-    }
+    res.status(200).json({ message: "Deleted" });
   } else if (req.method === "PATCH") {
     /*
      * ================================= PATCH =================================
      */
     await db.connect();
-    const project = await Project.findOne({ _id: req.query.id });
+    const project = await Project.findOne({ _id: req.query.id }).populate(
+      "owner"
+    );
+
     if (!project) {
       res.status(404).json({ error: "Not found" });
+    } else if (project.owner.email !== userEmail) {
+      res.status(401).json({ error: "Unauthorized" });
     } else {
       const mockApiExists = project.mockApis.includes(req.body.mockApiId);
       if (mockApiExists) {
@@ -71,7 +103,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       }
     }
     await db.disconnect();
-    return;
   } else {
     /*
      * ================================= OTHER =================================

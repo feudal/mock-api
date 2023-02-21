@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { MockApi } from "models";
+import { Field, MockApi } from "models";
 import { db } from "utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
@@ -24,15 +24,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(404).json({ error: "Not found" });
     }
   } else if (req.method === "DELETE") {
+    /*
+     * ================================= DELETE =================================
+     */
     await db.connect();
-    const mockApi = await MockApi.findByIdAndDelete(req.query.id);
-    await db.disconnect();
+    const mockApi = await MockApi.findById(req.query.id)
+      .populate("project")
+      .populate("fields");
 
-    if (mockApi) {
-      res.status(200).json({ name: mockApi.name });
-    } else {
+    if (!mockApi) {
       res.status(404).json({ error: "Not found" });
+    } else if (mockApi.project.owner.email !== req.query.userId) {
+      res.status(401).json({ error: "Unauthorized" });
+    } else {
+      await Field.deleteMany({ _id: { $in: mockApi.fields } });
+      await mockApi.remove();
+      res.status(200).json({ message: "Deleted" });
     }
+    await db.disconnect();
   } else {
     /*
      * ================================= OTHER =================================
