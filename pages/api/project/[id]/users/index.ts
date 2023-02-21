@@ -4,7 +4,24 @@ import { Project, User } from "models";
 import { db } from "utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
+    /*
+     * ================================= GET =================================
+     */
+    await db.connect();
+    const project = await Project.findOne({ _id: req.query.id }).populate(
+      "users"
+    );
+    console.log(project);
+    const users = project?.users;
+    await db.disconnect();
+
+    if (users) {
+      res.status(200).json(users);
+    } else {
+      res.status(404).json({ error: "Not found" });
+    }
+  } else if (req.method === "POST") {
     /*
      * ================================= POST =================================
      */

@@ -6,7 +6,6 @@ import {
   ListItemText,
   IconButton,
   Tooltip,
-  ListItemButton,
   Typography,
   Box,
   ListItem,
@@ -17,12 +16,11 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useSWRConfig } from "swr";
+import useSWR, { useSWRConfig } from "swr";
 
-import { DeleteUserAccessModal } from "components";
+import { AddUserToProject, DeleteUserAccessModal } from "components";
 import { User } from "types";
 import { useRouter } from "next/router";
-import { AddUserToProject } from "./Modals/AddUserToProjectModal";
 
 const LIST_STYLE = {
   width: "100%",
@@ -47,6 +45,13 @@ export const UserList = ({ users }: UserListProps) => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
 
+  const fetcher = async (url: string) => fetch(url).then((r) => r.json());
+  const { data: allUsers } = useSWR("/api/user", fetcher);
+
+  const availableUsers = allUsers?.data?.filter(
+    (user: User) => !users?.some((u) => u._id === user._id)
+  );
+
   return (
     <Card>
       <List
@@ -57,6 +62,7 @@ export const UserList = ({ users }: UserListProps) => {
         }
       >
         <Divider />
+
         {users?.length === 0 && (
           <Box sx={{ p: 2 }}>
             <Typography variant="body2" color="text.secondary">
@@ -104,20 +110,23 @@ export const UserList = ({ users }: UserListProps) => {
           </React.Fragment>
         ))}
 
-        <ListItem>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={() => setAddUserModalOpen(true)}
-          >
-            Add user
-          </Button>
+        {availableUsers?.length > 0 && (
+          <ListItem>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={() => setAddUserModalOpen(true)}
+            >
+              Add users
+            </Button>
 
-          <AddUserToProject
-            open={addUserModalOpen}
-            handleClose={() => setAddUserModalOpen(false)}
-          />
-        </ListItem>
+            <AddUserToProject
+              open={addUserModalOpen}
+              handleClose={() => setAddUserModalOpen(false)}
+              users={availableUsers}
+            />
+          </ListItem>
+        )}
       </List>
     </Card>
   );

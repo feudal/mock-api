@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
-import useSWR, { useSWRConfig } from "swr";
+import { useSWRConfig } from "swr";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
@@ -18,17 +18,17 @@ const addUsersToProject = async (projectId: string, emails: string[]) => {
 interface AddUserToProjectProps {
   open: boolean;
   handleClose: () => void;
+  users: User[];
 }
 
 export const AddUserToProject = ({
   open,
   handleClose,
+  users,
 }: AddUserToProjectProps) => {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
   const { mutate } = useSWRConfig();
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
-  const { data: users } = useSWR("/api/user", fetcher);
 
   return (
     <Modal
@@ -50,7 +50,7 @@ export const AddUserToProject = ({
       <AutoCompleteMultiSelector
         label="Emails"
         placeholder="Enter email"
-        options={users?.data?.map((user: User) => user.email)}
+        options={users?.map((user: User) => user.email)}
         {...register("emails")}
       />
     </Modal>

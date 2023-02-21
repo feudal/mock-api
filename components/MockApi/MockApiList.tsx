@@ -1,10 +1,7 @@
 import {
-  Button,
+  Box,
   Card,
-  CardActions,
-  CircularProgress,
   Divider,
-  Grid,
   IconButton,
   List,
   ListItemButton,
@@ -60,6 +57,14 @@ export const MockApiList = ({ mockApis }: MockApiListProps) => {
         }
       >
         <Divider />
+
+        {mockApis?.length === 0 && (
+          <Box sx={{ p: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              No API created yet
+            </Typography>
+          </Box>
+        )}
 
         {mockApis?.map((api: MockApi) => (
           <React.Fragment key={api._id}>

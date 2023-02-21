@@ -23,7 +23,9 @@ export const AutoCompleteMultiSelector = forwardRef<Ref, Props>(
       multiple
       size="small"
       fullWidth
-      onChange={(event, newValue) =>
+      ref={ref}
+      onBlur={onBlur}
+      onChange={(_, newValue) =>
         onChange({ target: { name, value: newValue } })
       }
       options={options}
@@ -35,9 +37,6 @@ export const AutoCompleteMultiSelector = forwardRef<Ref, Props>(
       }
       renderInput={(params) => (
         <TextField
-          name={name}
-          ref={ref}
-          onBlur={onBlur}
           helperText={helperText}
           {...params}
           label={label}

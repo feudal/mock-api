@@ -39,8 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     } else {
       res.status(404).json({ error: "Not found" });
     }
-  }
-  if (req.method === "PATCH") {
+  } else if (req.method === "PATCH") {
     /*
      * ================================= PATCH =================================
      */
