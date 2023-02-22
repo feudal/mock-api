@@ -16,3 +16,20 @@ export const kebabCase = (str?: string) => {
     .replace(/\s+/g, "-")
     .toLowerCase();
 };
+
+export const parseName = (name?: string | string[]) => {
+  if (typeof name === "string") {
+    return name;
+  }
+  if (Array.isArray(name)) {
+    return name.join("/");
+  }
+  return "";
+};
+
+export const checkIfIsId = (name?: string) => {
+  // format of the id ac7b4306-4096-432f-bc35-6b6875fab1d3
+
+  if (!name) return false;
+  return name?.length === 36 && name?.includes("-");
+};

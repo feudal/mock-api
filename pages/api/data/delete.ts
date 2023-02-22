@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "utils";
 import { MockApi } from "models";
 
+// TODO - Check if is used
+
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method === "DELETE") {
     /*

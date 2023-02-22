@@ -3,20 +3,23 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { faker } from "@faker-js/faker";
 
 import { Field } from "types";
-import { db } from "utils";
+import { db, parseName } from "utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   /*
    * ================================= POST =================================
    */
+
+  const mockApiName = parseName(req.query.name);
+
   if (req.method === "POST") {
-    if (!req.query.name) {
+    if (!mockApiName) {
       res.status(400).json({ message: "Missing name" });
       return;
     }
 
     await db.connect();
-    const mockApi = await MockApi.findOne({ name: req.query.name });
+    const mockApi = await MockApi.findOne({ name: mockApiName });
 
     if (!mockApi) {
       res.status(404).json({ error: "MockApi not found" });
@@ -32,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     for (let i = 0; i < req.body.count; i++) {
       data.push(
         Object.assign(
-          {},
+          { id: faker.datatype.uuid() },
           ...fields.map((field: Field) => {
             return {
               // @ts-ignore

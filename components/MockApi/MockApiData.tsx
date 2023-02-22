@@ -57,7 +57,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5">
+        <Typography variant="h6">
           You can &quot;POST&quot;, &quot;GET&quot;, &quot;PUT&quot;,
           &quot;DELETE&quot;, &quot;PATCH&quot; on this endpoint
         </Typography>

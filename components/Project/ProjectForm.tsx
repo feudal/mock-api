@@ -8,13 +8,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
 
 import { Project, User } from "types";
 import { AutoCompleteMultiSelector } from "components";
-import axios from "axios";
 
 const createProject = async (project: Partial<Project>) => {
   let error = false;

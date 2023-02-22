@@ -18,7 +18,7 @@ import { MockApiData, MockApiInterface } from "components";
 
 const generateMockApi = async (name: string, count: number) => {
   await axios
-    .post(`/api/mock-api/generate/${name}`, { count })
+    .post(`/api/data/generate/${name}`, { count })
     .catch((err) => toast.error(err.response.data.error));
 };
 
@@ -94,7 +94,7 @@ export const MockApi = () => {
                   variant="contained"
                   sx={{ mt: 2 }}
                   onClick={handleSubmit(async (data) => {
-                    await generateMockApi(api.name, data.count);
+                    await generateMockApi(name, data.count);
                     mutate(`/api/mock-api/${query.id}`);
                   })}
                 >
