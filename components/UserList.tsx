@@ -31,6 +31,7 @@ const LIST_STYLE = {
 
 interface UserListProps {
   users: User[];
+  hasPermission?: boolean;
 }
 
 const removeUserFromList = async (projectId: string, userId: string) => {
@@ -39,7 +40,7 @@ const removeUserFromList = async (projectId: string, userId: string) => {
     .catch((err) => toast.error(err.response.data.error));
 };
 
-export const UserList = ({ users }: UserListProps) => {
+export const UserList = ({ users, hasPermission }: UserListProps) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const { mutate } = useSWRConfig();
@@ -51,6 +52,7 @@ export const UserList = ({ users }: UserListProps) => {
   const availableUsers = allUsers?.data?.filter(
     (user: User) => !users?.some((u) => u._id === user._id)
   );
+  console.log({ allUsers, users, hasPermission, availableUsers });
 
   return (
     <Card>
@@ -85,32 +87,36 @@ export const UserList = ({ users }: UserListProps) => {
                 }
               />
 
-              <IconButton onClick={() => setSelectedUser(user)}>
-                <Tooltip title="Delete user from list" placement="top">
-                  <HighlightOffIcon color="error" />
-                </Tooltip>
-              </IconButton>
+              {hasPermission && (
+                <IconButton onClick={() => setSelectedUser(user)}>
+                  <Tooltip title="Delete user from list" placement="top">
+                    <HighlightOffIcon color="error" />
+                  </Tooltip>
+                </IconButton>
+              )}
             </ListItem>
 
             <Divider />
 
-            <DeleteUserAccessModal
-              userName={user.name}
-              open={selectedUser?._id === user._id}
-              handleClose={() => setSelectedUser(null)}
-              action={async () => {
-                await removeUserFromList(
-                  router.query.projectId as string,
-                  user._id
-                );
-                mutate(`/api/project/${router.query.projectId}`);
-                setSelectedUser(null);
-              }}
-            />
+            {hasPermission && (
+              <DeleteUserAccessModal
+                userName={user.name}
+                open={selectedUser?._id === user._id}
+                handleClose={() => setSelectedUser(null)}
+                action={async () => {
+                  await removeUserFromList(
+                    router.query.projectId as string,
+                    user._id
+                  );
+                  mutate(`/api/project/${router.query.projectId}`);
+                  setSelectedUser(null);
+                }}
+              />
+            )}
           </React.Fragment>
         ))}
 
-        {availableUsers?.length > 0 && (
+        {(availableUsers?.length > 0 || hasPermission) && (
           <ListItem>
             <Button
               fullWidth

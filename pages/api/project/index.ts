@@ -20,14 +20,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(404).json({ error: "Not found" });
     } else {
       const filteredProjects = projects.filter((project) => {
-        if (project.owner.email === userEmail) return true;
+        if (project.owner?.email === userEmail) return true;
         if (
           project.users.map((user: UserType) => user.email).includes(userEmail)
         ) {
           return true;
         }
       });
-      res.status(200).json({ data: filteredProjects });
+      const projectsWithPermissions = filteredProjects.map((project) => ({
+        ...project._doc,
+        hasPermission: project.owner?.email === userEmail,
+      }));
+      res.status(200).json({ data: projectsWithPermissions });
     }
     await db.disconnect();
   } else if (req.method === "POST") {

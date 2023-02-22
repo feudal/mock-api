@@ -37,9 +37,10 @@ const deleteApi = async (id: string) => {
 
 interface MockApiListProps {
   mockApis: MockApi[];
+  hasPermission?: boolean;
 }
 
-export const MockApiList = ({ mockApis }: MockApiListProps) => {
+export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
   const [selectedApi, setSelectedApi] = useState<MockApi | null>(null);
   const router = useRouter();
   const { mutate } = useSWRConfig();
@@ -79,31 +80,35 @@ export const MockApiList = ({ mockApis }: MockApiListProps) => {
                   primary={`/${api.name}`}
                 />
 
-                <IconButton
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    setSelectedApi(api);
-                  }}
-                >
-                  <Tooltip title="Delete api" placement="top">
-                    <HighlightOffIcon color="error" />
-                  </Tooltip>
-                </IconButton>
+                {hasPermission && (
+                  <IconButton
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      setSelectedApi(api);
+                    }}
+                  >
+                    <Tooltip title="Delete api" placement="top">
+                      <HighlightOffIcon color="error" />
+                    </Tooltip>
+                  </IconButton>
+                )}
               </ListItemButton>
 
               <Divider />
             </Link>
 
-            <DeleteMockApiModal
-              apiName={api.name}
-              open={selectedApi?._id === api._id}
-              handleClose={() => setSelectedApi(null)}
-              action={async () => {
-                await deleteApi(api._id);
-                await mutate(`/api/project/${router.query.projectId}`);
-                setSelectedApi(null);
-              }}
-            />
+            {hasPermission && (
+              <DeleteMockApiModal
+                apiName={api.name}
+                open={selectedApi?._id === api._id}
+                handleClose={() => setSelectedApi(null)}
+                action={async () => {
+                  await deleteApi(api._id);
+                  await mutate(`/api/project/${router.query.projectId}`);
+                  setSelectedApi(null);
+                }}
+              />
+            )}
           </React.Fragment>
         ))}
       </List>

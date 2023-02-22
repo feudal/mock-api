@@ -98,17 +98,18 @@ export const ProjectList = () => {
                     </Stack>
                   }
                 />
-
-                <IconButton
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setSelectedProject(project);
-                  }}
-                >
-                  <Tooltip title="Delete project" placement="top">
-                    <HighlightOffIcon color="error" />
-                  </Tooltip>
-                </IconButton>
+                {project.hasPermission && (
+                  <IconButton
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedProject(project);
+                    }}
+                  >
+                    <Tooltip title="Delete project" placement="top">
+                      <HighlightOffIcon color="error" />
+                    </Tooltip>
+                  </IconButton>
+                )}
               </ListItemButton>
 
               <Divider />

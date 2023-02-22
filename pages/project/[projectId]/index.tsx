@@ -21,29 +21,50 @@ export default function MockApiPage() {
     fetcher,
     { onError: (err) => toast.error(err.message) }
   );
+  const {
+    hasPermission,
+    data: { mockApis, users },
+  } = data || { hasPermission: false, data: {} };
 
   if (isLoading) return <Loader />;
 
   return (
     <>
-      <CustomHead title={`Project - ${data?.name}`} />
+      <CustomHead title={`Project - ${mockApis?.name}`} />
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <PageTitle entity="Project" name={data?.name} />
+          <PageTitle entity="Project" name={mockApis?.name} />
         </Grid>
 
-        <Grid item xs={3}>
-          <Stack direction="column" spacing={2}>
-            <MockApiList mockApis={data?.mockApis} />
+        {hasPermission ? (
+          <>
+            <Grid item xs={3}>
+              <Stack direction="column" spacing={2}>
+                <MockApiList
+                  mockApis={mockApis}
+                  hasPermission={hasPermission}
+                />
 
-            <UserList users={data?.users} />
-          </Stack>
-        </Grid>
+                <UserList users={users} hasPermission={hasPermission} />
+              </Stack>
+            </Grid>
 
-        <Grid item xs={9}>
-          <MockApiForm />
-        </Grid>
+            <Grid item xs={9}>
+              <MockApiForm />
+            </Grid>
+          </>
+        ) : (
+          <>
+            <Grid item xs={6}>
+              <MockApiList mockApis={mockApis} />
+            </Grid>
+
+            <Grid item xs={6}>
+              <UserList users={users} />
+            </Grid>
+          </>
+        )}
       </Grid>
     </>
   );

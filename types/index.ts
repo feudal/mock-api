@@ -18,9 +18,9 @@ export interface Field {
 export interface Project {
   _id: string;
   name: string;
-  owner: string;
-  users: string[];
-  mockApis: string[];
+  owner: User;
+  users: User[];
+  mockApis: MockApi[];
 }
 
 export interface User {
@@ -28,5 +28,5 @@ export interface User {
   name: string;
   email: string;
   image: string;
-  projects: string[];
+  projects: Project[];
 }

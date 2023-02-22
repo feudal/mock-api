@@ -19,21 +19,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
      * ================================= GET =================================
      */
     await db.connect();
-    const projects = await Project.findOne({ _id: req.query.id })
+    const project = await Project.findOne({ _id: req.query.id })
       .populate("owner")
       .populate("mockApis")
       .populate("users");
     await db.disconnect();
 
-    if (!projects) {
+    if (!project) {
       res.status(404).json({ error: "Not found" });
     } else if (
-      projects.users.map((user: User) => user.email).includes(userEmail)
+      project.users.map((user: User) => user.email).includes(userEmail) ||
+      project.owner?.email === userEmail
     ) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    } else {
-      res.status(200).json(projects);
+      res.status(200).json({
+        data: project,
+        hasPermission: project.owner?.email === userEmail,
+      });
     }
   } else if (req.method === "DELETE") {
     /*
@@ -45,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     );
     if (!project) {
       res.status(404).json({ error: "Not found" });
-    } else if (project.owner.email !== userEmail) {
+    } else if (project.owner?.email !== userEmail) {
       res.status(401).json({ error: "Unauthorized" });
       return;
     }
@@ -77,7 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
     if (!project) {
       res.status(404).json({ error: "Not found" });
-    } else if (project.owner.email !== userEmail) {
+    } else if (project.owner?.email !== userEmail) {
       res.status(401).json({ error: "Unauthorized" });
     } else {
       const mockApiExists = project.mockApis.includes(req.body.mockApiId);
