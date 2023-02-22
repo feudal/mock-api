@@ -5,5 +5,5 @@ export * from "./Modals";
 export * from "./Project";
 export * from "./CustomHead";
 export * from "./Loader";
-export * from "./PageTitle";
 export * from "./UserList";
+export * from "./BreadCrumbs";

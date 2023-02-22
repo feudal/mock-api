@@ -8,7 +8,7 @@ import {
   Loader,
   MockApiForm,
   MockApiList,
-  PageTitle,
+  Breadcrumbs,
   UserList,
 } from "components";
 
@@ -23,18 +23,18 @@ export default function MockApiPage() {
   );
   const {
     hasPermission,
-    data: { mockApis, users },
+    data: { mockApis, name, users },
   } = data || { hasPermission: false, data: {} };
 
   if (isLoading) return <Loader />;
 
   return (
     <>
-      <CustomHead title={`Project - ${mockApis?.name}`} />
+      <CustomHead title={`Project - ${name}`} />
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <PageTitle entity="Project" name={mockApis?.name} />
+          <Breadcrumbs projectName={name} />
         </Grid>
 
         {hasPermission ? (

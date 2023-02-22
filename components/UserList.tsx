@@ -52,7 +52,6 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
   const availableUsers = allUsers?.data?.filter(
     (user: User) => !users?.some((u) => u._id === user._id)
   );
-  console.log({ allUsers, users, hasPermission, availableUsers });
 
   return (
     <Card>

@@ -12,7 +12,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const project = await Project.findOne({ _id: req.query.id }).populate(
       "users"
     );
-    console.log(project);
     const users = project?.users;
     await db.disconnect();
 
