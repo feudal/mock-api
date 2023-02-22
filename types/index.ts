@@ -21,6 +21,7 @@ export interface Project {
   owner: User;
   users: User[];
   mockApis: MockApi[];
+  hasPermission: boolean;
 }
 
 export interface User {

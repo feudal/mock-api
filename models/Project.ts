@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const projectSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  hasPermission: { type: Boolean, default: false },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
