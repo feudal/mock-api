@@ -35,6 +35,8 @@ export const MockApi = () => {
     mutate,
   } = useSWR(`/api/mock-api/${query.id}`, fetcher);
 
+  const { name, fields, data } = api?.data || {};
+
   // TODO: Move this to a separate component
   const dataState = (isLoading || isError) && (
     <Grid
@@ -56,7 +58,7 @@ export const MockApi = () => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h4">Mock API - {api?.name}</Typography>
+        <Typography variant="h4">Mock API - {name}</Typography>
       </CardContent>
 
       <Divider />
@@ -64,14 +66,14 @@ export const MockApi = () => {
       {dataState || (
         <>
           <CardContent>
-            <MockApiInterface name={api?.name} fields={api?.fields} />
+            <MockApiInterface name={name} fields={fields} />
           </CardContent>
 
           <Divider />
 
           <CardContent>
-            {api?.data?.length !== 0 ? (
-              <MockApiData apiName={api?.name} data={api?.data} />
+            {data?.length !== 0 ? (
+              <MockApiData apiName={name} data={data} />
             ) : (
               <form>
                 <TextField
