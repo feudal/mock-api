@@ -115,7 +115,7 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
           </React.Fragment>
         ))}
 
-        {(availableUsers?.length > 0 || hasPermission) && (
+        {hasPermission && availableUsers?.length > 0 && (
           <ListItem>
             <Button
               fullWidth

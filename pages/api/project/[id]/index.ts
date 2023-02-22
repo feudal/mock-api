@@ -60,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         return mockApiFields?.fields;
       })
     );
-    const allFieldsIds = allFields.flat().map((field) => field._id);
+    const allFieldsIds = allFields.flat().map((field) => field?._id);
     await Field.deleteMany({ _id: { $in: allFieldsIds } });
     await MockApi.deleteMany({ _id: { $in: allMockApis } });
     await project.remove();
