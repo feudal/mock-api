@@ -93,7 +93,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         );
         let enumFields: string[] = [];
         if (req.body.enumFields)
-          await Promise.all(
+          enumFields = await Promise.all(
             req.body.enumFields?.map(async (field: any) => {
               const createdField = await EnumField.create(field);
               return createdField._id;
