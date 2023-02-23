@@ -6,6 +6,7 @@ interface DeleteProjectModalProps {
   open: boolean;
   handleClose: () => void;
   action: () => void;
+  isLoading?: boolean;
 }
 
 export const DeleteProjectModal = ({
@@ -13,6 +14,7 @@ export const DeleteProjectModal = ({
   open,
   handleClose,
   action,
+  isLoading,
 }: DeleteProjectModalProps) => {
   return (
     <Modal
@@ -20,10 +22,9 @@ export const DeleteProjectModal = ({
       handleClose={handleClose}
       title="Delete project"
       actionLabel="delete"
-      actionButtonProps={{
-        color: "error",
-      }}
+      actionButtonProps={{ color: "error" }}
       action={action}
+      isLoading={isLoading}
     >
       Are you sure you want to delete the project <b>{projectName}</b>? <br />
       This action cannot be undone.

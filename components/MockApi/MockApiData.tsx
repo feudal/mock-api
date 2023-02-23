@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
   Card,
@@ -14,8 +15,9 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useSWRConfig } from "swr";
 import { useRouter } from "next/router";
+import useSWRMutation from "swr/mutation";
 
-const BUTTON_STYLE = {
+const button_style = {
   textTransform: "none",
   mb: 2,
   padding: 2,
@@ -23,7 +25,7 @@ const BUTTON_STYLE = {
   justifyContent: "space-between",
 };
 
-const PAPER_STYLE = {
+const paper_style = {
   marginY: 2,
   padding: 2,
   overflowX: "scroll",
@@ -35,19 +37,22 @@ export interface MockApiDataProps {
   apiName?: string;
 }
 
-const deleteData = async (name?: string) => {
-  if (!name) return;
-
-  await axios
-    .delete(`/api/data/${name}`)
-    .catch((err) => toast.error(err.response.data.error));
-};
+const deleteData = async (url: string) => await axios.delete(url);
 
 export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
   const [locationOrigin, setLocationOrigin] = useState<string>("");
   const [linkCopied, setLinkCopied] = useState(false);
   const { query } = useRouter();
   const { mutate } = useSWRConfig();
+
+  const { trigger, isMutating } = useSWRMutation(
+    `/api/data/${apiName}`,
+    deleteData,
+    {
+      onSuccess: () => mutate(`/api/mock-api/${query.id}`),
+      onError: (err) => toast.error(err.message),
+    }
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -69,7 +74,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
         <Button
           fullWidth
           variant="outlined"
-          sx={BUTTON_STYLE}
+          sx={button_style}
           href={`${locationOrigin}/api/data/${apiName}`}
           target="_blank"
           endIcon={
@@ -92,18 +97,18 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
           {locationOrigin}/api/data/{apiName}
         </Button>
 
-        <Button
+        <LoadingButton
+          sx={{ paddingInline: 5 }}
           variant="contained"
           color="error"
-          onClick={async () => {
-            await deleteData(apiName);
-            mutate(`/api/mock-api/${query.id}`);
-          }}
+          onClick={trigger}
+          loading={isMutating}
+          loadingPosition="start"
         >
           Delete all data
-        </Button>
+        </LoadingButton>
 
-        <Paper elevation={0} sx={PAPER_STYLE} className="no-scrollbar">
+        <Paper elevation={0} sx={paper_style} className="no-scrollbar">
           <pre>
             <code>data = {JSON.stringify(data, null, 2)}</code>
           </pre>

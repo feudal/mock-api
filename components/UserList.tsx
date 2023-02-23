@@ -17,12 +17,14 @@ import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
+import useSWRMutation from "swr/mutation";
 
 import { AddUserToProject, DeleteUserAccessModal } from "components";
 import { User } from "types";
 import { useRouter } from "next/router";
+import { fetcher } from "utils";
 
-const LIST_STYLE = {
+const list_style = {
   width: "100%",
   bgcolor: "background.paper",
   borderRadius: 1,
@@ -34,11 +36,7 @@ interface UserListProps {
   hasPermission?: boolean;
 }
 
-const removeUserFromList = async (projectId: string, userId: string) => {
-  await axios
-    .patch(`/api/project/${projectId}/users/${userId}`)
-    .catch((err) => toast.error(err.response.data.error));
-};
+const removeUserFromList = async (url: string) => await axios.patch(url);
 
 export const UserList = ({ users, hasPermission }: UserListProps) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -46,17 +44,28 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
 
-  const fetcher = async (url: string) => fetch(url).then((r) => r.json());
   const { data: allUsers } = useSWR("/api/user", fetcher);
-
   const availableUsers = allUsers?.data?.filter(
     (user: User) => !users?.some((u) => u._id === user._id)
+  );
+
+  const url = `/api/project/${router.query.projectId}`;
+  const { trigger, isMutating } = useSWRMutation(
+    url,
+    () => removeUserFromList(`${url}/users/${selectedUser?._id}`),
+    {
+      onSuccess: () => {
+        mutate(url);
+        setSelectedUser(null);
+      },
+      onError: (err) => toast.error(err.message),
+    }
   );
 
   return (
     <Card>
       <List
-        sx={LIST_STYLE}
+        sx={list_style}
         component="nav"
         subheader={
           <ListSubheader component="div">Users in project</ListSubheader>
@@ -102,14 +111,8 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
                 userName={user.name}
                 open={selectedUser?._id === user._id}
                 handleClose={() => setSelectedUser(null)}
-                action={async () => {
-                  await removeUserFromList(
-                    router.query.projectId as string,
-                    user._id
-                  );
-                  mutate(`/api/project/${router.query.projectId}`);
-                  setSelectedUser(null);
-                }}
+                action={trigger}
+                isLoading={isMutating}
               />
             )}
           </React.Fragment>

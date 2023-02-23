@@ -11,11 +11,11 @@ import {
   Breadcrumbs,
   UserList,
 } from "components";
+import { fetcher } from "utils";
 
 export default function MockApiPage() {
   const { query } = useRouter();
 
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
   const { data, isLoading } = useSWR(
     `/api/project/${query.projectId}`,
     fetcher,

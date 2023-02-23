@@ -6,6 +6,7 @@ interface DeleteMockApiModalProps {
   open: boolean;
   handleClose: () => void;
   action: () => void;
+  isLoading?: boolean;
 }
 
 export const DeleteMockApiModal = ({
@@ -13,6 +14,7 @@ export const DeleteMockApiModal = ({
   open,
   handleClose,
   action,
+  isLoading,
 }: DeleteMockApiModalProps) => {
   return (
     <Modal
@@ -20,10 +22,9 @@ export const DeleteMockApiModal = ({
       handleClose={handleClose}
       title="Delete mock API"
       actionLabel="delete"
-      actionButtonProps={{
-        color: "error",
-      }}
+      actionButtonProps={{ color: "error" }}
       action={action}
+      isLoading={isLoading}
     >
       Are you sure you want to delete the api <b>{apiName}</b>? <br />
       This action cannot be undone.

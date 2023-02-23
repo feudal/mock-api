@@ -14,13 +14,13 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
+import useSWRMutation from "swr/mutation";
 
 import { MockApi } from "types";
 import { DeleteMockApiModal } from "components";
-import { useState } from "react";
-import React from "react";
 
 const list_style = {
   width: "100%",
@@ -36,11 +36,7 @@ const item_style = {
   textOverflow: "ellipsis",
 };
 
-const deleteApi = async (id: string) => {
-  await axios
-    .delete(`/api/mock-api/${id}`)
-    .catch((err) => toast.error(err.response.data.error));
-};
+const deleteApi = async (url: string) => await axios.delete(url);
 
 interface MockApiListProps {
   mockApis: MockApi[];
@@ -51,6 +47,18 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
   const [selectedApi, setSelectedApi] = useState<MockApi | null>(null);
   const router = useRouter();
   const { mutate } = useSWRConfig();
+
+  const { trigger, isMutating } = useSWRMutation(
+    `/api/mock-api/${router.query.id}`,
+    () => deleteApi(`/api/mock-api/${selectedApi?._id}`),
+    {
+      onSuccess: async () => {
+        await mutate(`/api/project/${router.query.projectId}`);
+        setSelectedApi(null);
+      },
+      onError: (err) => toast.error(err.message),
+    }
+  );
 
   return (
     <Card>
@@ -90,7 +98,7 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
 
                 {hasPermission && (
                   <IconButton
-                    onClick={async (e) => {
+                    onClick={(e) => {
                       e.preventDefault();
                       setSelectedApi(api);
                     }}
@@ -110,11 +118,8 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
                 apiName={api.name}
                 open={selectedApi?._id === api._id}
                 handleClose={() => setSelectedApi(null)}
-                action={async () => {
-                  await deleteApi(api._id);
-                  await mutate(`/api/project/${router.query.projectId}`);
-                  setSelectedApi(null);
-                }}
+                action={trigger}
+                isLoading={isMutating}
               />
             )}
           </React.Fragment>

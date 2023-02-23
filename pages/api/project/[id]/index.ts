@@ -86,17 +86,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         res.status(400).json({ error: "Mock API already exists" });
       } else {
         const fields = await Promise.all(
-          req.body.fields.map(async (field: any) => {
+          req.body.fields?.map(async (field: any) => {
             const createdField = await Field.create(field);
             return createdField._id;
           })
         );
-        const enumFields = await Promise.all(
-          req.body.enumFields.map(async (field: any) => {
-            const createdField = await EnumField.create(field);
-            return createdField._id;
-          })
-        );
+        let enumFields: string[] = [];
+        if (req.body.enumFields)
+          await Promise.all(
+            req.body.enumFields?.map(async (field: any) => {
+              const createdField = await EnumField.create(field);
+              return createdField._id;
+            })
+          );
 
         const mockApi = await MockApi.create({
           name: req.body.name,

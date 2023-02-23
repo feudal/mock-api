@@ -1,5 +1,5 @@
+import { LoadingButton } from "@mui/lab";
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -12,24 +12,29 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 import { useRouter } from "next/router";
+import useSWRMutation from "swr/mutation";
 
 import { Field, MockApi } from "types";
 import { kebabCase } from "utils";
 import { InterfaceInput } from "components";
+
+const createApi = async (url: string, { arg }: { arg: Partial<MockApi> }) =>
+  await axios.patch(url, arg);
 
 export const MockApiForm = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
   const { mutate } = useSWRConfig();
   const { query } = useRouter();
 
-  const createApi = async (api: Partial<MockApi>) => {
-    let error = false;
-    await axios.patch(`/api/project/${query.projectId}`, api).catch((err) => {
-      toast.error(err.response.data.error);
-      error = true;
-    });
-    return error;
-  };
+  const { trigger, isMutating } = useSWRMutation(
+    `/api/project/${query.projectId}`,
+    createApi,
+    {
+      onSuccess: async () =>
+        (await mutate(`/api/project/${query.projectId}`)) && reset(),
+      onError: (err) => toast.error(err.message),
+    }
+  );
 
   return (
     <Card>
@@ -42,17 +47,16 @@ export const MockApiForm = () => {
       <Divider />
 
       <form
-        onSubmit={handleSubmit(async (data) => {
+        onSubmit={handleSubmit((data) => {
           data.name = kebabCase(data.name);
-          data.fields = data.fields.filter(
-            (field: Field) => field !== undefined
+          data.fields = data.fields?.filter((f: Field) => f !== undefined);
+          data.enumFields = data.enumFields?.filter(
+            (f: Field) => f !== undefined,
+            (f: Field) => f.name !== ""
           );
-          const error = await createApi({
-            ...data,
-            projectId: query.id as string,
-          });
-          mutate(`/api/project/${query.projectId}`);
-          if (!error) reset();
+          if (data.fields.length === 0) delete data.fields;
+
+          trigger(data);
         })}
       >
         <CardContent>
@@ -71,9 +75,15 @@ export const MockApiForm = () => {
         <Divider />
 
         <CardActions>
-          <Button type="submit" variant="contained" sx={{ paddingInline: 10 }}>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            sx={{ paddingInline: 10 }}
+            loading={isMutating}
+            loadingPosition="start"
+          >
             Create
-          </Button>
+          </LoadingButton>
         </CardActions>
       </form>
     </Card>

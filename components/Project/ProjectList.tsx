@@ -19,20 +19,23 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 
 import { Project } from "types";
 import { DeleteProjectModal } from "components";
+import { fetcher } from "utils";
 
-const deleteProject = async (id: string) => {
-  await axios
-    .delete(`/api/project/${id}`)
-    .catch((err) => toast.error(err.response.data.error));
+const list_style = {
+  width: "100%",
+  bgcolor: "background.paper",
+  borderRadius: 1,
+  overflow: "hidden",
 };
+
+const deleteProject = async (url: string) => await axios.delete(url);
 
 export const ProjectList = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const fetcher = async (url: string) =>
-    await axios.get(url).then((res) => res.data);
 
   const {
     data: projects,
@@ -40,6 +43,18 @@ export const ProjectList = () => {
     isLoading,
     mutate,
   } = useSWR("/api/project", fetcher);
+
+  const { trigger, isMutating } = useSWRMutation(
+    "/api/project",
+    () => deleteProject(`/api/project/${selectedProject?._id}`),
+    {
+      onSuccess: async () => {
+        mutate("/api/project");
+        setSelectedProject(null);
+      },
+      onError: (err) => toast.error(err.message),
+    }
+  );
 
   // TODO: move this to a separate component
   const state = (isLoading || isError || projects?.data?.length === 0) && (
@@ -67,12 +82,7 @@ export const ProjectList = () => {
   return (
     <Card>
       <List
-        sx={{
-          width: "100%",
-          bgcolor: "background.paper",
-          borderRadius: 1,
-          overflow: "hidden",
-        }}
+        sx={list_style}
         component="nav"
         aria-labelledby="nested-list-subheader"
         subheader={
@@ -119,11 +129,8 @@ export const ProjectList = () => {
               projectName={project.name}
               open={selectedProject?._id === project._id}
               handleClose={() => setSelectedProject(null)}
-              action={async () => {
-                await deleteProject(project._id);
-                mutate("/api/project");
-                setSelectedProject(null);
-              }}
+              action={trigger}
+              isLoading={isMutating}
             />
           </React.Fragment>
         ))}

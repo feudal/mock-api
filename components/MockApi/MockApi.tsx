@@ -13,29 +13,37 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 
 import { MockApiData, MockApiInterface } from "components";
+import { fetcher } from "utils";
+import { LoadingButton } from "@mui/lab";
 
-const generateMockApi = async (name: string, count: number) => {
-  await axios
-    .post(`/api/data/generate/${name}`, { count })
-    .catch((err) => toast.error(err.response.data.error));
-};
+const generateMockApiData = async (
+  url: string,
+  { arg: count }: { arg: string }
+) => await axios.post(url, { count });
 
 export const MockApi = () => {
   const { query } = useRouter();
   const { register, handleSubmit } = useForm();
 
-  const fetcher = async (url: string) =>
-    await axios.get(url).then((res) => res.data);
   const {
     data: api,
     error: isError,
     isLoading,
     mutate,
   } = useSWR(`/api/mock-api/${query.id}`, fetcher);
-
   const { name, fields, enumFields, data } = api?.data || {};
+
+  const { trigger, isMutating } = useSWRMutation(
+    `/api/data/generate/${name}`,
+    generateMockApiData,
+    {
+      onSuccess: () => mutate(`/api/mock-api/${query.id}`),
+      onError: (err) => toast.error(err.message),
+    }
+  );
 
   // TODO: Move this to a separate component
   const dataState = (isLoading || isError) && (
@@ -94,16 +102,15 @@ export const MockApi = () => {
                   })}
                 />
 
-                <Button
+                <LoadingButton
                   variant="contained"
-                  sx={{ mt: 2 }}
-                  onClick={handleSubmit(async (data) => {
-                    await generateMockApi(name, data.count);
-                    mutate(`/api/mock-api/${query.id}`);
-                  })}
+                  sx={{ mt: 2, paddingInline: 5 }}
+                  onClick={handleSubmit((data) => trigger(data.count))}
+                  loading={isMutating}
+                  loadingPosition="start"
                 >
                   Generate objects for api
-                </Button>
+                </LoadingButton>
               </form>
             )}
           </CardContent>

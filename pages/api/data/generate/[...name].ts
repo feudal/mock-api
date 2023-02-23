@@ -17,6 +17,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(400).json({ message: "Missing name" });
       return;
     }
+    const count = parseInt(req.body.count);
+    if (Number.isNaN(count) || count <= 0) {
+      res.status(400).json({ message: "Invalid count" });
+      return;
+    }
 
     await db.connect();
     const mockApi = await MockApi.findOne({ name: mockApiName })

@@ -1,6 +1,6 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -12,28 +12,32 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
+import useSWRMutation from "swr/mutation";
 
 import { Project, User } from "types";
 import { AutoCompleteMultiSelector } from "components";
+import { fetcher } from "utils";
 
-const createProject = async (project: Partial<Project>) => {
-  let error = false;
-  await axios.post("/api/project", project).catch((err) => {
-    error = true;
-    toast.error(err.response.data.error);
-  });
-  return error;
-};
+const createProject = async (url: string, { arg }: { arg: Partial<Project> }) =>
+  await axios.post(url, arg);
 
 export const ProjectForm = () => {
   const { register, handleSubmit, reset } = useForm();
 
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
   const { data: users } = useSWR("/api/user", fetcher, {
     onError: (err) => toast.error(err.message),
   });
 
   const { mutate } = useSWRConfig();
+
+  const { trigger, isMutating } = useSWRMutation(
+    "/api/project",
+    createProject,
+    {
+      onSuccess: async () => (await mutate("/api/project")) && reset(),
+      onError: (err) => toast.error(err.message),
+    }
+  );
 
   return (
     <Card>
@@ -45,13 +49,7 @@ export const ProjectForm = () => {
 
       <Divider />
 
-      <form
-        onSubmit={handleSubmit(async (data) => {
-          const error = await createProject(data);
-          mutate("/api/project");
-          if (!error) reset();
-        })}
-      >
+      <form onSubmit={handleSubmit((data) => trigger(data))}>
         <CardContent>
           <TextField
             fullWidth
@@ -76,9 +74,15 @@ export const ProjectForm = () => {
         <Divider />
 
         <CardActions>
-          <Button type="submit" variant="contained" sx={{ paddingInline: 10 }}>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            sx={{ paddingInline: 10 }}
+            loading={isMutating}
+            loadingPosition="start"
+          >
             Create
-          </Button>
+          </LoadingButton>
         </CardActions>
       </form>
     </Card>

@@ -1,6 +1,6 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Modal as MUIModal,
-  Box,
   Typography,
   Card,
   CardContent,
@@ -8,8 +8,6 @@ import {
   Button,
   CardActions,
   Divider,
-  SxProps,
-  Theme,
 } from "@mui/material";
 
 const modal_style = {
@@ -31,6 +29,7 @@ interface ModalProps {
   title: string;
   actionLabel?: string;
   action: () => void;
+  isLoading?: boolean;
   actionButtonProps?: any;
   modalStyles?: any;
   children: React.ReactNode;
@@ -42,6 +41,7 @@ export const Modal = ({
   title,
   actionLabel = "Create",
   action,
+  isLoading,
   modalStyles,
   actionButtonProps,
   children,
@@ -69,14 +69,16 @@ export const Modal = ({
             Close
           </Button>
 
-          <Button
+          <LoadingButton
             {...actionButtonProps}
             fullWidth
             variant="contained"
             onClick={action}
+            loading={isLoading}
+            loadingPosition="start"
           >
             {actionLabel}
-          </Button>
+          </LoadingButton>
         </CardActions>
       </Card>
     </MUIModal>

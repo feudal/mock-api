@@ -6,6 +6,7 @@ interface DeleteUserAccessModalProps {
   open: boolean;
   handleClose: () => void;
   action: () => void;
+  isLoading?: boolean;
 }
 
 export const DeleteUserAccessModal = ({
@@ -13,6 +14,7 @@ export const DeleteUserAccessModal = ({
   open,
   handleClose,
   action,
+  isLoading,
 }: DeleteUserAccessModalProps) => {
   return (
     <Modal
@@ -20,10 +22,9 @@ export const DeleteUserAccessModal = ({
       handleClose={handleClose}
       title="Delete user access"
       actionLabel="delete"
-      actionButtonProps={{
-        color: "error",
-      }}
+      actionButtonProps={{ color: "error" }}
       action={action}
+      isLoading={isLoading}
     >
       Are you sure you want to delete {userName} from the list?
     </Modal>
