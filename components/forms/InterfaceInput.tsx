@@ -135,6 +135,7 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
                     return newEnumFields;
                   })
                 }
+                required={enumField?.choices?.length !== 0 ?? false}
               />
             </Grid>
 
