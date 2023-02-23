@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import React from "react";
 
 import { Field } from "types";
-import { pascalCase } from "utils";
+import { pascalCase, stripSlashes } from "utils";
 
 const text_style = {
   fontFamily: "monospace",
@@ -23,7 +23,7 @@ export const MockApiInterface = ({
   return (
     <pre>
       <Typography variant="h6" fontFamily="monospace">
-        interface {pascalCase(name)} &#123;
+        interface {stripSlashes(pascalCase(name))} &#123;
         <br />
         {fields?.map((field, idx) => (
           <Typography key={idx} sx={text_style}>

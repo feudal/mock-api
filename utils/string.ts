@@ -1,3 +1,9 @@
+export const stripSlashes = (str?: string) => {
+  if (typeof str !== "string") return str;
+
+  return str.replaceAll("/", "");
+};
+
 export const pascalCase = (str?: string) => {
   if (typeof str !== "string") return str;
 
