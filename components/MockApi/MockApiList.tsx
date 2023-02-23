@@ -22,11 +22,18 @@ import { DeleteMockApiModal } from "components";
 import { useState } from "react";
 import React from "react";
 
-const LIST_STYLE = {
+const list_style = {
   width: "100%",
   bgcolor: "background.paper",
   borderRadius: 1,
   overflow: "hidden",
+};
+
+const item_style = {
+  fontStyle: "italic",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 };
 
 const deleteApi = async (id: string) => {
@@ -48,7 +55,7 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
   return (
     <Card>
       <List
-        sx={LIST_STYLE}
+        sx={list_style}
         component="nav"
         aria-labelledby="nested-list-subheader"
         subheader={
@@ -76,7 +83,8 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
             >
               <ListItemButton>
                 <ListItemText
-                  sx={{ fontStyle: "italic" }}
+                  style={{ display: "inline-block" }}
+                  sx={item_style}
                   primary={`/${api.name}`}
                 />
 
