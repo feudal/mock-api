@@ -35,7 +35,7 @@ export const MockApi = () => {
     mutate,
   } = useSWR(`/api/mock-api/${query.id}`, fetcher);
 
-  const { name, fields, data } = api?.data || {};
+  const { name, fields, enumFields, data } = api?.data || {};
 
   // TODO: Move this to a separate component
   const dataState = (isLoading || isError) && (
@@ -66,7 +66,11 @@ export const MockApi = () => {
       {dataState || (
         <>
           <CardContent>
-            <MockApiInterface name={name} fields={fields} />
+            <MockApiInterface
+              name={name}
+              fields={fields}
+              enumFields={enumFields}
+            />
           </CardContent>
 
           <Divider />

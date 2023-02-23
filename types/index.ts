@@ -4,6 +4,7 @@ export interface MockApi {
   interfaceName: string;
   projectId: string;
   fields: Field[];
+  enumFields: Field[];
   data: Object[];
 
   createdAt: string;
@@ -12,7 +13,8 @@ export interface MockApi {
 
 export interface Field {
   name: string;
-  type: string[];
+  type?: string[];
+  choices?: string[];
 }
 
 export interface Project {
