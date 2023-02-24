@@ -16,7 +16,6 @@ import useSWRMutation from "swr/mutation";
 
 import { Project, User } from "types";
 import { AutoCompleteMultiSelector } from "components";
-import { fetcher } from "utils";
 
 const createProject = async (url: string, { arg }: { arg: Partial<Project> }) =>
   await axios.post(url, arg);
@@ -24,7 +23,7 @@ const createProject = async (url: string, { arg }: { arg: Partial<Project> }) =>
 export const ProjectForm = () => {
   const { register, handleSubmit, reset } = useForm();
 
-  const { data: users } = useSWR("/api/user", fetcher, {
+  const { data: users } = useSWR("/api/user", {
     onError: (err) => toast.error(err.message),
   });
 

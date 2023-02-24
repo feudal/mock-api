@@ -22,7 +22,6 @@ import useSWRMutation from "swr/mutation";
 import { AddUserToProject, DeleteUserAccessModal } from "components";
 import { User } from "types";
 import { useRouter } from "next/router";
-import { fetcher } from "utils";
 
 const list_style = {
   width: "100%",
@@ -44,7 +43,7 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
 
-  const { data: allUsers } = useSWR("/api/user", fetcher);
+  const { data: allUsers } = useSWR("/api/user");
   const availableUsers = allUsers?.data?.filter(
     (user: User) => !users?.some((u) => u._id === user._id)
   );

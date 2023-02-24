@@ -48,7 +48,7 @@ export const AddUserToProject = ({
       handleClose={handleClose}
       title="Add user to project"
       actionLabel="add"
-      modalStyles={{ width: "60vw" }}
+      modalStyles={{ width: 600 }}
       action={() => handleSubmit((data) => trigger(data.emails))()}
       isLoading={isMutating}
     >

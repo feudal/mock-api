@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
   Card,
@@ -16,8 +17,6 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { MockApiData, MockApiInterface } from "components";
-import { fetcher } from "utils";
-import { LoadingButton } from "@mui/lab";
 
 const generateMockApiData = async (
   url: string,
@@ -33,7 +32,7 @@ export const MockApi = () => {
     error: isError,
     isLoading,
     mutate,
-  } = useSWR(`/api/mock-api/${query.id}`, fetcher);
+  } = useSWR(`/api/mock-api/${query.id}`);
   const { name, fields, enumFields, data } = api?.data || {};
 
   const { trigger, isMutating } = useSWRMutation(

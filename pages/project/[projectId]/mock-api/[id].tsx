@@ -5,15 +5,11 @@ import { toast } from "react-toastify";
 
 import { Breadcrumbs, CustomHead, Loader, MockApi } from "components";
 import { MockApi as MockApiType } from "types";
-import { fetcher } from "utils";
 
 export default function MockApiPage() {
   const { query } = useRouter();
 
-  const { data, error, isLoading } = useSWR(
-    `/api/project/${query.projectId}`,
-    fetcher
-  );
+  const { data, error, isLoading } = useSWR(`/api/project/${query.projectId}`);
 
   const projectName = data?.data?.name;
   const mockApiName = data?.data?.mockApis?.find(

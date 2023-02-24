@@ -11,16 +11,13 @@ import {
   Breadcrumbs,
   UserList,
 } from "components";
-import { fetcher } from "utils";
 
 export default function MockApiPage() {
   const { query } = useRouter();
 
-  const { data, isLoading } = useSWR(
-    `/api/project/${query.projectId}`,
-    fetcher,
-    { onError: (err) => toast.error(err.message) }
-  );
+  const { data, isLoading } = useSWR(`/api/project/${query.projectId}`, {
+    onError: (err) => toast.error(err.message),
+  });
   const {
     hasPermission,
     data: { mockApis, name, users },

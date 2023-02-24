@@ -23,7 +23,6 @@ import useSWRMutation from "swr/mutation";
 
 import { Project } from "types";
 import { DeleteProjectModal } from "components";
-import { fetcher } from "utils";
 
 const list_style = {
   width: "100%",
@@ -42,7 +41,7 @@ export const ProjectList = () => {
     error: isError,
     isLoading,
     mutate,
-  } = useSWR("/api/project", fetcher);
+  } = useSWR("/api/project");
 
   const { trigger, isMutating } = useSWRMutation(
     "/api/project",
