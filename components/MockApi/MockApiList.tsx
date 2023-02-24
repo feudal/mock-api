@@ -34,6 +34,9 @@ const item_style = {
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
+  "& span": {
+    display: "unset",
+  },
 };
 
 const deleteApi = async (url: string) => await axios.delete(url);
@@ -91,7 +94,7 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
             >
               <ListItemButton>
                 <ListItemText
-                  style={{ display: "inline-block" }}
+                  title={api.name}
                   sx={item_style}
                   primary={`/${api.name}`}
                 />
