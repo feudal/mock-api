@@ -33,7 +33,7 @@ export const MockApi = () => {
     isLoading,
     mutate,
   } = useSWR(`/api/mock-api/${query.id}`);
-  const { name, fields, enumFields, data } = api?.data || {};
+  const { name, fields, data } = api?.data || {};
 
   const { trigger, isMutating } = useSWRMutation(
     `/api/data/generate/${name}`,
@@ -73,11 +73,7 @@ export const MockApi = () => {
       {dataState || (
         <>
           <CardContent>
-            <MockApiInterface
-              name={name}
-              fields={fields}
-              enumFields={enumFields}
-            />
+            <MockApiInterface name={name} fields={fields} />
           </CardContent>
 
           <Divider />

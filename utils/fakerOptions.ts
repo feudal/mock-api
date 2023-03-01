@@ -314,4 +314,8 @@ export const fakerOptions: { [key: string]: string[] } = {
   word: WordModule,
 };
 
-export const fakerOptionsKeys = Object.keys(fakerOptions);
+export const fakerOptionsKeys = [
+  "enum",
+  "interface",
+  ...Object.keys(fakerOptions),
+];

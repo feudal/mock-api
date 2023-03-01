@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-import { EnumField, Field, MockApi, Project } from "models";
+import { Field, MockApi, Project } from "models";
 import { db } from "utils";
 import { User } from "types";
 
@@ -86,25 +86,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         res.status(400).json({ error: "Mock API already exists" });
       } else {
         const fields = await Promise.all(
-          req.body.fields?.map(async (field: any) => {
+          req.body.fields.map(async (field: any) => {
             const createdField = await Field.create(field);
             return createdField._id;
           })
         );
-        let enumFields: string[] = [];
-        if (req.body.enumFields)
-          enumFields = await Promise.all(
-            req.body.enumFields?.map(async (field: any) => {
-              const createdField = await EnumField.create(field);
-              return createdField._id;
-            })
-          );
 
         const mockApi = await MockApi.create({
           name: req.body.name,
           project: req.query.id,
           fields,
-          enumFields,
         });
 
         project.mockApis.push(mockApi._id);

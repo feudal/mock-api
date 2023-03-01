@@ -12,29 +12,31 @@ const text_style = {
 export interface MockApiInterfaceProps {
   name?: string;
   fields?: Field[];
-  enumFields?: Field[];
 }
 
-export const MockApiInterface = ({
-  name,
-  fields,
-  enumFields,
-}: MockApiInterfaceProps) => {
+export const MockApiInterface = ({ name, fields }: MockApiInterfaceProps) => {
   return (
     <pre>
       <Typography variant="h6" fontFamily="monospace">
         interface {stripSlashes(pascalCase(name))} &#123;
         <br />
-        {fields?.map((field, idx) => (
-          <Typography key={idx} sx={text_style}>
-            {field.name}: {field?.type?.join("-")}; <br />
-          </Typography>
-        ))}
-        {enumFields?.map((enumField, idx) => (
-          <Typography key={idx} sx={text_style}>
-            {enumField.name}: {enumField?.choices?.join(" | ")}; <br />
-          </Typography>
-        ))}
+        {fields?.map((field: Field, idx) => {
+          if (field.type?.[0] === "enum") {
+            return (
+              <Typography key={idx} sx={text_style}>
+                {field.name}: {field?.type[1]}; <br />
+              </Typography>
+            );
+          } else if (field.type?.[0] === "interface") {
+            return <p key={idx}>interface</p>;
+          } else {
+            return (
+              <Typography key={idx} sx={text_style}>
+                {field.name}: {field.type?.join("-")}; <br />
+              </Typography>
+            );
+          }
+        })}
         &#125;
       </Typography>
     </pre>

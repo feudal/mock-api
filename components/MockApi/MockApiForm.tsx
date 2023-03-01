@@ -50,12 +50,6 @@ export const MockApiForm = () => {
         onSubmit={handleSubmit((data) => {
           data.name = kebabCase(data.name);
           data.fields = data.fields?.filter((f: Field) => f !== undefined);
-          data.enumFields = data.enumFields?.filter(
-            (f: Field) => f !== undefined,
-            (f: Field) => f.name !== ""
-          );
-          if (data.fields.length === 0) delete data.fields;
-
           trigger(data);
         })}
       >

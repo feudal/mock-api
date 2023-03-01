@@ -24,9 +24,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
 
     await db.connect();
-    const mockApi = await MockApi.findOne({ name: mockApiName })
-      .populate("fields")
-      .populate("enumFields");
+    const mockApi = await MockApi.findOne({ name: mockApiName }).populate(
+      "fields"
+    );
 
     if (!mockApi) {
       res.status(404).json({ error: "MockApi not found" });
@@ -35,7 +35,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
 
     const fields = mockApi.fields;
-    const enumFields = mockApi.enumFields;
 
     // Generate fake data
     let data: string[] = [];
@@ -43,14 +42,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       data.push(
         Object.assign(
           { id: faker.datatype.uuid() },
-          ...fields.map((field: Field) => ({
-            // @ts-ignore
-            [field.name]: faker?.[field.type[0]]?.[field.type[1]]?.(),
-          })),
-          ...enumFields.map((field: Field) => ({
-            [field.name]:
-              field.choices?.[faker.datatype.number(field.choices.length - 1)],
-          }))
+
+          ...fields.map((field: Field) => {
+            console.log(field.type?.[0]);
+            switch (field.type?.[0]) {
+              case "enum":
+                return {
+                  [field.name]:
+                    field.type[1].split(" | ")?.[
+                      //generate random number between 0 and length of enum
+                      faker.datatype.number(
+                        field.type[1].split(" | ").length - 1
+                      )
+                    ],
+                };
+              case "interface":
+                return "interface";
+              default:
+                return {
+                  // @ts-ignore
+                  [field.name]: faker?.[field.type[0]]?.[field.type[1]]?.(),
+                };
+            }
+          })
         )
       );
     }

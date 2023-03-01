@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Field } from "types";
 
 import { fakerOptions, fakerOptionsKeys } from "utils";
+import { ChipsInput } from ".";
 
-export interface FieldsTypSelectorProps
-  extends React.HTMLAttributes<HTMLSelectElement> {
+export interface FieldsTypSelectorProps {
   name: string;
   index: number;
   required?: boolean;
@@ -17,11 +17,12 @@ export const FieldsTypeSelector = ({
   index,
   setFields,
   required,
-  ...props
 }: FieldsTypSelectorProps) => {
-  const [fakerOption, setFakerOption] = useState<string>(fakerOptionsKeys[0]);
+  const [fakerOption, setFakerOption] = useState<string>(fakerOptionsKeys[2]);
   const [subOption, setSubOption] = useState<string>(
-    fakerOptions[fakerOption][0]
+    fakerOption === "enum" || fakerOption === "interface"
+      ? ""
+      : fakerOptions[fakerOption][0]
   );
 
   useEffect(() => {
@@ -34,43 +35,73 @@ export const FieldsTypeSelector = ({
 
   return (
     <>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <Select
-          // {...props}
           fullWidth
           variant="outlined"
           size="small"
           required={required}
           defaultValue={fakerOption}
           onChange={(v) => {
-            setFakerOption(v.target.value);
-            setSubOption(fakerOptions[v.target.value][0]);
+            switch (v.target.value) {
+              case "enum":
+                setFakerOption("enum");
+                setSubOption("");
+                return;
+              case "interface":
+                setFakerOption("interface");
+                setSubOption("");
+                return;
+              default:
+                setFakerOption(v.target.value);
+                setSubOption(fakerOptions[v.target.value][0]);
+            }
           }}
         >
           {fakerOptionsKeys.map((fakerOption, idx) => (
-            <MenuItem key={idx} value={fakerOption}>
+            <MenuItem
+              key={idx}
+              value={fakerOption}
+              sx={{
+                color:
+                  fakerOption === "enum" || fakerOption === "interface"
+                    ? "primary.main"
+                    : "text.primary",
+              }}
+            >
               {fakerOption}
             </MenuItem>
           ))}
         </Select>
       </Grid>
 
-      <Grid item xs={6}>
-        <Select
-          // {...props}
-          fullWidth
-          variant="outlined"
-          size="small"
-          required={required}
-          value={subOption}
-          onChange={(v) => setSubOption(v.target.value)}
-        >
-          {fakerOptions[fakerOption].map((subOption, idx) => (
-            <MenuItem key={idx} value={subOption}>
-              {subOption}
-            </MenuItem>
-          ))}
-        </Select>
+      <Grid item xs={8}>
+        {fakerOption !== "enum" && fakerOption !== "interface" && (
+          <Select
+            fullWidth
+            variant="outlined"
+            size="small"
+            required={required}
+            value={subOption}
+            onChange={(v) => setSubOption(v.target.value)}
+          >
+            {fakerOptions[fakerOption].map((subOption, idx) => (
+              <MenuItem key={idx} value={subOption}>
+                {subOption}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+
+        {fakerOption === "enum" && (
+          <ChipsInput
+            label="Enum choices"
+            placeholder="Enter choices"
+            onChange={(values) => setSubOption(values.join(" | "))}
+          />
+        )}
+
+        {fakerOption === "interface" && <div>Interface</div>}
       </Grid>
     </>
   );

@@ -12,12 +12,6 @@ const mockApiSchema = new mongoose.Schema({
       ref: "Field",
     },
   ],
-  enumFields: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "EnumField",
-    },
-  ],
   data: [{ type: Object }],
 });
 

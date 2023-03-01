@@ -18,9 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
      * ================================= GET =================================
      */
     await db.connect();
-    const mockApi = await MockApi.findById(req.query.id)
-      .populate("fields")
-      .populate("enumFields");
+    const mockApi = await MockApi.findById(req.query.id).populate("fields");
     await db.disconnect();
 
     if (mockApi) {
@@ -38,8 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     await db.connect();
     const mockApi = await MockApi.findById(req.query.id)
       .populate("project")
-      .populate("fields")
-      .populate("enumFields");
+      .populate("fields");
 
     if (!mockApi) {
       res.status(404).json({ error: "Not found" });
@@ -47,7 +44,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(401).json({ error: "Unauthorized" });
     } else {
       await Field.deleteMany({ _id: { $in: mockApi.fields } });
-      await Field.deleteMany({ _id: { $in: mockApi.enumFields } });
       await mockApi.remove();
       res.status(200).json({ message: "Deleted" });
     }
