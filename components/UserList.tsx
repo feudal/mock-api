@@ -1,15 +1,4 @@
-import {
-  Card,
-  List,
-  ListSubheader,
-  Divider,
-  ListItemText,
-  Typography,
-  Box,
-  ListItem,
-  Stack,
-  Button,
-} from "@mui/material";
+import { Card, Button, CardActions } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -20,16 +9,10 @@ import {
   AddUserToProject,
   DeleteButton,
   DeleteUserAccessModal,
+  List,
 } from "components";
 import { User } from "types";
 import { useRouter } from "next/router";
-
-const list_style = {
-  width: "100%",
-  bgcolor: "background.paper",
-  borderRadius: 1,
-  overflow: "hidden",
-};
 
 interface UserListProps {
   users: User[];
@@ -64,46 +47,22 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
 
   return (
     <Card>
-      <List
-        sx={list_style}
-        component="nav"
-        subheader={
-          <ListSubheader component="div">Users in project</ListSubheader>
-        }
-      >
-        <Divider />
-
-        {users?.length === 0 && (
-          <Box sx={{ p: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              No users
-            </Typography>
-          </Box>
-        )}
-
+      <List title="Users in project" emptyMessage="No users">
         {users?.map((user: User) => (
           <React.Fragment key={user._id}>
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Stack>
-                    {user.name}
-                    <Typography variant="caption" color="text.secondary">
-                      {user.email}
-                    </Typography>
-                  </Stack>
-                }
-              />
-
-              {hasPermission && (
-                <DeleteButton
-                  title="Delete user from list"
-                  onClick={() => setSelectedUser(user)}
-                />
-              )}
-            </ListItem>
-
-            <Divider />
+            <List.Item
+              key={user._id}
+              icon={
+                hasPermission && (
+                  <DeleteButton
+                    title="Delete project"
+                    onClick={() => setSelectedUser(user)}
+                  />
+                )
+              }
+            >
+              {user.name}
+            </List.Item>
 
             {hasPermission && (
               <DeleteUserAccessModal
@@ -116,25 +75,25 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
             )}
           </React.Fragment>
         ))}
-
-        {hasPermission && availableUsers?.length > 0 && (
-          <ListItem>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => setAddUserModalOpen(true)}
-            >
-              Add users
-            </Button>
-
-            <AddUserToProject
-              open={addUserModalOpen}
-              handleClose={() => setAddUserModalOpen(false)}
-              users={availableUsers}
-            />
-          </ListItem>
-        )}
       </List>
+
+      {hasPermission && availableUsers?.length > 0 && (
+        <CardActions>
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={() => setAddUserModalOpen(true)}
+          >
+            Add users
+          </Button>
+
+          <AddUserToProject
+            open={addUserModalOpen}
+            handleClose={() => setAddUserModalOpen(false)}
+            users={availableUsers}
+          />
+        </CardActions>
+      )}
     </Card>
   );
 };

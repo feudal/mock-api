@@ -1,32 +1,13 @@
-import {
-  Card,
-  CircularProgress,
-  Divider,
-  Grid,
-  List,
-  ListItemButton,
-  ListItemText,
-  ListSubheader,
-  Typography,
-} from "@mui/material";
-import { Stack } from "@mui/system";
 import FolderIcon from "@mui/icons-material/Folder";
+import { Stack, Card } from "@mui/material";
 import axios from "axios";
-import Link from "next/link";
 import React, { SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { Project } from "types";
-import { DeleteButton, DeleteProjectModal } from "components";
-
-const list_style = {
-  width: "100%",
-  bgcolor: "background.paper",
-  borderRadius: 1,
-  overflow: "hidden",
-};
+import { DeleteButton, DeleteProjectModal, List, StateCard } from "components";
 
 const deleteProject = async (url: string) => await axios.delete(url);
 
@@ -52,59 +33,20 @@ export const ProjectList = () => {
     }
   );
 
-  // TODO: move this to a separate component
-  const state = (isLoading || isError || projects?.data?.length === 0) && (
-    <Grid
-      alignContent="center"
-      justifyContent="center"
-      container
-      height="50vh"
-      minHeight={200}
-    >
-      {isLoading && <CircularProgress size={100} />}
-      {isError && (
-        <Typography align="center" variant="h4" color="error">
-          Error
-        </Typography>
-      )}
-      {projects?.data?.length === 0 && (
-        <Typography variant="h4" align="center">
-          No projects <br /> found
-        </Typography>
-      )}
-    </Grid>
-  );
+  if (isLoading || isError) {
+    return <StateCard isLoading={isLoading} isError={isError} />;
+  }
 
   return (
     <Card>
-      <List
-        sx={list_style}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            Project list
-          </ListSubheader>
-        }
-      >
-        <Divider />
-
-        {state}
-
+      <List title="Project list" emptyMessage="No project created yet">
         {projects?.data?.map((project: Project) => (
           <React.Fragment key={project._id}>
-            <Link href={`/project/${project._id}`} key={project._id} passHref>
-              <ListItemButton>
-                <ListItemText
-                  sx={{ fontStyle: "italic" }}
-                  primary={
-                    <Stack direction="row" spacing={1}>
-                      <FolderIcon color="secondary" />
-                      <span>{project.name}</span>
-                    </Stack>
-                  }
-                />
-                {project.hasPermission && (
+            <List.Item
+              key={project._id}
+              href={`/project/${project._id}`}
+              icon={
+                project.hasPermission && (
                   <DeleteButton
                     title="Delete project"
                     onClick={(e: SyntheticEvent) => {
@@ -112,19 +54,24 @@ export const ProjectList = () => {
                       setSelectedProject(project);
                     }}
                   />
-                )}
-              </ListItemButton>
+                )
+              }
+            >
+              <Stack direction="row" spacing={1}>
+                <FolderIcon color="secondary" />
+                <span>{project.name}</span>
+              </Stack>
+            </List.Item>
 
-              <Divider />
-            </Link>
-
-            <DeleteProjectModal
-              projectName={project.name}
-              open={selectedProject?._id === project._id}
-              handleClose={() => setSelectedProject(null)}
-              action={trigger}
-              isLoading={isMutating}
-            />
+            {project.hasPermission && (
+              <DeleteProjectModal
+                projectName={project.name}
+                open={selectedProject?._id === project._id}
+                handleClose={() => setSelectedProject(null)}
+                action={trigger}
+                isLoading={isMutating}
+              />
+            )}
           </React.Fragment>
         ))}
       </List>

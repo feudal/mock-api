@@ -1,40 +1,13 @@
-import {
-  Box,
-  Card,
-  Divider,
-  List,
-  ListItemButton,
-  ListItemText,
-  ListSubheader,
-  Typography,
-} from "@mui/material";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { MouseEventHandler, SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { MockApi } from "types";
-import { DeleteButton, DeleteMockApiModal } from "components";
-
-const list_style = {
-  width: "100%",
-  bgcolor: "background.paper",
-  borderRadius: 1,
-  overflow: "hidden",
-};
-
-const item_style = {
-  fontStyle: "italic",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  "& span": {
-    display: "unset",
-  },
-};
+import { DeleteButton, DeleteMockApiModal, List } from "components";
+import { Card } from "@mui/material";
 
 const deleteApi = async (url: string) => await axios.delete(url);
 
@@ -62,41 +35,13 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
 
   return (
     <Card>
-      <List
-        sx={list_style}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            API list
-          </ListSubheader>
-        }
-      >
-        <Divider />
-
-        {mockApis?.length === 0 && (
-          <Box sx={{ p: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              No API created yet
-            </Typography>
-          </Box>
-        )}
-
+      <List title="API list" emptyMessage="No API created yet">
         {mockApis?.map((api: MockApi) => (
           <React.Fragment key={api._id}>
-            <Link
+            <List.Item
               href={`/project/${router.query.projectId}/mock-api/${api._id}`}
-              key={api._id}
-              passHref
-            >
-              <ListItemButton>
-                <ListItemText
-                  title={api.name}
-                  sx={item_style}
-                  primary={`/${api.name}`}
-                />
-
-                {hasPermission && (
+              icon={
+                hasPermission && (
                   <DeleteButton
                     title="Delete api"
                     onClick={(e: SyntheticEvent) => {
@@ -104,11 +49,11 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
                       setSelectedApi(api);
                     }}
                   />
-                )}
-              </ListItemButton>
-
-              <Divider />
-            </Link>
+                )
+              }
+            >
+              /{api.name}
+            </List.Item>
 
             {hasPermission && (
               <DeleteMockApiModal
