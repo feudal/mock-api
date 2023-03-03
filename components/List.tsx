@@ -1,16 +1,16 @@
 import {
   Box,
   Divider,
-  Grid,
   List as MuiList,
   ListItemButton,
   ListItemText,
   ListSubheader,
+  Stack,
   Typography,
 } from "@mui/material";
 import { DefaultComponentProps } from "@mui/material/OverridableComponent";
 import Link from "next/link";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 
 const list_style = {
   width: "100%",
@@ -40,24 +40,32 @@ export const ListItem = ({ href, icon, children }: ListItemProps) => {
   return (
     <>
       {href ? (
-        <Link href={href} passHref>
-          <ListItemButton sx={item_style}>
-            <ListItemText primary={children} />
+        <ListItemButton sx={item_style}>
+          <Stack
+            sx={{ width: "100%" }}
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Link style={{ width: "100%" }} href={href} passHref>
+              <ListItemText primary={children} />
+            </Link>
+
             {icon}
-          </ListItemButton>
-        </Link>
+          </Stack>
+        </ListItemButton>
       ) : (
-        <Grid
-          container
+        <Stack
+          sx={{ width: "100%" }}
           direction="row"
-          justifyContent="space-between"
           alignItems="center"
+          justifyContent="space-between"
           paddingX={2}
           paddingY={1}
         >
           <ListItemText sx={item_style} primary={children} />
           {icon}
-        </Grid>
+        </Stack>
       )}
 
       <Divider />
