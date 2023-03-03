@@ -4,22 +4,23 @@ import {
   ListSubheader,
   Divider,
   ListItemText,
-  IconButton,
-  Tooltip,
   Typography,
   Box,
   ListItem,
   Stack,
   Button,
 } from "@mui/material";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { AddUserToProject, DeleteUserAccessModal } from "components";
+import {
+  AddUserToProject,
+  DeleteButton,
+  DeleteUserAccessModal,
+} from "components";
 import { User } from "types";
 import { useRouter } from "next/router";
 
@@ -95,11 +96,10 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
               />
 
               {hasPermission && (
-                <IconButton onClick={() => setSelectedUser(user)}>
-                  <Tooltip title="Delete user from list" placement="top">
-                    <HighlightOffIcon color="error" />
-                  </Tooltip>
-                </IconButton>
+                <DeleteButton
+                  title="Delete user from list"
+                  onClick={() => setSelectedUser(user)}
+                />
               )}
             </ListItem>
 

@@ -1,18 +1,9 @@
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import {
-  Button,
-  Grid,
-  IconButton,
-  Paper,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 import { Field } from "types";
-import { FieldsTypeSelector } from "components";
+import { DeleteButton, FieldsTypeSelector } from "components";
 
 export interface InterfaceInputProps {
   register: UseFormRegister<FieldValues>;
@@ -83,14 +74,11 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
 
             {idx !== 0 && (
               <Grid container item xs={1} mt={1} alignContent="flex-end">
-                <IconButton
+                <DeleteButton
+                  title="Delete field"
                   sx={{ ml: "auto" }}
                   onClick={() => deleteField(idx)}
-                >
-                  <Tooltip title="Delete field" placement="top">
-                    <HighlightOffIcon color="error" />
-                  </Tooltip>
-                </IconButton>
+                />
               </Grid>
             )}
           </Grid>

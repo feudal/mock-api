@@ -3,26 +3,23 @@ import {
   CircularProgress,
   Divider,
   Grid,
-  IconButton,
   List,
   ListItemButton,
   ListItemText,
   ListSubheader,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import FolderIcon from "@mui/icons-material/Folder";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "axios";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { Project } from "types";
-import { DeleteProjectModal } from "components";
+import { DeleteButton, DeleteProjectModal } from "components";
 
 const list_style = {
   width: "100%",
@@ -108,16 +105,13 @@ export const ProjectList = () => {
                   }
                 />
                 {project.hasPermission && (
-                  <IconButton
-                    onClick={(e) => {
+                  <DeleteButton
+                    title="Delete project"
+                    onClick={(e: SyntheticEvent) => {
                       e.preventDefault();
                       setSelectedProject(project);
                     }}
-                  >
-                    <Tooltip title="Delete project" placement="top">
-                      <HighlightOffIcon color="error" />
-                    </Tooltip>
-                  </IconButton>
+                  />
                 )}
               </ListItemButton>
 

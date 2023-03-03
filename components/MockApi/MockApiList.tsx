@@ -2,25 +2,22 @@ import {
   Box,
   Card,
   Divider,
-  IconButton,
   List,
   ListItemButton,
   ListItemText,
   ListSubheader,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { MouseEventHandler, SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { MockApi } from "types";
-import { DeleteMockApiModal } from "components";
+import { DeleteButton, DeleteMockApiModal } from "components";
 
 const list_style = {
   width: "100%",
@@ -100,16 +97,13 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
                 />
 
                 {hasPermission && (
-                  <IconButton
-                    onClick={(e) => {
+                  <DeleteButton
+                    title="Delete api"
+                    onClick={(e: SyntheticEvent) => {
                       e.preventDefault();
                       setSelectedApi(api);
                     }}
-                  >
-                    <Tooltip title="Delete api" placement="top">
-                      <HighlightOffIcon color="error" />
-                    </Tooltip>
-                  </IconButton>
+                  />
                 )}
               </ListItemButton>
 

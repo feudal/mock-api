@@ -7,3 +7,4 @@ export * from "./CustomHead";
 export * from "./Loader";
 export * from "./UserList";
 export * from "./BreadCrumbs";
+export * from "./DeleteButton";
