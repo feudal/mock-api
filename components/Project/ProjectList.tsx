@@ -2,7 +2,6 @@ import FolderIcon from "@mui/icons-material/Folder";
 import { Stack, Card } from "@mui/material";
 import axios from "axios";
 import React, { SyntheticEvent, useState } from "react";
-import { toast } from "react-toastify";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
@@ -29,7 +28,6 @@ export const ProjectList = () => {
         mutate("/api/project");
         setSelectedProject(null);
       },
-      onError: (err) => toast.error(err.message),
     }
   );
 

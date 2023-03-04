@@ -14,7 +14,7 @@ import { User } from "types";
 import { useRouter } from "next/router";
 
 interface UserListProps {
-  users: User[];
+  users?: User[];
   hasPermission?: boolean;
 }
 

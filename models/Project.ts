@@ -19,6 +19,12 @@ const projectSchema = new mongoose.Schema({
       ref: "MockApi",
     },
   ],
+  interfaces: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Interface",
+    },
+  ],
 });
 
 export const Project =
