@@ -1,9 +1,14 @@
 import { Grid } from "@mui/material";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { toast } from "react-toastify";
 
-import { Breadcrumbs, CustomHead, Loader, MockApi } from "components";
+import {
+  Breadcrumbs,
+  CustomHead,
+  Loader,
+  MockApi,
+  StateCard,
+} from "components";
 import { MockApi as MockApiType } from "types";
 
 export default function MockApiPage() {
@@ -16,8 +21,8 @@ export default function MockApiPage() {
     (mockApi: MockApiType) => mockApi._id === query.id
   )?.name;
 
-  if (error) toast.error(error.message);
-  if (isLoading) return <Loader />;
+  if (error || error)
+    return <StateCard isError={error} isLoading={isLoading} />;
 
   return (
     <>

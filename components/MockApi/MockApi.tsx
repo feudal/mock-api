@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
@@ -38,10 +37,7 @@ export const MockApi = () => {
   const { trigger, isMutating } = useSWRMutation(
     `/api/data/generate/${name}`,
     generateMockApiData,
-    {
-      onSuccess: () => mutate(`/api/mock-api/${query.id}`),
-      onError: (err) => toast.error(err.message),
-    }
+    { onSuccess: () => mutate(`/api/mock-api/${query.id}`) }
   );
 
   if (isLoading || isError) {

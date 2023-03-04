@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 
@@ -23,19 +23,14 @@ const createProject = async (url: string, { arg }: { arg: Partial<Project> }) =>
 export const ProjectForm = () => {
   const { register, handleSubmit, reset } = useForm();
 
-  const { data: users } = useSWR("/api/user", {
-    onError: (err) => toast.error(err.message),
-  });
+  const { data: users } = useSWR("/api/user");
 
   const { mutate } = useSWRConfig();
 
   const { trigger, isMutating } = useSWRMutation(
     "/api/project",
     createProject,
-    {
-      onSuccess: async () => (await mutate("/api/project")) && reset(),
-      onError: (err) => toast.error(err.message),
-    }
+    { onSuccess: async () => (await mutate("/api/project")) && reset() }
   );
 
   return (

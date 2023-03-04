@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 import { useRouter } from "next/router";
 import useSWRMutation from "swr/mutation";
@@ -32,7 +31,6 @@ export const MockApiForm = () => {
     {
       onSuccess: async () =>
         (await mutate(`/api/project/${query.projectId}`)) && reset(),
-      onError: (err) => toast.error(err.message),
     }
   );
 

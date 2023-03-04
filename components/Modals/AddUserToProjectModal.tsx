@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 
 import { AutoCompleteMultiSelector } from "components";
 import { User } from "types";
@@ -38,7 +37,6 @@ export const AddUserToProject = ({
         await mutate(`/api/project/${router.query.projectId}`);
         handleClose();
       },
-      onError: (err) => toast.error(err.message),
     }
   );
 

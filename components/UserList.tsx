@@ -1,7 +1,6 @@
 import { Card, Button, CardActions } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 
@@ -41,7 +40,6 @@ export const UserList = ({ users, hasPermission }: UserListProps) => {
         mutate(url);
         setSelectedUser(null);
       },
-      onError: (err) => toast.error(err.message),
     }
   );
 
