@@ -44,14 +44,17 @@ const BreadcrumbItem = ({
 
   return (
     <Link href={href ?? "/"} passHref>
-      <MUILink
-        underline="hover"
-        sx={{ display: "flex", alignItems: "center" }}
+      <Typography
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          "&:hover": { textDecoration: "underline" },
+        }}
         color="inherit"
       >
         {icon}
         {children}
-      </MUILink>
+      </Typography>
     </Link>
   );
 };
