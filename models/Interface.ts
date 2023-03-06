@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const interfaceSchema = new mongoose.Schema({
   name: String,
+  isDefault: {
+    type: Boolean,
+    default: false,
+  },
   fields: [
     {
       type: mongoose.Schema.Types.ObjectId,

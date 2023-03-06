@@ -14,7 +14,7 @@ const editMockApi = async (
   { arg: { name } }: { arg: { name: string } }
 ) => await axios.patch(url, { name });
 
-interface AddUserToProjectProps {
+interface EditMockApiModalProps {
   open: boolean;
   handleClose: () => void;
   mockApi: Partial<MockApi>;
@@ -24,7 +24,7 @@ export const EditMockApiModal = ({
   open,
   handleClose,
   mockApi,
-}: AddUserToProjectProps) => {
+}: EditMockApiModalProps) => {
   const { register, handleSubmit, reset } = useForm();
   const router = useRouter();
   const { mutate } = useSWRConfig();

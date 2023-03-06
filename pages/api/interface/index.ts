@@ -32,11 +32,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       const project = await Project.findById(req.body.projectId);
       if (!project) res.status(400).json({ error: "Project does not exist" });
 
+      const isOtherInterfacesDefault = await Interface.exists({
+        project: req.body.projectId,
+        isDefault: true,
+      });
       const interFace = await Interface.create({
         name: req.body.name,
+        isDefault: !isOtherInterfacesDefault,
         project,
       });
-      console.log({ interFace });
       await project.interfaces.push(interFace._id);
       await project.save();
       await db.disconnect();

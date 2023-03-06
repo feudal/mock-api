@@ -39,3 +39,9 @@ export const checkIfIsId = (name?: string) => {
   if (!name) return false;
   return name?.length === 36 && name?.includes("-");
 };
+
+export const capitalize = (str?: string) => {
+  if (typeof str !== "string") return str;
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};

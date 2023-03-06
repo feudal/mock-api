@@ -5,3 +5,4 @@ export * from "./DeleteUserAccessModal";
 export * from "./AddUserToProjectModal";
 export * from "./CreateMockApiModal";
 export * from "./DeleteInterfaceModal";
+export * from "./EditInterfaceModal";

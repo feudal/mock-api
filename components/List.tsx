@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { DefaultComponentProps } from "@mui/material/OverridableComponent";
 import Link from "next/link";
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { PropsWithChildren } from "react";
 
 const list_style = {
   width: "100%",
@@ -30,19 +30,19 @@ const item_style = {
   },
 };
 
-interface ListItemProps {
+interface ListItemProps extends DefaultComponentProps<any> {
   href?: string;
   children: React.ReactNode;
   icon?: React.ReactNode;
 }
 
-export const ListItem = ({ href, icon, children }: ListItemProps) => {
+export const ListItem = ({ href, icon, children, ...props }: ListItemProps) => {
   return (
     <>
       {href ? (
-        <ListItemButton sx={item_style}>
+        <ListItemButton sx={item_style} {...props}>
           <Stack
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", ...props.xs }}
             direction="row"
             alignItems="center"
             justifyContent="space-between"
@@ -63,7 +63,11 @@ export const ListItem = ({ href, icon, children }: ListItemProps) => {
           paddingX={2}
           paddingY={1}
         >
-          <ListItemText sx={item_style} primary={children} />
+          <ListItemText
+            primary={children}
+            sx={{ ...item_style, ...props.xs }}
+            {...props}
+          />
           {icon}
         </Stack>
       )}

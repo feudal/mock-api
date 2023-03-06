@@ -1,9 +1,15 @@
+import { Card, Theme } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { SyntheticEvent, useState } from "react";
+import React, { useState } from "react";
 
 import { Interface } from "types";
-import { DeleteButton, DeleteInterfaceModal, List } from "components";
-import { Card } from "@mui/material";
+import {
+  DeleteInterfaceModal,
+  EditInterfaceModal,
+  List,
+  Menu,
+} from "components";
+import { capitalize } from "utils";
 
 interface InterfaceProps {
   interfaces?: Interface[];
@@ -17,6 +23,9 @@ export const InterfaceList = ({
   const [selectedInterface, setSelectedInterface] = useState<Interface | null>(
     null
   );
+  const [selectedEditInterface, setSelectedEditInterface] =
+    useState<Interface | null>(null);
+
   const router = useRouter();
 
   return (
@@ -25,29 +34,44 @@ export const InterfaceList = ({
         {interfaces?.map((interFace: Interface) => (
           <React.Fragment key={interFace._id}>
             <List.Item
-              href={`/project/${router.query.projectId}/interface/${interFace._id}`}
+              xs={{
+                color: (theme: Theme) =>
+                  interFace.isDefault && theme.palette.primary.main,
+              }}
+              title={interFace.isDefault ? "Default Interface" : undefined}
               icon={
                 hasPermission && (
-                  <DeleteButton
-                    title="Delete api"
-                    onClick={(e: SyntheticEvent) => {
-                      e.preventDefault();
-                      setSelectedInterface(interFace);
-                    }}
-                  />
+                  <>
+                    <Menu>
+                      <Menu.Item
+                        onClick={() => setSelectedEditInterface(interFace)}
+                      >
+                        Edit
+                      </Menu.Item>
+                      <Menu.Item
+                        onClick={() => setSelectedInterface(interFace)}
+                      >
+                        Delete
+                      </Menu.Item>
+                    </Menu>
+
+                    <EditInterfaceModal
+                      interFace={interFace}
+                      open={selectedEditInterface?._id === interFace._id}
+                      handleClose={() => setSelectedEditInterface(null)}
+                    />
+
+                    <DeleteInterfaceModal
+                      interFace={interFace}
+                      open={selectedInterface?._id === interFace._id}
+                      handleClose={() => setSelectedInterface(null)}
+                    />
+                  </>
                 )
               }
             >
-              /{interFace.name}
+              {capitalize(interFace.name)}
             </List.Item>
-
-            {hasPermission && (
-              <DeleteInterfaceModal
-                interFace={interFace}
-                open={selectedInterface?._id === interFace._id}
-                handleClose={() => setSelectedInterface(null)}
-              />
-            )}
           </React.Fragment>
         ))}
       </List>

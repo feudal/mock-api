@@ -29,6 +29,37 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(404).json({ error: "Not found" });
     }
     await db.disconnect();
+  } else if (req.method === "PATCH") {
+    /*
+     * ================================= PATCH =================================
+     */
+    await db.connect();
+    const interFace = await Interface.findById(req.query.id).populate({
+      path: "project",
+      populate: { path: "owner" },
+    });
+
+    if (!interFace) {
+      res.status(404).json({ error: "Not found" });
+    } else if (interFace.project?.owner?.email !== userEmail) {
+      res.status(401).json({ error: "Unauthorized" });
+    } else {
+      const { name, isDefault } = req.body;
+      if (isDefault) {
+        await Interface.updateMany(
+          { project: interFace.project },
+          { isDefault: false }
+        );
+
+        interFace.isDefault = true;
+      } else {
+        interFace.isDefault = false;
+      }
+      interFace.name = name;
+      await interFace.save();
+      res.status(200).json({ message: "Updated" });
+    }
+    await db.disconnect();
   } else if (req.method === "DELETE") {
     /*
      * ================================= DELETE =================================
