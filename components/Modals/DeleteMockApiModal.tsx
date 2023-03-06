@@ -1,21 +1,39 @@
+import axios from "axios";
+import { useRouter } from "next/router";
 import React from "react";
+import { useSWRConfig } from "swr";
+import useSWRMutation from "swr/mutation";
+
+import { MockApi } from "types";
 import { Modal } from ".";
 
+const deleteApi = async (url: string) => await axios.delete(url);
+
 interface DeleteMockApiModalProps {
-  apiName: string;
+  mockApi: MockApi;
   open: boolean;
   handleClose: () => void;
-  action: () => void;
-  isLoading?: boolean;
 }
 
 export const DeleteMockApiModal = ({
-  apiName,
+  mockApi,
   open,
   handleClose,
-  action,
-  isLoading,
 }: DeleteMockApiModalProps) => {
+  const router = useRouter();
+  const { mutate } = useSWRConfig();
+
+  const { trigger, isMutating } = useSWRMutation(
+    `/api/mock-api/${router.query.id}`,
+    () => deleteApi(`/api/mock-api/${mockApi?._id}`),
+    {
+      onSuccess: async () => {
+        await mutate(`/api/project/${router.query.projectId}`);
+        handleClose();
+      },
+    }
+  );
+
   return (
     <Modal
       open={open}
@@ -23,10 +41,10 @@ export const DeleteMockApiModal = ({
       title="Delete mock API"
       actionLabel="delete"
       actionButtonProps={{ color: "error" }}
-      action={action}
-      isLoading={isLoading}
+      action={trigger}
+      isLoading={isMutating}
     >
-      Are you sure you want to delete the api <b>{apiName}</b>? <br />
+      Are you sure you want to delete the api <b>{mockApi.name}</b>? <br />
       This action cannot be undone.
     </Modal>
   );

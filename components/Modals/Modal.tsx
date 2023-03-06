@@ -26,7 +26,7 @@ const modal_style = {
 interface ModalProps {
   open: boolean;
   handleClose: () => void;
-  title: string;
+  title: React.ReactNode;
   actionLabel?: string;
   action: () => void;
   isLoading?: boolean;

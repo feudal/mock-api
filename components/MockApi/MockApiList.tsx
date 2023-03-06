@@ -1,37 +1,21 @@
-import axios from "axios";
 import { useRouter } from "next/router";
-import React, { SyntheticEvent, useState } from "react";
-import { toast } from "react-toastify";
-import { useSWRConfig } from "swr";
-import useSWRMutation from "swr/mutation";
+import React, { useState } from "react";
 
 import { MockApi } from "types";
-import { DeleteButton, DeleteMockApiModal, List } from "components";
-import { Card } from "@mui/material";
-
-const deleteApi = async (url: string) => await axios.delete(url);
+import { CreateMockApiModal, DeleteMockApiModal, List, Menu } from "components";
+import { Button, Card, CardActions } from "@mui/material";
+import { EditMockApiModal } from "components/Modals/EditMockApiModal";
 
 interface MockApiListProps {
-  mockApis: MockApi[];
+  mockApis?: MockApi[];
   hasPermission?: boolean;
 }
 
 export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
   const [selectedApi, setSelectedApi] = useState<MockApi | null>(null);
+  const [selectedEditApi, setSelectedEditApi] = useState<MockApi | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const router = useRouter();
-  const { mutate } = useSWRConfig();
-
-  const { trigger, isMutating } = useSWRMutation(
-    `/api/mock-api/${router.query.id}`,
-    () => deleteApi(`/api/mock-api/${selectedApi?._id}`),
-    {
-      onSuccess: async () => {
-        await mutate(`/api/project/${router.query.projectId}`);
-        setSelectedApi(null);
-      },
-      onError: (err) => toast.error(err.message),
-    }
-  );
 
   return (
     <Card>
@@ -42,31 +26,54 @@ export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
               href={`/project/${router.query.projectId}/mock-api/${api._id}`}
               icon={
                 hasPermission && (
-                  <DeleteButton
-                    title="Delete api"
-                    onClick={(e: SyntheticEvent) => {
-                      e.preventDefault();
-                      setSelectedApi(api);
-                    }}
-                  />
+                  <Menu>
+                    <Menu.Item onClick={() => setSelectedEditApi(api)}>
+                      Edit
+                    </Menu.Item>
+                    <Menu.Item onClick={() => setSelectedApi(api)}>
+                      Delete
+                    </Menu.Item>
+                  </Menu>
                 )
               }
             >
               /{api.name}
             </List.Item>
+            {hasPermission && (
+              <EditMockApiModal
+                mockApi={api}
+                open={selectedEditApi?._id === api._id}
+                handleClose={() => setSelectedEditApi(null)}
+              />
+            )}
 
             {hasPermission && (
               <DeleteMockApiModal
-                apiName={api.name}
+                mockApi={api}
                 open={selectedApi?._id === api._id}
                 handleClose={() => setSelectedApi(null)}
-                action={trigger}
-                isLoading={isMutating}
               />
             )}
           </React.Fragment>
         ))}
       </List>
+
+      {hasPermission && (
+        <CardActions>
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            Create new API
+          </Button>
+
+          <CreateMockApiModal
+            open={isCreateModalOpen}
+            handleClose={() => setIsCreateModalOpen(false)}
+          />
+        </CardActions>
+      )}
     </Card>
   );
 };

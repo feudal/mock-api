@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { db } from "utils";
-import { MockApi, Field } from "models";
+import { MockApi, Project } from "models";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method === "GET") {
@@ -23,20 +23,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     if (mockApiExists) {
       res.status(400).json({ error: "Api with this name already exists" });
       db.disconnect();
-      return;
     } else {
-      const fields = await Promise.all(
-        req.body.fields.map(async (field: any) => {
-          const createdField = await Field.create(field);
-          return createdField._id;
-        })
-      );
+      const project = await Project.findById(req.body.projectId);
+      if (!project) {
+        res.status(400).json({ error: "Project does not exist" });
+        db.disconnect();
+      }
 
-      const mockApi = await MockApi.create({
-        name: req.body.name,
-        fields: fields,
-      });
+      const mockApi = await MockApi.create({ name: req.body.name, project });
 
+      project!.mockApis.push(mockApi._id);
+      await project.save();
       await db.disconnect();
 
       res.status(200).json({ data: mockApi });

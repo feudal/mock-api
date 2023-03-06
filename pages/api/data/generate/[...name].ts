@@ -44,7 +44,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
           { id: faker.datatype.uuid() },
 
           ...fields.map((field: Field) => {
-            console.log(field.type?.[0]);
             switch (field.type?.[0]) {
               case "enum":
                 return {

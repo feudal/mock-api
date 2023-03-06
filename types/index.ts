@@ -1,13 +1,8 @@
 export interface MockApi {
   _id: string;
   name: string;
-  interfaceName: string;
-  projectId: string;
-  fields: Field[];
+  project: Project;
   data: Object[];
-
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Field {
@@ -21,6 +16,7 @@ export interface Project {
   owner: User;
   users: User[];
   mockApis: MockApi[];
+  interfaces: Interface[];
   hasPermission: boolean;
 }
 
@@ -30,4 +26,16 @@ export interface User {
   email: string;
   image: string;
   projects: Project[];
+}
+
+export interface Interface {
+  _id: string;
+  name: string;
+  project: Project;
+  fields: Field[];
+}
+
+export interface CustomError extends Error {
+  info?: any;
+  status?: number;
 }
