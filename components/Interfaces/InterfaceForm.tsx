@@ -38,7 +38,7 @@ export const InterfaceForm = () => {
 
   return (
     <Card>
-      <CardContent>
+      <CardContent sx={{ padding: 1 }}>
         <Typography component="h5" variant="h5">
           Create new Interface
         </Typography>
@@ -56,7 +56,7 @@ export const InterfaceForm = () => {
           });
         })}
       >
-        <CardContent>
+        <CardContent sx={{ padding: 1 }}>
           <TextField
             fullWidth
             variant="outlined"

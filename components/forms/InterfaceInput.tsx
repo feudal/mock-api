@@ -28,8 +28,8 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
     <Paper
       elevation={0}
       sx={{
-        mt: 2,
-        padding: 2,
+        mt: 1,
+        padding: 1,
         border: (theme) => `1px solid ${theme.palette.grey[400]}`,
       }}
     >
@@ -85,7 +85,7 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
         );
       })}
 
-      <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={addField}>
+      <Button fullWidth variant="contained" sx={{ mt: 1 }} onClick={addField}>
         Add new field
       </Button>
     </Paper>

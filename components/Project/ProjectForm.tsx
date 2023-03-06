@@ -35,7 +35,7 @@ export const ProjectForm = () => {
 
   return (
     <Card>
-      <CardContent>
+      <CardContent sx={{ padding: 1 }}>
         <Typography component="h5" variant="h5">
           Create new Project
         </Typography>
@@ -44,7 +44,7 @@ export const ProjectForm = () => {
       <Divider />
 
       <form onSubmit={handleSubmit((data) => trigger(data))}>
-        <CardContent>
+        <CardContent sx={{ padding: 1 }}>
           <TextField
             fullWidth
             variant="outlined"

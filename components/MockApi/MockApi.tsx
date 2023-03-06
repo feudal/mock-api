@@ -43,19 +43,19 @@ export const MockApi = () => {
 
   return (
     <Card>
-      <CardContent>
+      <CardContent sx={{ padding: 1 }}>
         <Typography variant="h4">Mock API - {name}</Typography>
       </CardContent>
 
       <Divider />
 
-      <CardContent>
+      <CardContent sx={{ padding: 1 }}>
         <MockApiInterface name={name} fields={fields} />
       </CardContent>
 
       <Divider />
 
-      <CardContent>
+      <CardContent sx={{ padding: 1 }}>
         {data?.length !== 0 ? (
           <MockApiData apiName={name} data={data} />
         ) : (

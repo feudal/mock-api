@@ -21,6 +21,7 @@ const list_style = {
 
 const item_style = {
   fontStyle: "italic",
+  padding: 1,
   // doesn't work
   whiteSpace: "nowrap",
   overflow: "hidden",
@@ -60,8 +61,8 @@ export const ListItem = ({ href, icon, children, ...props }: ListItemProps) => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          paddingX={2}
-          paddingY={1}
+          paddingX={0}
+          paddingY={0.5}
         >
           <ListItemText
             primary={children}

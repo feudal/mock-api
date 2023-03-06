@@ -23,7 +23,7 @@ export default function Login() {
       style={{ height: "100%" }}
     >
       <Card elevation={5} sx={{ borderRadius: 3, padding: 3 }}>
-        <CardContent>
+        <CardContent sx={{ padding: 1 }}>
           <Typography variant="h3" gutterBottom>
             Welcome to Mock Api
           </Typography>
