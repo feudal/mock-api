@@ -75,7 +75,6 @@ export const Modal = ({
             variant="contained"
             onClick={action}
             loading={isLoading}
-            loadingPosition="start"
           >
             {actionLabel}
           </LoadingButton>

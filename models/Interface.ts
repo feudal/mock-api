@@ -8,7 +8,7 @@ const interfaceSchema = new mongoose.Schema({
       ref: "Field",
     },
   ],
-  projectId: {
+  project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
   },

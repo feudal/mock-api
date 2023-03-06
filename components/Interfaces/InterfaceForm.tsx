@@ -13,21 +13,23 @@ import { useSWRConfig } from "swr";
 import { useRouter } from "next/router";
 import useSWRMutation from "swr/mutation";
 
-import { Field, MockApi } from "types";
+import { Field, Interface } from "types";
 import { kebabCase } from "utils";
 import { InterfaceInput } from "components";
 
-const createApi = async (url: string, { arg }: { arg: Partial<MockApi> }) =>
-  await axios.patch(url, arg);
+const createInterface = async (
+  url: string,
+  { arg }: { arg: Partial<Interface> & { projectId: string } }
+) => await axios.post(url, arg);
 
-export const MockApiForm = () => {
+export const InterfaceForm = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
   const { mutate } = useSWRConfig();
   const { query } = useRouter();
 
   const { trigger, isMutating } = useSWRMutation(
-    `/api/project/${query.projectId}`,
-    createApi,
+    "/api/interface",
+    createInterface,
     {
       onSuccess: async () =>
         (await mutate(`/api/project/${query.projectId}`)) && reset(),
@@ -38,7 +40,7 @@ export const MockApiForm = () => {
     <Card>
       <CardContent>
         <Typography component="h5" variant="h5">
-          Create new API
+          Create new Interface
         </Typography>
       </CardContent>
 
@@ -48,7 +50,10 @@ export const MockApiForm = () => {
         onSubmit={handleSubmit((data) => {
           data.name = kebabCase(data.name);
           data.fields = data.fields?.filter((f: Field) => f !== undefined);
-          trigger(data);
+          trigger({
+            ...data,
+            projectId: query.projectId as string,
+          });
         })}
       >
         <CardContent>
@@ -56,7 +61,7 @@ export const MockApiForm = () => {
             fullWidth
             variant="outlined"
             size="small"
-            label="API name"
+            label="Interface name"
             required
             {...register("name", { required: true })}
           />
@@ -72,7 +77,6 @@ export const MockApiForm = () => {
             variant="contained"
             sx={{ paddingInline: 10 }}
             loading={isMutating}
-            loadingPosition="start"
           >
             Create
           </LoadingButton>

@@ -73,7 +73,6 @@ export const ProjectForm = () => {
             variant="contained"
             sx={{ paddingInline: 10 }}
             loading={isMutating}
-            loadingPosition="start"
           >
             Create
           </LoadingButton>

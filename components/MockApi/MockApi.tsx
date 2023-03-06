@@ -1,11 +1,8 @@
 import { LoadingButton } from "@mui/lab";
 import {
-  Button,
   Card,
   CardContent,
-  CircularProgress,
   Divider,
-  Grid,
   TextField,
   Typography,
 } from "@mui/material";
@@ -82,7 +79,6 @@ export const MockApi = () => {
               sx={{ mt: 2, paddingInline: 5 }}
               onClick={handleSubmit((data) => trigger(data.count))}
               loading={isMutating}
-              loadingPosition="start"
             >
               Generate objects for api
             </LoadingButton>

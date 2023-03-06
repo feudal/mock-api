@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-import { Field, MockApi, Project } from "models";
+import { Field, Interface, MockApi, Project } from "models";
 import { db } from "utils";
 import { User } from "types";
 
@@ -22,7 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const project = await Project.findOne({ _id: req.query.id })
       .populate("owner")
       .populate("mockApis")
-      .populate("users");
+      .populate("users")
+      .populate("interfaces");
     await db.disconnect();
 
     if (!project) {
@@ -52,17 +53,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
 
     const allMockApis = project.mockApis;
+    const allInterfaces = project.interfaces;
     const allFields = await Promise.all(
-      allMockApis.map(async (mockApi: any) => {
-        const mockApiFields = await MockApi.findOne({ _id: mockApi }).populate(
-          "fields"
-        );
-        return mockApiFields?.fields;
+      allInterfaces.map(async (interfaceId: any) => {
+        const interfaceFields = await Interface.findOne({
+          _id: interfaceId,
+        }).populate("fields");
+        return interfaceFields?.fields;
       })
     );
     const allFieldsIds = allFields.flat().map((field) => field?._id);
     await Field.deleteMany({ _id: { $in: allFieldsIds } });
     await MockApi.deleteMany({ _id: { $in: allMockApis } });
+    await Interface.deleteMany({ _id: { $in: allInterfaces } });
     await project.remove();
     await db.disconnect();
 
