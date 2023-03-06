@@ -34,11 +34,6 @@ export const InterfaceList = ({
         {interfaces?.map((interFace: Interface) => (
           <React.Fragment key={interFace._id}>
             <List.Item
-              xs={{
-                color: (theme: Theme) =>
-                  interFace.isDefault && theme.palette.primary.main,
-              }}
-              title={interFace.isDefault ? "Default Interface" : undefined}
               icon={
                 hasPermission && (
                   <>

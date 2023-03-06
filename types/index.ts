@@ -33,7 +33,6 @@ export interface Interface {
   name: string;
   project: Project;
   fields: Field[];
-  isDefault: boolean;
 }
 
 export interface CustomError extends Error {

@@ -44,18 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     } else if (interFace.project?.owner?.email !== userEmail) {
       res.status(401).json({ error: "Unauthorized" });
     } else {
-      const { name, isDefault } = req.body;
-      if (isDefault) {
-        await Interface.updateMany(
-          { project: interFace.project },
-          { isDefault: false }
-        );
-
-        interFace.isDefault = true;
-      } else {
-        interFace.isDefault = false;
-      }
-      interFace.name = name;
+      interFace.name = req.body.name;
       await interFace.save();
       res.status(200).json({ message: "Updated" });
     }

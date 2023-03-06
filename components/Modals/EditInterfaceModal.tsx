@@ -12,10 +12,8 @@ import { capitalize } from "utils";
 
 const editInterface = async (
   url: string,
-  {
-    arg: { name, isDefault, projectId },
-  }: { arg: { name: string; isDefault: boolean; projectId: string } }
-) => await axios.patch(url, { name, isDefault, projectId });
+  { arg: { name, projectId } }: { arg: { name: string; projectId: string } }
+) => await axios.patch(url, { name, projectId });
 
 interface EditInterfaceModalProps {
   open: boolean;
@@ -59,7 +57,6 @@ export const EditInterfaceModal = ({
         handleSubmit((data) =>
           trigger({
             name: data.name,
-            isDefault: data.isDefault,
             projectId: router.query.projectId as string,
           })
         )()
@@ -74,17 +71,6 @@ export const EditInterfaceModal = ({
         variant="outlined"
         size="small"
         {...register("name")}
-      />
-
-      <FormControlLabel
-        sx={{ mb: -2 }}
-        control={
-          <Checkbox
-            defaultChecked={interFace?.isDefault}
-            {...register("isDefault")}
-          />
-        }
-        label="Set as default"
       />
     </Modal>
   );
