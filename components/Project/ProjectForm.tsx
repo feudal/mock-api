@@ -36,9 +36,7 @@ export const ProjectForm = () => {
   return (
     <Card>
       <CardContent sx={{ padding: 1 }}>
-        <Typography component="h5" variant="h5">
-          Create new Project
-        </Typography>
+        <Typography component="h5">Create new Project</Typography>
       </CardContent>
 
       <Divider />
@@ -56,6 +54,7 @@ export const ProjectForm = () => {
 
           <Box sx={{ mt: 1 }}>
             <AutoCompleteMultiSelector
+              multiple
               label="Emails"
               placeholder="Enter email"
               helperText="Enter email of users that will have access to this project"

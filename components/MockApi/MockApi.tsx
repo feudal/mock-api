@@ -9,55 +9,50 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import useSWR from "swr";
+import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { MockApiData, MockApiInterface, StateCard } from "components";
+import { Interface, MockApiData, StateCard } from "components";
+import { MockApi as MockApiType, Interface as InterfaceType } from "types";
 
 const generateMockApiData = async (
   url: string,
   { arg: count }: { arg: string }
 ) => await axios.post(url, { count });
 
-export const MockApi = () => {
+interface MockApiProps {
+  mockApi: MockApiType;
+  interfaces: InterfaceType[];
+}
+
+export const MockApi = ({ mockApi, interfaces }: MockApiProps) => {
   const { query } = useRouter();
   const { register, handleSubmit } = useForm();
-
-  const {
-    data: api,
-    error: isError,
-    isLoading,
-    mutate,
-  } = useSWR(`/api/mock-api/${query.id}`);
-  const { name, fields, data } = api?.data || {};
+  const { mutate } = useSWRConfig();
 
   const { trigger, isMutating } = useSWRMutation(
-    `/api/data/generate/${name}`,
+    `/api/data/generate/${mockApi?.name}`,
     generateMockApiData,
     { onSuccess: () => mutate(`/api/mock-api/${query.id}`) }
   );
 
-  if (isLoading || isError) {
-    return <StateCard isLoading={isLoading} isError={isError} />;
-  }
-
   return (
     <Card>
       <CardContent sx={{ padding: 1 }}>
-        <Typography variant="h4">Mock API - {name}</Typography>
+        <Typography variant="h5">Mock API - {mockApi?.name}</Typography>
       </CardContent>
 
       <Divider />
 
       <CardContent sx={{ padding: 1 }}>
-        <MockApiInterface name={name} fields={fields} />
+        <Interface name={mockApi?.name} interFaces={interfaces} />
       </CardContent>
 
       <Divider />
 
       <CardContent sx={{ padding: 1 }}>
-        {data?.length !== 0 ? (
-          <MockApiData apiName={name} data={data} />
+        {mockApi?.data?.length !== 0 ? (
+          <MockApiData apiName={mockApi?.name} data={mockApi?.data} />
         ) : (
           <form>
             <TextField

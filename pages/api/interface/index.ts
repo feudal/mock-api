@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { db } from "utils";
-import { Interface, Project } from "models";
+import { Field, Interface, Project } from "models";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method === "GET") {
@@ -18,12 +18,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
      * ================================= POST =================================
      */
     await db.connect();
-    const mockApiExistsInProject = await Interface.exists({
+    const interfaceExistsInProject = await Interface.exists({
       name: req.body.name,
       project: req.body.projectId,
     });
 
-    if (mockApiExistsInProject) {
+    if (interfaceExistsInProject) {
       res
         .status(400)
         .json({ error: "Interface with this name already exists" });
@@ -32,8 +32,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       const project = await Project.findById(req.body.projectId);
       if (!project) res.status(400).json({ error: "Project does not exist" });
 
+      const fields = await Promise.all(
+        req.body.fields.map(async (field: any) => {
+          const createdField = await Field.create(field);
+          return createdField._id;
+        })
+      );
       const interFace = await Interface.create({
         name: req.body.name,
+        fields,
         project,
       });
       await project.interfaces.push(interFace._id);

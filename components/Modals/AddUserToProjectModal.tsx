@@ -51,6 +51,7 @@ export const AddUserToProject = ({
       isLoading={isMutating}
     >
       <AutoCompleteMultiSelector
+        multiple
         label="Emails"
         placeholder="Enter email"
         options={users?.map((user: User) => user.email)}
