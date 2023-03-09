@@ -1,7 +1,8 @@
 import { Grid, MenuItem, Select } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { Field, Interface } from "types";
+import React, { useContext, useEffect, useState } from "react";
+import { Field } from "types";
 
+import { ProjectContext } from "context";
 import { fakerOptions, fakerOptionsKeys } from "utils";
 import { ChipsInput } from ".";
 
@@ -10,7 +11,6 @@ export interface FieldsTypSelectorProps {
   index: number;
   required?: boolean;
   setFields: React.Dispatch<React.SetStateAction<(Field | undefined)[]>>;
-  interfaces?: Interface[];
 }
 
 export const FieldsTypeSelector = ({
@@ -18,8 +18,8 @@ export const FieldsTypeSelector = ({
   index,
   setFields,
   required,
-  interfaces,
 }: FieldsTypSelectorProps) => {
+  const { interfaces } = useContext(ProjectContext);
   const interfacesOptions = interfaces?.map((interFace) => interFace.name);
   const [fakerOption, setFakerOption] = useState<string>(fakerOptionsKeys[2]);
   const [subOption, setSubOption] = useState<string>(

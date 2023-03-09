@@ -1,17 +1,19 @@
+import { Button, Card, CardActions } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { MockApi } from "types";
-import { CreateMockApiModal, DeleteMockApiModal, List, Menu } from "components";
-import { Button, Card, CardActions } from "@mui/material";
-import { EditMockApiModal } from "components/Modals/EditMockApiModal";
+import {
+  CreateMockApiModal,
+  DeleteMockApiModal,
+  EditMockApiModal,
+  List,
+  Menu,
+} from "components";
+import { ProjectContext } from "context";
 
-interface MockApiListProps {
-  mockApis?: MockApi[];
-  hasPermission?: boolean;
-}
-
-export const MockApiList = ({ mockApis, hasPermission }: MockApiListProps) => {
+export const MockApiList = () => {
+  const { mockApis, hasPermission } = useContext(ProjectContext);
   const [selectedApi, setSelectedApi] = useState<MockApi | null>(null);
   const [selectedEditApi, setSelectedEditApi] = useState<MockApi | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);

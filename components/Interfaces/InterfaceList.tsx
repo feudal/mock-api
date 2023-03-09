@@ -1,5 +1,5 @@
 import { Card } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { Interface } from "types";
 import {
@@ -8,17 +8,11 @@ import {
   List,
   Menu,
 } from "components";
+import { ProjectContext } from "context";
 import { capitalize } from "utils";
 
-interface InterfaceProps {
-  interfaces?: Interface[];
-  hasPermission?: boolean;
-}
-
-export const InterfaceList = ({
-  interfaces,
-  hasPermission,
-}: InterfaceProps) => {
+export const InterfaceList = () => {
+  const { interfaces, hasPermission } = useContext(ProjectContext);
   const [selectedInterface, setSelectedInterface] = useState<Interface | null>(
     null
   );

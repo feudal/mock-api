@@ -8,12 +8,13 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { InterfaceSelector, MockApiData } from "components";
-import { MockApi, Project } from "types";
+import { ProjectContext } from "context";
 
 const generateMockApiData = async (
   url: string,
@@ -22,21 +23,11 @@ const generateMockApiData = async (
   }: { arg: { projectId: string; interfaceId: string; count: number } }
 ) => await axios.post(url, { projectId, interfaceId, count });
 
-interface MockApiDataGeneratorProps {
-  project: Project;
-}
-
-export const MockApiDataGenerator = ({
-  project,
-}: MockApiDataGeneratorProps) => {
+export const MockApiDataGenerator = () => {
+  const { mockApi } = useContext(ProjectContext);
   const { query } = useRouter();
   const { register, handleSubmit } = useForm();
   const { mutate } = useSWRConfig();
-
-  const interFaces = project?.interfaces;
-  const mockApi = project?.mockApis?.find(
-    (mockApi: MockApi) => mockApi._id === query.id
-  );
 
   const { trigger, isMutating } = useSWRMutation(
     `/api/data/generate/${mockApi?.name}`,
@@ -56,17 +47,14 @@ export const MockApiDataGenerator = ({
       <Divider />
 
       <CardContent sx={{ padding: 1 }}>
-        <InterfaceSelector
-          interFaces={interFaces}
-          selectedInterFace={mockApi?.interface}
-        />
+        <InterfaceSelector />
       </CardContent>
 
       <Divider />
 
       <CardContent sx={{ padding: 1 }}>
         {mockApi?.data?.length !== 0 ? (
-          <MockApiData data={mockApi?.data} apiName={mockApi?.name} />
+          <MockApiData />
         ) : (
           <form>
             <TextField

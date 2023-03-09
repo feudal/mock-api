@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSWRConfig } from "swr";
 import { useRouter } from "next/router";
 import useSWRMutation from "swr/mutation";
+
+import { ProjectContext } from "context";
 
 const button_style = {
   textTransform: "none",
@@ -31,21 +33,17 @@ const paper_style = {
   boxShadow: (theme: Theme) => `inset 0 0 10px 10px ${theme.palette.divider}`,
 };
 
-export interface MockApiDataProps {
-  data?: Object[];
-  apiName?: string;
-}
-
 const deleteData = async (url: string) => await axios.delete(url);
 
-export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
+export const MockApiData = () => {
+  const { mockApi } = useContext(ProjectContext);
   const [locationOrigin, setLocationOrigin] = useState<string>("");
   const [linkCopied, setLinkCopied] = useState(false);
   const { query } = useRouter();
   const { mutate } = useSWRConfig();
 
   const { trigger, isMutating } = useSWRMutation(
-    `/api/data/${apiName}`,
+    `/api/data/${mockApi?.name}`,
     deleteData,
     {
       onSuccess: () =>
@@ -74,7 +72,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
           fullWidth
           variant="outlined"
           sx={button_style}
-          href={`${locationOrigin}/api/data/${apiName}`}
+          href={`${locationOrigin}/api/data/${mockApi?.name}`}
           target="_blank"
           endIcon={
             <Tooltip
@@ -85,7 +83,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
                 onClick={(e) => {
                   e.preventDefault();
                   navigator.clipboard.writeText(
-                    `${locationOrigin}/api/data/${apiName}`
+                    `${locationOrigin}/api/data/${mockApi?.name}`
                   );
                   setLinkCopied(true);
                 }}
@@ -93,7 +91,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
             </Tooltip>
           }
         >
-          {locationOrigin}/api/data/{apiName}
+          {locationOrigin}/api/data/{mockApi?.name}
         </Button>
 
         <LoadingButton
@@ -108,7 +106,7 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
 
         <Paper elevation={0} sx={paper_style} className="no-scrollbar">
           <pre>
-            <code>data = {JSON.stringify(data, null, 2)}</code>
+            <code>data = {JSON.stringify(mockApi?.data, null, 2)}</code>
           </pre>
         </Paper>
       </CardContent>

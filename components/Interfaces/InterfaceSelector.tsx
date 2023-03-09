@@ -1,7 +1,8 @@
 import { Typography } from "@mui/material";
 import { AutoCompleteMultiSelector } from "components";
+import { ProjectContext } from "context";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { Field, Interface } from "types";
@@ -14,7 +15,7 @@ const text_style = {
 };
 
 export const showInterFace = (
-  interfaces: Interface[],
+  interfaces?: Interface[],
   interFace?: Interface
 ) => {
   if (!interFace) return null;
@@ -34,7 +35,7 @@ export const showInterFace = (
               {field.name}: &#123; <br />
               {showInterFace(
                 interfaces,
-                interfaces.find(
+                interfaces?.find(
                   (interFace) => interFace.name === field.type?.[1]
                 )
               )}
@@ -59,12 +60,11 @@ interface interFacesProps {
   selectedInterFace?: Interface;
 }
 
-export const InterfaceSelector = ({
-  interFaces,
-  selectedInterFace,
-}: interFacesProps) => {
+export const InterfaceSelector = () => {
   const router = useRouter();
   const { register } = useForm();
+  const { interfaces, mockApi } = useContext(ProjectContext);
+  const selectedInterFace = mockApi?.interface;
   const [interFace, setInterFace] = React.useState<Interface | undefined>(
     selectedInterFace
   );
@@ -86,12 +86,12 @@ export const InterfaceSelector = ({
       <AutoCompleteMultiSelector
         label="Interface name"
         placeholder="Enter interface name"
-        options={interFaces?.map((interFace) => interFace.name)}
+        options={interfaces?.map((interFace) => interFace.name)}
         {...register("interface")}
         value={interFace?.name || ""}
         onChange={async (e) => {
           setInterFace(
-            interFaces.find((interFace) => interFace.name === e.target.value)
+            interfaces?.find((interFace) => interFace.name === e.target.value)
           );
         }}
       />
@@ -105,7 +105,7 @@ export const InterfaceSelector = ({
           <Typography variant="h6" mt={1} fontFamily="monospace">
             interface {stripSlashes(pascalCase(interFace?.name))} &#123;
             <br />
-            {showInterFace(interFaces, interFace)}
+            {showInterFace(interfaces, interFace)}
           </Typography>
         </pre>
       )}

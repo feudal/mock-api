@@ -1,15 +1,16 @@
 import HomeIcon from "@mui/icons-material/Home";
 import FolderIcon from "@mui/icons-material/Folder";
-
 import {
   Breadcrumbs as MUIBreadcrumbs,
   Typography,
-  Link as MUILink,
   Card,
   CardActions,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useContext } from "react";
+
+import { ProjectContext } from "context";
 
 const iconProps: {
   sx: { mr: number };
@@ -59,13 +60,9 @@ const BreadcrumbItem = ({
   );
 };
 
-interface BreadcrumbsProps {
-  projectName?: string;
-  mockApiName?: string;
-}
-
-export const Breadcrumbs = ({ projectName, mockApiName }: BreadcrumbsProps) => {
+export const Breadcrumbs = () => {
   const { projectId, id } = useRouter().query;
+  const { project, mockApi } = useContext(ProjectContext);
 
   return (
     <Card>
@@ -79,17 +76,19 @@ export const Breadcrumbs = ({ projectName, mockApiName }: BreadcrumbsProps) => {
             All Projects
           </BreadcrumbItem>
 
-          {projectName && (
+          {project?.name && (
             <BreadcrumbItem
               isLast={id ? false : true}
               href={`/project/${projectId}`}
               icon={<FolderIcon {...iconProps} />}
             >
-              {projectName}
+              {project?.name}
             </BreadcrumbItem>
           )}
 
-          {mockApiName && <BreadcrumbItem isLast>{mockApiName}</BreadcrumbItem>}
+          {mockApi?.name && (
+            <BreadcrumbItem isLast>{mockApi?.name}</BreadcrumbItem>
+          )}
         </MUIBreadcrumbs>
       </CardActions>
     </Card>

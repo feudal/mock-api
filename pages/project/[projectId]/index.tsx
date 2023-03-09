@@ -1,6 +1,5 @@
-import { useRouter } from "next/router";
 import { Grid, Stack } from "@mui/material";
-import useSWR from "swr";
+import { useContext } from "react";
 
 import {
   CustomHead,
@@ -9,19 +8,12 @@ import {
   MockApiList,
   Breadcrumbs,
   UserList,
+  InterfaceList,
 } from "components";
-import { InterfaceList } from "components";
-import { Project } from "types";
+import { ProjectContext } from "context";
 
 export default function MockApiPage() {
-  const { query } = useRouter();
-
-  const { data, isLoading } = useSWR<{
-    hasPermission: boolean;
-    data: Project;
-  }>(`/api/project/${query.projectId}`);
-
-  const { data: project, hasPermission } = data || {};
+  const { project, hasPermission, isLoading } = useContext(ProjectContext);
 
   if (isLoading) return <Loader />;
 
@@ -31,42 +23,31 @@ export default function MockApiPage() {
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Breadcrumbs projectName={project?.name} />
+          <Breadcrumbs />
         </Grid>
 
         {hasPermission ? (
           <>
             <Grid item xs={3}>
               <Stack direction="column" spacing={2}>
-                <MockApiList
-                  mockApis={project?.mockApis}
-                  hasPermission={hasPermission}
-                />
-
-                <UserList
-                  users={project?.users}
-                  hasPermission={hasPermission}
-                />
-
-                <InterfaceList
-                  interfaces={project?.interfaces}
-                  hasPermission={hasPermission}
-                />
+                <MockApiList />
+                <UserList />
+                <InterfaceList />
               </Stack>
             </Grid>
 
             <Grid item xs={9}>
-              <InterfaceForm interfaces={project?.interfaces} />
+              <InterfaceForm />
             </Grid>
           </>
         ) : (
           <>
             <Grid item xs={6}>
-              <MockApiList mockApis={project?.mockApis} />
+              <MockApiList />
             </Grid>
 
             <Grid item xs={6}>
-              <UserList users={project?.users} />
+              <UserList />
             </Grid>
           </>
         )}

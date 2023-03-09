@@ -1,8 +1,9 @@
 import { Card, Button, CardActions } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
+import { useRouter } from "next/router";
 
 import {
   AddUserToProject,
@@ -10,17 +11,13 @@ import {
   DeleteUserAccessModal,
   List,
 } from "components";
+import { ProjectContext } from "context";
 import { User } from "types";
-import { useRouter } from "next/router";
-
-interface UserListProps {
-  users?: User[];
-  hasPermission?: boolean;
-}
 
 const removeUserFromList = async (url: string) => await axios.patch(url);
 
-export const UserList = ({ users, hasPermission }: UserListProps) => {
+export const UserList = () => {
+  const { users, hasPermission } = useContext(ProjectContext);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const { mutate } = useSWRConfig();

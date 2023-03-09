@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material";
-import { useRouter } from "next/router";
-import useSWR from "swr";
+import { useContext } from "react";
 
 import {
   Breadcrumbs,
@@ -9,23 +8,13 @@ import {
   MockApiDataGenerator,
   StateCard,
 } from "components";
-import { MockApi } from "types";
+import { ProjectContext } from "context";
 
 export default function MockApiPage() {
-  const { query } = useRouter();
+  const { isLoading, isError, project } = useContext(ProjectContext);
 
-  const { data, error, isLoading } = useSWR(
-    `/api/project/${query.projectId}?populateFields=true`
-  );
-
-  const interfaces = data?.data?.interfaces;
-  const project = data?.data;
-  const mockApi = data?.data?.mockApis?.find(
-    (mockApi: MockApi) => mockApi._id === query.id
-  );
-
-  if (error || error)
-    return <StateCard isError={error} isLoading={isLoading} />;
+  if (isLoading || isError)
+    return <StateCard isError={isError} isLoading={isLoading} />;
 
   return (
     <>
@@ -33,18 +22,15 @@ export default function MockApiPage() {
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Breadcrumbs
-            projectName={project?.name}
-            mockApiName={mockApi?.name}
-          />
+          <Breadcrumbs />
         </Grid>
 
         <Grid item xs={3}>
-          <InterfaceList interfaces={interfaces} />
+          <InterfaceList />
         </Grid>
 
         <Grid item xs={9}>
-          <MockApiDataGenerator project={project} />
+          <MockApiDataGenerator />
         </Grid>
       </Grid>
     </>
