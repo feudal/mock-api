@@ -7,11 +7,13 @@ interface Props {
   placeholder: string;
   options?: string[];
   helperText?: string;
-  multiple?: boolean;
 
   name: string;
   onChange: ChangeHandler;
   onBlur: ChangeHandler;
+
+  multiple?: boolean;
+  defaultValue?: string[] | string;
 }
 export type Ref = HTMLInputElement;
 
@@ -21,15 +23,17 @@ export const AutoCompleteMultiSelector = forwardRef<Ref, Props>(
       label,
       placeholder,
       helperText,
-      multiple = false,
       options = [],
       name,
       onChange,
       onBlur,
+      multiple = false,
+      defaultValue = [],
     },
     ref
   ) => (
     <Autocomplete
+      defaultValue={defaultValue}
       multiple={multiple}
       size="small"
       fullWidth

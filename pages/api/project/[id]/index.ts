@@ -19,20 +19,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
      * ================================= GET =================================
      */
     await db.connect();
-    const project = await Project.findOne({ _id: req.query.id })
-      .populate("owner")
-      .populate("mockApis")
-      .populate("users");
+    let project;
     if (req.query.populateFields === "true") {
-      await project.populate({
-        path: "interfaces",
-        populate: { path: "fields" },
-      });
+      project = await Project.findById(req.query.id)
+        .populate("owner")
+        .populate("users")
+        .populate({
+          path: "interfaces",
+          populate: { path: "fields" },
+        })
+        .populate({
+          path: "mockApis",
+          populate: { path: "interface", populate: { path: "fields" } },
+        });
     } else {
-      await project.populate("interfaces");
+      project = await Project.findById(req.query.id)
+        .populate("owner")
+        .populate("users")
+        .populate("interfaces")
+        .populate("mockApis");
     }
-
-    console.log(project);
 
     await db.disconnect();
 

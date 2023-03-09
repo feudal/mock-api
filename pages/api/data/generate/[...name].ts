@@ -1,4 +1,4 @@
-import { MockApi } from "models";
+import { Interface, MockApi } from "models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { faker } from "@faker-js/faker";
 
@@ -22,19 +22,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(400).json({ message: "Invalid count" });
       return;
     }
+    if (!req.body.interfaceId) {
+      res.status(400).json({ message: "Missing interface id" });
+      return;
+    }
 
     await db.connect();
-    const mockApi = await MockApi.findOne({ name: mockApiName }).populate(
+    const mockApi = await MockApi.findOne({ name: mockApiName });
+    const interFace = await Interface.findById(req.body.interfaceId).populate(
       "fields"
     );
 
-    if (!mockApi) {
-      res.status(404).json({ error: "MockApi not found" });
+    if (!interFace) {
+      res.status(404).json({ error: "Not found" });
       db.disconnect();
       return;
     }
 
-    const fields = mockApi.fields;
+    const fields = interFace.fields;
 
     // Generate fake data
     let data: string[] = [];
@@ -69,14 +74,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
 
     mockApi.data = data;
+    mockApi.interface = interFace;
     await mockApi.save();
     await db.disconnect();
-
-    if (mockApi) {
-      res.status(200).json(mockApi);
-    } else {
-      res.status(404).json({ error: "Not found" });
-    }
+    res.status(200).json({ data });
   } else {
     /*
      * ================================= OTHER =================================

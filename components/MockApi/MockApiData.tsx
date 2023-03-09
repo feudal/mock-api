@@ -47,7 +47,10 @@ export const MockApiData = ({ data, apiName }: MockApiDataProps) => {
   const { trigger, isMutating } = useSWRMutation(
     `/api/data/${apiName}`,
     deleteData,
-    { onSuccess: () => mutate(`/api/mock-api/${query.id}`) }
+    {
+      onSuccess: () =>
+        mutate(`/api/project/${query.projectId}?populateFields=true`),
+    }
   );
 
   useEffect(() => {

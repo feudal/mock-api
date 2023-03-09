@@ -36,7 +36,7 @@ export const ProjectForm = () => {
   return (
     <Card>
       <CardContent sx={{ padding: 1 }}>
-        <Typography component="h5">Create new Project</Typography>
+        <Typography variant="h5">Create new Project</Typography>
       </CardContent>
 
       <Divider />

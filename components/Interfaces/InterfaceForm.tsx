@@ -39,7 +39,7 @@ export const InterfaceForm = () => {
   return (
     <Card>
       <CardContent sx={{ padding: 1 }}>
-        <Typography component="h5">Create new Interface</Typography>
+        <Typography variant="h5">Create new Interface</Typography>
       </CardContent>
 
       <Divider />

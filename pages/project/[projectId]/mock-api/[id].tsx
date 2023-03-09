@@ -6,20 +6,22 @@ import {
   Breadcrumbs,
   CustomHead,
   InterfaceList,
-  MockApi,
+  MockApiDataGenerator,
   StateCard,
 } from "components";
-import { MockApi as MockApiType } from "types";
+import { MockApi } from "types";
 
 export default function MockApiPage() {
   const { query } = useRouter();
 
-  const { data, error, isLoading } = useSWR(`/api/project/${query.projectId}`);
+  const { data, error, isLoading } = useSWR(
+    `/api/project/${query.projectId}?populateFields=true`
+  );
 
   const interfaces = data?.data?.interfaces;
-  const projectName = data?.data?.name;
+  const project = data?.data;
   const mockApi = data?.data?.mockApis?.find(
-    (mockApi: MockApiType) => mockApi._id === query.id
+    (mockApi: MockApi) => mockApi._id === query.id
   );
 
   if (error || error)
@@ -27,11 +29,14 @@ export default function MockApiPage() {
 
   return (
     <>
-      <CustomHead title={`Mock API - ${projectName}`} />
+      <CustomHead title={`Mock API - ${project?.name}`} />
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Breadcrumbs projectName={projectName} mockApiName={mockApi?.name} />
+          <Breadcrumbs
+            projectName={project?.name}
+            mockApiName={mockApi?.name}
+          />
         </Grid>
 
         <Grid item xs={3}>
@@ -39,7 +44,7 @@ export default function MockApiPage() {
         </Grid>
 
         <Grid item xs={9}>
-          <MockApi mockApi={mockApi} interfaces={interfaces} />
+          <MockApiDataGenerator project={project} />
         </Grid>
       </Grid>
     </>

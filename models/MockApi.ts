@@ -6,6 +6,10 @@ const mockApiSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
   },
+  interface: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Interface",
+  },
   data: [{ type: Object }],
 });
 

@@ -12,28 +12,39 @@ import { useForm } from "react-hook-form";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { Interface, MockApiData, StateCard } from "components";
-import { MockApi as MockApiType, Interface as InterfaceType } from "types";
+import { InterfaceSelector, MockApiData } from "components";
+import { MockApi, Project } from "types";
 
 const generateMockApiData = async (
   url: string,
-  { arg: count }: { arg: string }
-) => await axios.post(url, { count });
+  {
+    arg: { count, interfaceId },
+  }: { arg: { count: number; interfaceId: string } }
+) => await axios.post(url, { count, interfaceId });
 
-interface MockApiProps {
-  mockApi: MockApiType;
-  interfaces: InterfaceType[];
+interface MockApiDataGeneratorProps {
+  project: Project;
 }
 
-export const MockApi = ({ mockApi, interfaces }: MockApiProps) => {
+export const MockApiDataGenerator = ({
+  project,
+}: MockApiDataGeneratorProps) => {
   const { query } = useRouter();
   const { register, handleSubmit } = useForm();
   const { mutate } = useSWRConfig();
 
+  const interFaces = project?.interfaces;
+  const mockApi = project?.mockApis?.find(
+    (mockApi: MockApi) => mockApi._id === query.id
+  );
+
   const { trigger, isMutating } = useSWRMutation(
     `/api/data/generate/${mockApi?.name}`,
     generateMockApiData,
-    { onSuccess: () => mutate(`/api/mock-api/${query.id}`) }
+    {
+      onSuccess: () =>
+        mutate(`/api/project/${query.projectId}?populateFields=true`),
+    }
   );
 
   return (
@@ -45,14 +56,17 @@ export const MockApi = ({ mockApi, interfaces }: MockApiProps) => {
       <Divider />
 
       <CardContent sx={{ padding: 1 }}>
-        <Interface name={mockApi?.name} interFaces={interfaces} />
+        <InterfaceSelector
+          interFaces={interFaces}
+          selectedInterFace={mockApi?.interface}
+        />
       </CardContent>
 
       <Divider />
 
       <CardContent sx={{ padding: 1 }}>
         {mockApi?.data?.length !== 0 ? (
-          <MockApiData apiName={mockApi?.name} data={mockApi?.data} />
+          <MockApiData data={mockApi?.data} apiName={mockApi?.name} />
         ) : (
           <form>
             <TextField
@@ -72,8 +86,14 @@ export const MockApi = ({ mockApi, interfaces }: MockApiProps) => {
             <LoadingButton
               variant="contained"
               sx={{ mt: 2, paddingInline: 5 }}
-              onClick={handleSubmit((data) => trigger(data.count))}
+              onClick={handleSubmit((data) =>
+                trigger({
+                  count: data.count,
+                  interfaceId: query.interfaceId as string,
+                })
+              )}
               loading={isMutating}
+              disabled={!query.interfaceId}
             >
               Generate objects for api
             </LoadingButton>

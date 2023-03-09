@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
       value={{
         fetcher,
         revalidateOnFocus: false,
-        onError: (err) => toast.error(err.message),
+        onError: (err) => toast.error(err.response.data.error ?? err.message),
       }}
     >
       <ThemeProvider theme={theme}>

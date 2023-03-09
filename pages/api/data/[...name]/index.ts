@@ -47,7 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         await db.connect();
         const mockApi = await MockApi.findOneAndUpdate(
           { name: mockApiName },
-          { $unset: { data: 1 } },
+          { $unset: { data: "", interface: "" } },
           { new: true }
         );
         await db.disconnect();

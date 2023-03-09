@@ -2,6 +2,7 @@ export interface MockApi {
   _id: string;
   name: string;
   project: Project;
+  interface: Interface;
   data: Object[];
 }
 
