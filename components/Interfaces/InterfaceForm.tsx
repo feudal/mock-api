@@ -22,7 +22,11 @@ const createInterface = async (
   { arg }: { arg: Partial<Interface> & { projectId: string } }
 ) => await axios.post(url, arg);
 
-export const InterfaceForm = () => {
+interface InterfaceFormProps {
+  interfaces?: Interface[];
+}
+
+export const InterfaceForm = ({ interfaces }: InterfaceFormProps) => {
   const { register, handleSubmit, setValue, reset } = useForm();
   const { mutate } = useSWRConfig();
   const { query } = useRouter();
@@ -64,7 +68,11 @@ export const InterfaceForm = () => {
             {...register("name", { required: true })}
           />
 
-          <InterfaceInput register={register} setValue={setValue} />
+          <InterfaceInput
+            register={register}
+            setValue={setValue}
+            interfaces={interfaces}
+          />
         </CardContent>
 
         <Divider />

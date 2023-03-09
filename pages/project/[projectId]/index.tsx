@@ -56,7 +56,7 @@ export default function MockApiPage() {
             </Grid>
 
             <Grid item xs={9}>
-              <InterfaceForm />
+              <InterfaceForm interfaces={project?.interfaces} />
             </Grid>
           </>
         ) : (

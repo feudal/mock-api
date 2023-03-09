@@ -1,6 +1,6 @@
 import { Grid, MenuItem, Select } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Field } from "types";
+import { Field, Interface } from "types";
 
 import { fakerOptions, fakerOptionsKeys } from "utils";
 import { ChipsInput } from ".";
@@ -10,6 +10,7 @@ export interface FieldsTypSelectorProps {
   index: number;
   required?: boolean;
   setFields: React.Dispatch<React.SetStateAction<(Field | undefined)[]>>;
+  interfaces?: Interface[];
 }
 
 export const FieldsTypeSelector = ({
@@ -17,7 +18,9 @@ export const FieldsTypeSelector = ({
   index,
   setFields,
   required,
+  interfaces,
 }: FieldsTypSelectorProps) => {
+  const interfacesOptions = interfaces?.map((interFace) => interFace.name);
   const [fakerOption, setFakerOption] = useState<string>(fakerOptionsKeys[2]);
   const [subOption, setSubOption] = useState<string>(
     fakerOption === "enum" || fakerOption === "interface"
@@ -41,7 +44,7 @@ export const FieldsTypeSelector = ({
           variant="outlined"
           size="small"
           required={required}
-          defaultValue={fakerOption}
+          value={fakerOption}
           onChange={(v) => {
             switch (v.target.value) {
               case "enum":
@@ -50,7 +53,7 @@ export const FieldsTypeSelector = ({
                 return;
               case "interface":
                 setFakerOption("interface");
-                setSubOption("");
+                setSubOption(interfacesOptions?.[0] || "");
                 return;
               default:
                 setFakerOption(v.target.value);
@@ -101,7 +104,22 @@ export const FieldsTypeSelector = ({
           />
         )}
 
-        {fakerOption === "interface" && <div>Interface</div>}
+        {fakerOption === "interface" && (
+          <Select
+            fullWidth
+            variant="outlined"
+            size="small"
+            required={required}
+            value={subOption}
+            onChange={(v) => setSubOption(v.target.value)}
+          >
+            {interfacesOptions?.map((subOption, idx) => (
+              <MenuItem key={idx} value={subOption}>
+                {subOption}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
       </Grid>
     </>
   );

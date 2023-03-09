@@ -1,5 +1,4 @@
-import { Card, Theme } from "@mui/material";
-import { useRouter } from "next/router";
+import { Card } from "@mui/material";
 import React, { useState } from "react";
 
 import { Interface } from "types";
@@ -25,8 +24,6 @@ export const InterfaceList = ({
   );
   const [selectedEditInterface, setSelectedEditInterface] =
     useState<Interface | null>(null);
-
-  const router = useRouter();
 
   return (
     <Card>

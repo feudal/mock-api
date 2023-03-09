@@ -18,9 +18,9 @@ import { MockApi, Project } from "types";
 const generateMockApiData = async (
   url: string,
   {
-    arg: { count, interfaceId },
-  }: { arg: { count: number; interfaceId: string } }
-) => await axios.post(url, { count, interfaceId });
+    arg: { projectId, interfaceId, count },
+  }: { arg: { projectId: string; interfaceId: string; count: number } }
+) => await axios.post(url, { projectId, interfaceId, count });
 
 interface MockApiDataGeneratorProps {
   project: Project;
@@ -88,8 +88,9 @@ export const MockApiDataGenerator = ({
               sx={{ mt: 2, paddingInline: 5 }}
               onClick={handleSubmit((data) =>
                 trigger({
-                  count: data.count,
+                  projectId: query.projectId as string,
                   interfaceId: query.interfaceId as string,
+                  count: data.count,
                 })
               )}
               loading={isMutating}

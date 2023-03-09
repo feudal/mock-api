@@ -2,15 +2,20 @@ import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
-import { Field } from "types";
+import { Field, Interface } from "types";
 import { DeleteButton, FieldsTypeSelector } from "components";
 
 export interface InterfaceInputProps {
   register: UseFormRegister<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
+  interfaces?: Interface[];
 }
 
-export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
+export const InterfaceInput = ({
+  register,
+  setValue,
+  interfaces,
+}: InterfaceInputProps) => {
   const [fields, setFields] = useState<(Field | undefined)[]>([
     { name: "", type: [] },
   ]);
@@ -52,7 +57,7 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
                 required
                 label={`Field name - ${idx + 1}`}
                 inputProps={{ pattern: "[a-zA-Z_]+" }}
-                defaultValue={field?.name}
+                value={field?.name}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFields((prev) => {
                     const newFields = [...prev];
@@ -69,6 +74,7 @@ export const InterfaceInput = ({ register, setValue }: InterfaceInputProps) => {
                 required
                 name="fields"
                 setFields={setFields}
+                interfaces={interfaces}
               />
             </Grid>
 

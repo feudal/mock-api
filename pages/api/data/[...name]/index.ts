@@ -45,14 +45,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
          * ================================= DELETE =================================
          */
         await db.connect();
-        const mockApi = await MockApi.findOneAndUpdate(
+        await MockApi.findOneAndUpdate(
           { name: mockApiName },
           { $unset: { data: "", interface: "" } },
           { new: true }
         );
         await db.disconnect();
 
-        res.status(200).json({ data: mockApi });
+        res.status(200).json({ message: "Deleted" });
       } else {
         /*
          * ================================= OTHER =================================

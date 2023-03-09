@@ -1,9 +1,7 @@
-import { Interface, MockApi } from "models";
+import { Interface, MockApi, Project } from "models";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { faker } from "@faker-js/faker";
 
-import { Field } from "types";
-import { db, parseName } from "utils";
+import { db, generateObjectFromFields, parseName } from "utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   /*
@@ -26,8 +24,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       res.status(400).json({ message: "Missing interface id" });
       return;
     }
+    if (!req.body.projectId) {
+      res.status(400).json({ message: "Missing project id" });
+      return;
+    }
 
     await db.connect();
+    const { interfaces } = await Project.findById(req.body.projectId).populate({
+      path: "interfaces",
+      populate: { path: "fields" },
+    });
+
     const mockApi = await MockApi.findOne({ name: mockApiName });
     const interFace = await Interface.findById(req.body.interfaceId).populate(
       "fields"
@@ -42,35 +49,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const fields = interFace.fields;
 
     // Generate fake data
-    let data: string[] = [];
+    let data: Object[] = [];
     for (let i = 0; i < req.body.count; i++) {
-      data.push(
-        Object.assign(
-          { id: faker.datatype.uuid() },
-
-          ...fields.map((field: Field) => {
-            switch (field.type?.[0]) {
-              case "enum":
-                return {
-                  [field.name]:
-                    field.type[1].split(" | ")?.[
-                      //generate random number between 0 and length of enum
-                      faker.datatype.number(
-                        field.type[1].split(" | ").length - 1
-                      )
-                    ],
-                };
-              case "interface":
-                return "interface";
-              default:
-                return {
-                  // @ts-ignore
-                  [field.name]: faker?.[field.type[0]]?.[field.type[1]]?.(),
-                };
-            }
-          })
-        )
-      );
+      data.push(generateObjectFromFields(fields, interfaces));
     }
 
     mockApi.data = data;
