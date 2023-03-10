@@ -71,11 +71,11 @@ export const InterfaceList = () => {
 
       {hasPermission && !isOnInterfacePage && (
         <CardActions>
-          <Link href={`/project/${project?._id}/interface`} passHref>
-            <Button fullWidth variant="contained">
+          <Button fullWidth variant="contained">
+            <Link href={`/project/${project?._id}/interface`}>
               Create new interface
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </CardActions>
       )}
     </Card>
