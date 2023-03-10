@@ -58,7 +58,7 @@ export const Modal = ({
 
         <Divider />
 
-        <CardContent sx={{ padding: 1 }}>
+        <CardContent sx={{ p: 1 }}>
           <Typography id="modal-modal-description">{children}</Typography>
         </CardContent>
 

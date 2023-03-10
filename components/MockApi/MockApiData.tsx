@@ -1,4 +1,3 @@
-import { LoadingButton } from "@mui/lab";
 import {
   Button,
   Card,
@@ -17,6 +16,7 @@ import { useRouter } from "next/router";
 import useSWRMutation from "swr/mutation";
 
 import { ProjectContext } from "context";
+import { Modal } from "components";
 
 const button_style = {
   textTransform: "none",
@@ -39,6 +39,7 @@ export const MockApiData = () => {
   const { mockApi } = useContext(ProjectContext);
   const [locationOrigin, setLocationOrigin] = useState<string>("");
   const [linkCopied, setLinkCopied] = useState(false);
+  const [open, setOpen] = useState(false);
   const { query } = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -58,7 +59,7 @@ export const MockApiData = () => {
 
   return (
     <Card>
-      <CardContent sx={{ padding: 1 }}>
+      <CardContent sx={{ p: 1 }}>
         <Typography variant="h6">
           You can &quot;POST&quot;, &quot;GET&quot;, &quot;PUT&quot;,
           &quot;DELETE&quot;, &quot;PATCH&quot; on this endpoint
@@ -67,7 +68,7 @@ export const MockApiData = () => {
 
       <Divider />
 
-      <CardContent sx={{ padding: 1 }}>
+      <CardContent sx={{ p: 1 }}>
         <Button
           fullWidth
           variant="outlined"
@@ -94,15 +95,27 @@ export const MockApiData = () => {
           {locationOrigin}/api/data/{mockApi?.name}
         </Button>
 
-        <LoadingButton
+        <Button
           sx={{ paddingInline: 5 }}
           variant="contained"
           color="error"
-          onClick={trigger}
-          loading={isMutating}
+          onClick={() => setOpen(true)}
         >
           Delete all data
-        </LoadingButton>
+        </Button>
+
+        <Modal
+          open={open}
+          handleClose={() => setOpen(false)}
+          title="Delete data"
+          actionLabel="delete"
+          actionButtonProps={{ color: "error" }}
+          action={trigger}
+          isLoading={isMutating}
+        >
+          Are you sure you want to delete all data from this API? <br />
+          This action cannot be undone.
+        </Modal>
 
         <Paper elevation={0} sx={paper_style} className="no-scrollbar">
           <pre>

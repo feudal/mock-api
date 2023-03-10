@@ -1,10 +1,9 @@
-import { Grid, Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useContext } from "react";
 
 import {
   CustomHead,
   Loader,
-  InterfaceForm,
   MockApiList,
   Breadcrumbs,
   UserList,
@@ -13,7 +12,7 @@ import {
 import { ProjectContext } from "context";
 
 export default function MockApiPage() {
-  const { project, hasPermission, isLoading } = useContext(ProjectContext);
+  const { project, isLoading } = useContext(ProjectContext);
 
   if (isLoading) return <Loader />;
 
@@ -26,31 +25,17 @@ export default function MockApiPage() {
           <Breadcrumbs />
         </Grid>
 
-        {hasPermission ? (
-          <>
-            <Grid item xs={3}>
-              <Stack direction="column" spacing={2}>
-                <MockApiList />
-                <UserList />
-                <InterfaceList />
-              </Stack>
-            </Grid>
+        <Grid item xs={4}>
+          <UserList />
+        </Grid>
 
-            <Grid item xs={9}>
-              <InterfaceForm />
-            </Grid>
-          </>
-        ) : (
-          <>
-            <Grid item xs={6}>
-              <MockApiList />
-            </Grid>
+        <Grid item xs={4}>
+          <MockApiList />
+        </Grid>
 
-            <Grid item xs={6}>
-              <UserList />
-            </Grid>
-          </>
-        )}
+        <Grid item xs={4}>
+          <InterfaceList />
+        </Grid>
       </Grid>
     </>
   );

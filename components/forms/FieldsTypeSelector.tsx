@@ -19,8 +19,8 @@ export const FieldsTypeSelector = ({
   setFields,
   required,
 }: FieldsTypSelectorProps) => {
-  const { interfaces } = useContext(ProjectContext);
-  const interfacesOptions = interfaces?.map((interFace) => interFace.name);
+  const { interFaces } = useContext(ProjectContext);
+  const interfacesOptions = interFaces?.map((interFace) => interFace.name);
   const [fakerOption, setFakerOption] = useState<string>(fakerOptionsKeys[2]);
   const [subOption, setSubOption] = useState<string>(
     fakerOption === "enum" || fakerOption === "interface"

@@ -21,8 +21,9 @@ const list_style = {
 
 const item_style = {
   fontStyle: "italic",
-  padding: 1,
-  // doesn't work
+  // display: "inline-block",
+  maxWidth: "80%",
+
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -32,27 +33,42 @@ const item_style = {
 };
 
 interface ListItemProps extends DefaultComponentProps<any> {
+  active?: boolean;
   href?: string;
   children: React.ReactNode;
   icon?: React.ReactNode;
 }
 
-export const ListItem = ({ href, icon, children, ...props }: ListItemProps) => {
+export const ListItem = ({
+  active,
+  href,
+  icon,
+  children,
+  ...props
+}: ListItemProps) => {
   return (
     <>
       {href ? (
-        <ListItemButton sx={item_style} {...props}>
+        <ListItemButton
+          sx={{
+            backgroundColor: (theme) =>
+              active ? theme.palette.primary.light : "transparent",
+            ...props.xs,
+          }}
+          {...props}
+        >
           <Stack
-            sx={{ width: "100%", ...props.xs }}
+            sx={{ width: "100%" }}
+            spacing={2}
             direction="row"
             alignItems="center"
             justifyContent="space-between"
           >
             <Link style={{ width: "100%" }} href={href} passHref>
-              <ListItemText primary={children} />
+              <ListItemText sx={{ ...item_style }} primary={children} />
             </Link>
 
-            {icon}
+            <Box sx={{ position: "absolute", right: 16 }}>{icon}</Box>
           </Stack>
         </ListItemButton>
       ) : (
@@ -61,7 +77,7 @@ export const ListItem = ({ href, icon, children, ...props }: ListItemProps) => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          paddingX={0}
+          paddingX={2}
           paddingY={0.5}
         >
           <ListItemText

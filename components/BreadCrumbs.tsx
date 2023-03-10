@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 
 import { ProjectContext } from "context";
+import { pascalCase } from "utils";
 
 const iconProps: {
   sx: { mr: number };
@@ -61,8 +62,13 @@ const BreadcrumbItem = ({
 };
 
 export const Breadcrumbs = () => {
-  const { projectId, id } = useRouter().query;
-  const { project, mockApi } = useContext(ProjectContext);
+  const { projectId, id, interfaceId } = useRouter().query;
+  const { project, mockApi, interFaces } = useContext(ProjectContext);
+  const interfaceName = interFaces?.find(
+    (interfaceItem) => interfaceItem._id === interfaceId
+  )?.name;
+
+  console.log({ projectId, id, interfaceId });
 
   return (
     <Card>
@@ -78,7 +84,7 @@ export const Breadcrumbs = () => {
 
           {project?.name && (
             <BreadcrumbItem
-              isLast={id ? false : true}
+              isLast={id || interfaceId ? false : true}
               href={`/project/${projectId}`}
               icon={<FolderIcon {...iconProps} />}
             >
@@ -86,8 +92,10 @@ export const Breadcrumbs = () => {
             </BreadcrumbItem>
           )}
 
-          {mockApi?.name && (
-            <BreadcrumbItem isLast>{mockApi?.name}</BreadcrumbItem>
+          {(mockApi?.name || interfaceId) && (
+            <BreadcrumbItem isLast>
+              {mockApi?.name ?? pascalCase(interfaceName)}
+            </BreadcrumbItem>
           )}
         </MUIBreadcrumbs>
       </CardActions>

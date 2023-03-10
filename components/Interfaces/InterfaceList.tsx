@@ -1,5 +1,6 @@
 import { Card } from "@mui/material";
 import React, { useContext, useState } from "react";
+import { useRouter } from "next/router";
 
 import { Interface } from "types";
 import {
@@ -12,7 +13,8 @@ import { ProjectContext } from "context";
 import { capitalize } from "utils";
 
 export const InterfaceList = () => {
-  const { interfaces, hasPermission } = useContext(ProjectContext);
+  const { query } = useRouter();
+  const { project, interFaces, hasPermission } = useContext(ProjectContext);
   const [selectedInterface, setSelectedInterface] = useState<Interface | null>(
     null
   );
@@ -22,9 +24,11 @@ export const InterfaceList = () => {
   return (
     <Card>
       <List title="Interfaces list" emptyMessage="No Interfaces created yet">
-        {interfaces?.map((interFace: Interface) => (
+        {interFaces?.map((interFace: Interface) => (
           <React.Fragment key={interFace._id}>
             <List.Item
+              active={query.interfaceId === interFace._id}
+              href={`/project/${project?._id}/interface/${interFace._id}`}
               icon={
                 hasPermission && (
                   <>

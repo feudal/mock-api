@@ -15,7 +15,7 @@ interface ProjectContextType {
   project?: Project;
   mockApis?: MockApi[];
   mockApi?: MockApi;
-  interfaces?: Interface[];
+  interFaces?: Interface[];
   hasPermission?: boolean;
   users?: User[];
   owner?: User;
@@ -32,7 +32,7 @@ export const ProjectProvider = ({ children }: Props): ReactElement => {
   const [project, setProject] = useState<Project>();
   const [mockApis, setMockApis] = useState<MockApi[]>();
   const [mockApi, setMockApi] = useState<MockApi>();
-  const [interfaces, setInterfaces] = useState<Interface[]>();
+  const [interFaces, setInterFaces] = useState<Interface[]>();
   const [hasPermission, setHasPermission] = useState<boolean>();
   const [users, setUsers] = useState<User[]>();
   const [owner, setOwner] = useState<User>();
@@ -67,7 +67,7 @@ export const ProjectProvider = ({ children }: Props): ReactElement => {
           (mockApi: MockApi) => mockApi._id === router.query.id
         )
       );
-      setInterfaces(data.interfaces);
+      setInterFaces(data.interfaces);
       setHasPermission(hasPermission);
       setUsers(data.users);
       setOwner(data.owner);
@@ -84,7 +84,7 @@ export const ProjectProvider = ({ children }: Props): ReactElement => {
               project,
               mockApis,
               mockApi,
-              interfaces,
+              interFaces,
               hasPermission,
               users,
               owner,

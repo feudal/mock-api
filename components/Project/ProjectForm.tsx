@@ -35,14 +35,14 @@ export const ProjectForm = () => {
 
   return (
     <Card>
-      <CardContent sx={{ padding: 1 }}>
+      <CardContent sx={{ p: 1 }}>
         <Typography variant="h5">Create new Project</Typography>
       </CardContent>
 
       <Divider />
 
       <form onSubmit={handleSubmit((data) => trigger(data))}>
-        <CardContent sx={{ padding: 1 }}>
+        <CardContent sx={{ p: 1 }}>
           <TextField
             fullWidth
             variant="outlined"
