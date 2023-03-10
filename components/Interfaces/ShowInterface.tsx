@@ -27,15 +27,24 @@ export const showInterFaceObject = (
             </Typography>
           );
         } else if (field.type?.[0] === "interface") {
+          const interFace = interfaces?.find(
+            (interFace) => interFace.name === field.type?.[1]
+          );
+          if (!interFace)
+            return (
+              <Typography
+                key={idx}
+                component="span"
+                color="error"
+                sx={text_style}
+              >
+                {field.type?.[1]}: interface not found
+              </Typography>
+            );
           return (
             <Typography key={idx} component="span" sx={text_style}>
               {field.name}: &#123; <br />
-              {showInterFaceObject(
-                interfaces,
-                interfaces?.find(
-                  (interFace) => interFace.name === field.type?.[1]
-                )
-              )}
+              {showInterFaceObject(interfaces, interFace)}
               <Typography sx={text_style}>&#125;;</Typography>
             </Typography>
           );

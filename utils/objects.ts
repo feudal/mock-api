@@ -24,9 +24,10 @@ export const generateObjectFromFields = (
           const interFace = interfaces.find(
             (i: Interface) => i.name === field?.type?.[1]
           );
+          if (!interFace) return {};
           return {
             [field.name]: generateObjectFromFields(
-              interFace!.fields,
+              interFace.fields,
               interfaces
             ),
           };

@@ -1,25 +1,17 @@
 import { Grid } from "@mui/material";
 import { useContext } from "react";
-import { useRouter } from "next/router";
 
 import {
   Breadcrumbs,
   CustomHead,
   InterfaceForm,
   InterfaceList,
-  ShowInterface,
   StateCard,
 } from "components";
 import { ProjectContext } from "context";
-import { Stack } from "@mui/system";
 
 export default function MockApiPage() {
-  const { query } = useRouter();
-  const { isLoading, isError, project, interFaces } =
-    useContext(ProjectContext);
-  const interFace = interFaces?.find(
-    (interFace) => interFace._id === query.interfaceId
-  );
+  const { isLoading, isError, project } = useContext(ProjectContext);
 
   if (isLoading || isError)
     return <StateCard isError={isError} isLoading={isLoading} />;
@@ -38,11 +30,7 @@ export default function MockApiPage() {
         </Grid>
 
         <Grid item xs={9}>
-          <Stack spacing={2}>
-            <ShowInterface interFace={interFace} card />
-
-            <InterfaceForm />
-          </Stack>
+          <InterfaceForm />
         </Grid>
       </Grid>
     </>

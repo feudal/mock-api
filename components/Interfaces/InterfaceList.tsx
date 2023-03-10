@@ -1,4 +1,4 @@
-import { Card } from "@mui/material";
+import { Button, Card, CardActions } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { useRouter } from "next/router";
 
@@ -11,9 +11,10 @@ import {
 } from "components";
 import { ProjectContext } from "context";
 import { capitalize } from "utils";
+import Link from "next/link";
 
 export const InterfaceList = () => {
-  const { query } = useRouter();
+  const router = useRouter();
   const { project, interFaces, hasPermission } = useContext(ProjectContext);
   const [selectedInterface, setSelectedInterface] = useState<Interface | null>(
     null
@@ -21,13 +22,15 @@ export const InterfaceList = () => {
   const [selectedEditInterface, setSelectedEditInterface] =
     useState<Interface | null>(null);
 
+  const isOnInterfacePage = router.pathname.includes("/interface/");
+
   return (
     <Card>
       <List title="Interfaces list" emptyMessage="No Interfaces created yet">
         {interFaces?.map((interFace: Interface) => (
           <React.Fragment key={interFace._id}>
             <List.Item
-              active={query.interfaceId === interFace._id}
+              active={router.query.interfaceId === interFace._id}
               href={`/project/${project?._id}/interface/${interFace._id}`}
               icon={
                 hasPermission && (
@@ -65,6 +68,16 @@ export const InterfaceList = () => {
           </React.Fragment>
         ))}
       </List>
+
+      {hasPermission && !isOnInterfacePage && (
+        <CardActions>
+          <Link href={`/project/${project?._id}/interface`} passHref>
+            <Button fullWidth variant="contained">
+              Create new interface
+            </Button>
+          </Link>
+        </CardActions>
+      )}
     </Card>
   );
 };

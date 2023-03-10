@@ -62,13 +62,11 @@ const BreadcrumbItem = ({
 };
 
 export const Breadcrumbs = () => {
-  const { projectId, id, interfaceId } = useRouter().query;
+  const { projectId, id, selectedInterfaceId } = useRouter().query;
   const { project, mockApi, interFaces } = useContext(ProjectContext);
   const interfaceName = interFaces?.find(
-    (interfaceItem) => interfaceItem._id === interfaceId
+    (interfaceItem) => interfaceItem._id === selectedInterfaceId
   )?.name;
-
-  console.log({ projectId, id, interfaceId });
 
   return (
     <Card>
@@ -84,7 +82,7 @@ export const Breadcrumbs = () => {
 
           {project?.name && (
             <BreadcrumbItem
-              isLast={id || interfaceId ? false : true}
+              isLast={id || selectedInterfaceId ? false : true}
               href={`/project/${projectId}`}
               icon={<FolderIcon {...iconProps} />}
             >
@@ -92,7 +90,7 @@ export const Breadcrumbs = () => {
             </BreadcrumbItem>
           )}
 
-          {(mockApi?.name || interfaceId) && (
+          {(mockApi?.name || selectedInterfaceId) && (
             <BreadcrumbItem isLast>
               {mockApi?.name ?? pascalCase(interfaceName)}
             </BreadcrumbItem>

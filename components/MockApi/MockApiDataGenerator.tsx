@@ -77,12 +77,12 @@ export const MockApiDataGenerator = () => {
               onClick={handleSubmit((data) =>
                 trigger({
                   projectId: query.projectId as string,
-                  interfaceId: query.interfaceId as string,
+                  interfaceId: query.selectedInterfaceId as string,
                   count: data.count,
                 })
               )}
               loading={isMutating}
-              disabled={!query.interfaceId}
+              disabled={!query.selectedInterfaceId}
             >
               Generate objects for api
             </LoadingButton>

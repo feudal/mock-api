@@ -24,7 +24,7 @@ export const InterfaceSelector = () => {
     if (interFace)
       router.push({
         pathname: router.pathname,
-        query: { ...router.query, interfaceId: interFace?._id },
+        query: { ...router.query, selectedInterfaceId: interFace?._id },
       });
   }, [interFace]);
 
