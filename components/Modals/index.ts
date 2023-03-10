@@ -7,3 +7,4 @@ export * from "./CreateMockApiModal";
 export * from "./DeleteInterfaceModal";
 export * from "./EditInterfaceModal";
 export * from "./EditMockApiModal";
+export * from "./EditProjectModal";

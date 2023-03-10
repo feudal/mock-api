@@ -1,17 +1,25 @@
 import FolderIcon from "@mui/icons-material/Folder";
 import { Stack, Card } from "@mui/material";
 import axios from "axios";
-import React, { SyntheticEvent, useState } from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { Project } from "types";
-import { DeleteButton, DeleteProjectModal, List, StateCard } from "components";
+import {
+  DeleteProjectModal,
+  EditProjectModal,
+  List,
+  Menu,
+  StateCard,
+} from "components";
 
 const deleteProject = async (url: string) => await axios.delete(url);
 
 export const ProjectList = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedEditProject, setSelectedEditProject] =
+    useState<Project | null>(null);
 
   const {
     data: projects,
@@ -45,13 +53,19 @@ export const ProjectList = () => {
               href={`/project/${project._id}`}
               icon={
                 project.hasPermission && (
-                  <DeleteButton
-                    title="Delete project"
-                    onClick={(e: SyntheticEvent) => {
-                      e.preventDefault();
-                      setSelectedProject(project);
-                    }}
-                  />
+                  <Menu>
+                    <Menu.Item onClick={() => setSelectedEditProject(project)}>
+                      Edit
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSelectedProject(project);
+                      }}
+                    >
+                      Delete
+                    </Menu.Item>
+                  </Menu>
                 )
               }
             >
@@ -60,6 +74,14 @@ export const ProjectList = () => {
                 <span>{project.name}</span>
               </Stack>
             </List.Item>
+
+            {project.hasPermission && (
+              <EditProjectModal
+                project={project}
+                open={selectedEditProject?._id === project._id}
+                handleClose={() => setSelectedEditProject(null)}
+              />
+            )}
 
             {project.hasPermission && (
               <DeleteProjectModal

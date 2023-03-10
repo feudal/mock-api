@@ -90,37 +90,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     /*
      * ================================= PATCH =================================
      */
+
+    if (!req.body.name)
+      res.status(400).json({ error: "Body must contain name" });
+
     await db.connect();
     const project = await Project.findOne({ _id: req.query.id }).populate(
       "owner"
     );
-
     if (!project) {
       res.status(404).json({ error: "Not found" });
     } else if (project.owner?.email !== userEmail) {
       res.status(401).json({ error: "Unauthorized" });
     } else {
-      const mockApiExists = project.mockApis.includes(req.body.mockApiId);
-      if (mockApiExists) {
-        res.status(400).json({ error: "Mock API already exists" });
-      } else {
-        const fields = await Promise.all(
-          req.body.fields.map(async (field: any) => {
-            const createdField = await Field.create(field);
-            return createdField._id;
-          })
-        );
-
-        const mockApi = await MockApi.create({
-          name: req.body.name,
-          project: req.query.id,
-          fields,
-        });
-
-        project.mockApis.push(mockApi._id);
-        await project.save();
-        res.status(200).json({ data: project });
-      }
+      project.name = req.body.name;
+      await project.save();
+      res.status(200).json({ data: project });
     }
     await db.disconnect();
   } else {
