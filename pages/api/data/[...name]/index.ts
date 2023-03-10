@@ -59,6 +59,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
          */
         res.status(400).json({ error: "Bad request" });
       }
+      break;
     case true: // [id].tsx
       if (req.method === "GET") {
         /*
@@ -137,6 +138,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
          */
         res.status(400).json({ error: "Bad request" });
       }
+      break;
+    default:
+      res.status(400).json({ error: "Bad request" });
   }
 };
 
