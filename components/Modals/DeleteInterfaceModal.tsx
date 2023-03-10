@@ -28,7 +28,9 @@ export const DeleteInterfaceModal = ({
     () => deleteInterFace(`/api/interface/${interFace?._id}`),
     {
       onSuccess: async () => {
-        await mutate(`/api/project/${router.query.projectId}`);
+        await mutate(
+          `/api/project/${router.query.projectId}?populateFields=true`
+        );
         handleClose();
       },
     }

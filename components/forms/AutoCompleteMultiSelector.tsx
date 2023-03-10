@@ -13,7 +13,7 @@ interface Props {
   onBlur: ChangeHandler;
 
   multiple?: boolean;
-  value?: string[] | string;
+  defaultValue?: string[] | string;
 }
 export type Ref = HTMLInputElement;
 
@@ -28,12 +28,12 @@ export const AutoCompleteMultiSelector = forwardRef<Ref, Props>(
       onChange,
       onBlur,
       multiple = false,
-      value = [],
+      defaultValue = [],
     },
     ref
   ) => (
     <Autocomplete
-      value={value}
+      defaultValue={defaultValue}
       multiple={multiple}
       size="small"
       fullWidth

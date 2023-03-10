@@ -35,7 +35,9 @@ export const EditInterfaceModal = ({
     editInterface,
     {
       onSuccess: async () => {
-        await mutate(`/api/project/${router.query.projectId}`);
+        await mutate(
+          `/api/project/${router.query.projectId}?populateFields=true`
+        );
         handleClose();
         reset();
       },
@@ -70,6 +72,7 @@ export const EditInterfaceModal = ({
         fullWidth
         variant="outlined"
         size="small"
+        defaultValue={interFace?.name}
         {...register("name")}
       />
     </Modal>

@@ -34,7 +34,9 @@ export const EditMockApiModal = ({
     editMockApi,
     {
       onSuccess: async () => {
-        await mutate(`/api/project/${router.query.projectId}`);
+        await mutate(
+          `/api/project/${router.query.projectId}?populateFields=true`
+        );
         handleClose();
         reset();
       },
@@ -62,6 +64,7 @@ export const EditMockApiModal = ({
         fullWidth
         variant="outlined"
         size="small"
+        defaultValue={mockApi?.name}
         {...register("name")}
       />
     </Modal>

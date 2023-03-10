@@ -31,7 +31,9 @@ export const CreateMockApiModal = ({
     createMockApi,
     {
       onSuccess: async () => {
-        await mutate(`/api/project/${router.query.projectId}`);
+        await mutate(
+          `/api/project/${router.query.projectId}?populateFields=true`
+        );
         handleClose();
         reset();
       },

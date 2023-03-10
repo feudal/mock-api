@@ -88,7 +88,7 @@ export const InterfaceSelector = () => {
         placeholder="Enter interface name"
         options={interfaces?.map((interFace) => interFace.name)}
         {...register("interface")}
-        value={interFace?.name || ""}
+        defaultValue={interFace?.name || ""}
         onChange={async (e) => {
           setInterFace(
             interfaces?.find((interFace) => interFace.name === e.target.value)

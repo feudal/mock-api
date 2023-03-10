@@ -28,7 +28,9 @@ export const DeleteMockApiModal = ({
     () => deleteApi(`/api/mock-api/${mockApi?._id}`),
     {
       onSuccess: async () => {
-        await mutate(`/api/project/${router.query.projectId}`);
+        await mutate(
+          `/api/project/${router.query.projectId}?populateFields=true`
+        );
         handleClose();
       },
     }

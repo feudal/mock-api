@@ -31,9 +31,10 @@ export const InterfaceForm = () => {
     "/api/interface",
     createInterface,
     {
-      onSuccess: async () =>
-        (await mutate(`/api/project/${query.projectId}?populateFields=true`)) &&
-        reset(),
+      onSuccess: async () => {
+        await mutate(`/api/project/${query.projectId}?populateFields=true`);
+        reset();
+      },
     }
   );
 
