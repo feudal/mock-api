@@ -17,26 +17,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     ? allQueryNames.slice(0, allQueryNames.length - 1).join("/")
     : allQueryNames.join("/");
 
+  await db.connect();
+  const mockApi = await MockApi.findOne({ name: mockApiName });
+
+  if (!mockApi) {
+    res.status(404).json({ error: "Not found" });
+    await db.disconnect();
+    return;
+  }
+
   switch (hasId) {
     case false: // [name].tsx
       if (req.method === "GET") {
         /*
          * ================================= GET =================================
          */
-        await db.connect();
-        const mockApis = await MockApi.findOne({ name: mockApiName });
-        await db.disconnect();
-        const data = mockApis.data;
 
-        res.status(200).json({ data });
+        res.status(200).json({ data: mockApi.data });
       } else if (req.method === "POST") {
         const data = req.body;
         if (!data) res.status(400).json({ error: "Body is required" });
 
-        await db.connect();
-        const mockApis = await MockApi.findOne({ name: mockApiName });
-        mockApis.data.push(data);
-        await mockApis.save();
+        mockApi.data.push(data);
+        await mockApi.save();
         await db.disconnect();
 
         res.status(200).json({ data });
@@ -44,7 +47,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         /*
          * ================================= DELETE =================================
          */
-        await db.connect();
         await MockApi.findOneAndUpdate(
           { name: mockApiName },
           { $unset: { data: "", interface: "" } },
@@ -66,9 +68,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
          * ================================= GET =================================
          */
 
-        await db.connect();
-        const mockApis = await MockApi.findOne({ name: mockApiName });
-        const data = mockApis.data.find((item: any) => item.id === queryId);
+        const data = mockApi.data.find((item: any) => item.id === queryId);
         await db.disconnect();
 
         if (!data) res.status(404).json({ error: "Not found" });
@@ -120,8 +120,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         /*
          * ================================= DELETE =================================
          */
-        await db.connect();
-        const mockApi = await MockApi.findOne({ name: mockApiName });
+
         const itemExists = mockApi.data.find(
           (item: any) => item.id === queryId
         );
