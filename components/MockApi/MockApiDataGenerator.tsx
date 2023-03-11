@@ -41,7 +41,7 @@ export const MockApiDataGenerator = () => {
   return (
     <Card>
       <CardContent sx={{ p: 1 }}>
-        <Typography variant="h5">Mock API - {mockApi?.name}</Typography>
+        <Typography variant="h5">Mock API - /{mockApi?.name}</Typography>
       </CardContent>
 
       <Divider />

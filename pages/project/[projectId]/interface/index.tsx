@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import { useContext } from "react";
 
 import {
@@ -6,6 +6,7 @@ import {
   CustomHead,
   InterfaceForm,
   InterfaceList,
+  MockApiList,
   StateCard,
 } from "components";
 import { ProjectContext } from "context";
@@ -26,7 +27,10 @@ export default function MockApiPage() {
         </Grid>
 
         <Grid item xs={3}>
-          <InterfaceList />
+          <Stack spacing={2}>
+            <InterfaceList />
+            <MockApiList />
+          </Stack>
         </Grid>
 
         <Grid item xs={9}>

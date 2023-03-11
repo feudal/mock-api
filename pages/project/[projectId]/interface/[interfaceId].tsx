@@ -7,6 +7,7 @@ import {
   CustomHead,
   InterfaceForm,
   InterfaceList,
+  MockApiList,
   ShowInterface,
   StateCard,
 } from "components";
@@ -34,7 +35,10 @@ export default function MockApiPage() {
         </Grid>
 
         <Grid item xs={3}>
-          <InterfaceList />
+          <Stack spacing={2}>
+            <InterfaceList />
+            <MockApiList />
+          </Stack>
         </Grid>
 
         <Grid item xs={9}>

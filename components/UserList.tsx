@@ -56,7 +56,7 @@ export const UserList = () => {
                 )
               }
             >
-              {user.name}
+              <b>{user.name}</b>
             </List.Item>
 
             {hasPermission && (

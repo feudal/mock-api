@@ -25,6 +25,7 @@ export const MockApiList = () => {
         {mockApis?.map((api: MockApi) => (
           <React.Fragment key={api._id}>
             <List.Item
+              sx={{ fontStyle: "italic" }}
               href={`/project/${router.query.projectId}/mock-api/${api._id}`}
               icon={
                 hasPermission && (

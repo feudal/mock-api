@@ -20,7 +20,6 @@ const list_style = {
 };
 
 const item_style = {
-  fontStyle: "italic",
   // display: "inline-block",
   maxWidth: "80%",
 
