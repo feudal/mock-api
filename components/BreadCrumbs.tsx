@@ -68,8 +68,6 @@ export const Breadcrumbs = () => {
     (interfaceItem) => interfaceItem._id === interfaceId
   )?.name;
 
-  console.log({ projectId, id, interfaceId });
-
   return (
     <Card>
       <CardActions>

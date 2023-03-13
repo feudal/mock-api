@@ -11,21 +11,20 @@ export const InterfaceSelector = () => {
   const router = useRouter();
   const { register } = useForm();
   const { interFaces, mockApi } = useContext(ProjectContext);
-  const selectedInterFace = mockApi?.interface;
   const [interFace, setInterFace] = React.useState<Interface | undefined>(
-    selectedInterFace
+    mockApi?.interface
   );
 
   useEffect(() => {
-    setInterFace(selectedInterFace);
-  }, [selectedInterFace]);
+    setInterFace(mockApi?.interface);
+    console.log("mockApi?.interface" + mockApi?.interface);
+  }, [mockApi?.interface]);
 
   useEffect(() => {
-    if (interFace)
-      router.push({
-        pathname: router.pathname,
-        query: { ...router.query, selectedInterfaceId: interFace?._id },
-      });
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, selectedInterfaceId: interFace?._id },
+    });
   }, [interFace]);
 
   return (

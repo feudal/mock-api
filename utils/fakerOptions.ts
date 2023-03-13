@@ -317,5 +317,6 @@ export const fakerOptions: { [key: string]: string[] } = {
 export const fakerOptionsKeys = [
   "enum",
   "interface",
+  "array-of-interface",
   ...Object.keys(fakerOptions),
 ];

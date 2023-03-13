@@ -5,6 +5,12 @@ import { ProjectContext } from "context";
 import { Interface } from "types";
 import { pascalCase, stripSlashes } from "utils";
 
+const NoInterface = ({ fieldType }: { fieldType?: string }) => (
+  <Typography component="span" color="error" sx={text_style}>
+    {fieldType}: interface not found
+  </Typography>
+);
+
 const text_style = {
   display: "block",
   margin: "-0.5rem 0 -0.5rem 1rem",
@@ -20,40 +26,47 @@ export const showInterFaceObject = (
   return (
     <pre>
       {interFace.fields?.map((field, idx) => {
-        if (field.type?.[0] === "enum") {
-          return (
-            <Typography key={idx} component="span" sx={text_style}>
-              {field.name}: {field?.type[1]}; <br />
-            </Typography>
-          );
-        } else if (field.type?.[0] === "interface") {
-          const interFace = interfaces?.find(
-            (interFace) => interFace.name === field.type?.[1]
-          );
-          if (!interFace)
+        const fieldName = field.name;
+        const fieldType = field.type?.[1];
+        const interFace = interfaces?.find(
+          (interFace) => interFace.name === fieldType
+        );
+
+        switch (field.type?.[0]) {
+          case "enum":
             return (
-              <Typography
-                key={idx}
-                component="span"
-                color="error"
-                sx={text_style}
-              >
-                {field.type?.[1]}: interface not found
+              <Typography key={idx} component="span" sx={text_style}>
+                {fieldName}: {fieldType}; <br />
               </Typography>
             );
-          return (
-            <Typography key={idx} component="span" sx={text_style}>
-              {field.name}: &#123; <br />
-              {showInterFaceObject(interfaces, interFace)}
-              <Typography sx={text_style}>&#125;;</Typography>
-            </Typography>
-          );
-        } else {
-          return (
-            <Typography key={idx} component="span" sx={text_style}>
-              {field.name}: {field.type?.join("-")}; <br />
-            </Typography>
-          );
+          case "interface":
+            if (!interFace)
+              return <NoInterface key={idx} fieldType={fieldType} />;
+
+            return (
+              <Typography key={idx} component="span" sx={text_style}>
+                {fieldName}: &#123; <br />
+                {showInterFaceObject(interfaces, interFace)}
+                <Typography sx={text_style}></Typography>
+              </Typography>
+            );
+          case "array-of-interface":
+            if (!interFace)
+              return <NoInterface key={idx} fieldType={fieldType} />;
+
+            return (
+              <Typography key={idx} component="span" sx={text_style}>
+                {fieldName}: Array &#123; <br />
+                {showInterFaceObject(interfaces, interFace)}
+                <Typography sx={text_style}></Typography>
+              </Typography>
+            );
+          default:
+            return (
+              <Typography key={idx} component="span" sx={text_style}>
+                {fieldName}: {field.type?.join("-")}; <br />
+              </Typography>
+            );
         }
       })}
       &#125;

@@ -21,9 +21,12 @@ export const FieldsTypeSelector = ({
 }: FieldsTypSelectorProps) => {
   const { interFaces } = useContext(ProjectContext);
   const interfacesOptions = interFaces?.map((interFace) => interFace.name);
-  const [fakerOption, setFakerOption] = useState<string>(fakerOptionsKeys[2]);
+  const [fakerOption, setFakerOption] = useState<string>(fakerOptionsKeys[3]);
+
   const [subOption, setSubOption] = useState<string>(
-    fakerOption === "enum" || fakerOption === "interface"
+    fakerOption === "enum" ||
+      fakerOption === "interface" ||
+      fakerOption === "array-of-interface"
       ? ""
       : fakerOptions[fakerOption][0]
   );
@@ -50,11 +53,11 @@ export const FieldsTypeSelector = ({
               case "enum":
                 setFakerOption("enum");
                 setSubOption("");
-                return;
-              case "interface":
+                break;
+              case "interface" || "array-of-interface":
                 setFakerOption("interface");
                 setSubOption(interfacesOptions?.[0] || "");
-                return;
+                break;
               default:
                 setFakerOption(v.target.value);
                 setSubOption(fakerOptions[v.target.value][0]);
@@ -67,7 +70,9 @@ export const FieldsTypeSelector = ({
               value={fakerOption}
               sx={{
                 color:
-                  fakerOption === "enum" || fakerOption === "interface"
+                  fakerOption === "enum" ||
+                  fakerOption === "interface" ||
+                  fakerOption === "array-of-interface"
                     ? "primary.main"
                     : "text.primary",
               }}
@@ -79,22 +84,24 @@ export const FieldsTypeSelector = ({
       </Grid>
 
       <Grid item xs={8}>
-        {fakerOption !== "enum" && fakerOption !== "interface" && (
-          <Select
-            fullWidth
-            variant="outlined"
-            size="small"
-            required={required}
-            value={subOption}
-            onChange={(v) => setSubOption(v.target.value)}
-          >
-            {fakerOptions[fakerOption].map((subOption, idx) => (
-              <MenuItem key={idx} value={subOption}>
-                {subOption}
-              </MenuItem>
-            ))}
-          </Select>
-        )}
+        {fakerOption !== "enum" &&
+          fakerOption !== "interface" &&
+          fakerOption !== "array-of-interface" && (
+            <Select
+              fullWidth
+              variant="outlined"
+              size="small"
+              required={required}
+              value={subOption}
+              onChange={(v) => setSubOption(v.target.value)}
+            >
+              {fakerOptions[fakerOption].map((subOption, idx) => (
+                <MenuItem key={idx} value={subOption}>
+                  {subOption}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
 
         {fakerOption === "enum" && (
           <ChipsInput
@@ -104,7 +111,8 @@ export const FieldsTypeSelector = ({
           />
         )}
 
-        {fakerOption === "interface" && (
+        {(fakerOption === "interface" ||
+          fakerOption === "array-of-interface") && (
           <Select
             fullWidth
             variant="outlined"
