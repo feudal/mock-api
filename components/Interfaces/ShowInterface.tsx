@@ -81,11 +81,14 @@ interface ShowInterfaceProps {
 
 export const ShowInterface = ({ interFace, card }: ShowInterfaceProps) => {
   const { interFaces } = useContext(ProjectContext);
+  const interFaceName = stripSlashes(pascalCase(interFace?.name));
+
+  if (!interFace) return null;
 
   const interfaceObject = (
     <pre>
       <Typography variant="h6" mt={1} fontFamily="monospace">
-        interface {stripSlashes(pascalCase(interFace?.name))} &#123;
+        interface {interFaceName} &#123;
         <br />
         {showInterFaceObject(interFaces, interFace)}
       </Typography>

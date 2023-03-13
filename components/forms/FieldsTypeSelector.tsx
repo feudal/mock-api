@@ -54,8 +54,12 @@ export const FieldsTypeSelector = ({
                 setFakerOption("enum");
                 setSubOption("");
                 break;
-              case "interface" || "array-of-interface":
+              case "interface":
                 setFakerOption("interface");
+                setSubOption(interfacesOptions?.[0] || "");
+                break;
+              case "array-of-interface":
+                setFakerOption("array-of-interface");
                 setSubOption(interfacesOptions?.[0] || "");
                 break;
               default:

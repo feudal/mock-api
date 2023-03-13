@@ -22,7 +22,7 @@ export const InterfaceList = () => {
   const [selectedEditInterface, setSelectedEditInterface] =
     useState<Interface | null>(null);
 
-  const isOnInterfacePage = router.pathname.includes("/interface/");
+  const isOnInterfacePage = router.pathname.includes("/interface");
 
   return (
     <Card>
