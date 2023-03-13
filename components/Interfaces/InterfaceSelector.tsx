@@ -17,10 +17,16 @@ export const InterfaceSelector = () => {
 
   useEffect(() => {
     setInterFace(mockApi?.interface);
-    console.log("mockApi?.interface" + mockApi?.interface);
   }, [mockApi?.interface]);
 
   useEffect(() => {
+    if (!interFace) {
+      setInterFace(
+        interFaces?.find(
+          (interFace) => interFace._id === router.query.selectedInterfaceId
+        )
+      );
+    }
     router.push({
       pathname: router.pathname,
       query: { ...router.query, selectedInterfaceId: interFace?._id },
